@@ -4,8 +4,14 @@
 //  Stream utilities and callbacks
 //
 
-import Foundation
 import Bass
+import Foundation
+
+private func bassStreamEndedCallback(_: DWORD, _: DWORD, _: DWORD, _: UnsafeMutableRawPointer?) {
+    Task { @MainActor in
+        NotificationCenter.default.post(name: .bassStreamEnded, object: nil)
+    }
+}
 
 extension BASSAudioEngine {
     // MARK: - Stream Properties
@@ -68,10 +74,7 @@ extension BASSAudioEngine {
             currentStream,
             DWORD(BASS_SYNC_END),
             0,
-            { _, _, _, _ in
-                // Notify delegate that stream ended
-                NotificationCenter.default.post(name: .bassStreamEnded, object: nil)
-            },
+            bassStreamEndedCallback,
             nil
         )
     }

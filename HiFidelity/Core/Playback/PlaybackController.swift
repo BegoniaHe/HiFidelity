@@ -6,33 +6,36 @@
 //
 
 import Foundation
-import SwiftUI
 import MediaPlayer
+import Observation
+import SwiftUI
 
 /// Manages playback state and controls
-class PlaybackController: ObservableObject {
+@MainActor
+@Observable
+class PlaybackController {
     static let shared = PlaybackController()
 
     // MARK: - Published Properties
 
-    @Published var currentTrack: Track? {
+    var currentTrack: Track? {
         didSet {
             applyReplayGain()
             updateNowPlayingInfo()
         }
     }
-    @Published var isPlaying: Bool = false {
+    var isPlaying: Bool = false {
         didSet {
             updateNowPlayingPlaybackState()
         }
     }
-    @Published var currentTime: Double = 0.0 {
+    var currentTime: Double = 0.0 {
         didSet {
             updateNowPlayingElapsedTime()
         }
     }
-    @Published var duration: Double = 0.0
-    @Published var volume: Double = 0.7 {
+    var duration: Double = 0.0
+    var volume: Double = 0.7 {
         didSet {
             // Sync volume to centralized AudioSettings
             AudioSettings.shared.playbackVolume = volume
@@ -41,8 +44,8 @@ class PlaybackController: ObservableObject {
             audioEngine.setVolume(effectiveVolume)
         }
     }
-    @Published var isMuted: Bool = false
-    @Published var repeatMode: RepeatMode = .off {
+    var isMuted: Bool = false
+    var repeatMode: RepeatMode = .off {
         didSet {
             // Clear preloaded next track if switching to repeat one
             // since we won't be playing the next track
@@ -54,20 +57,32 @@ class PlaybackController: ObservableObject {
             }
         }
     }
-    @Published var isShuffleEnabled: Bool = false
+    var isShuffleEnabled: Bool = false
 
     // Audio quality info
-    @Published var currentStreamInfo: BASSStreamInfo?
+    var currentStreamInfo: BASSStreamInfo? {
+        didSet {
+            NotificationCenter.default.post(name: .streamInfoDidUpdate, object: nil)
+        }
+    }
 
     // Queue management
-    @Published var queue: [Track] = []
-    @Published var playbackHistory: [Track] = []
-    @Published var currentQueueIndex: Int = -1
+    var queue: [Track] = [] {
+        didSet {
+            NotificationCenter.default.post(name: .playbackQueueDidChange, object: nil)
+        }
+    }
+    var playbackHistory: [Track] = []
+    var currentQueueIndex: Int = -1 {
+        didSet {
+            NotificationCenter.default.post(name: .playbackQueueIndexDidChange, object: nil)
+        }
+    }
 
     // UI State
-    @Published var showQueue: Bool = false
-    @Published var showLyrics: Bool = false
-    @Published var showVisualizer: Bool = false
+    var showQueue: Bool = false
+    var showLyrics: Bool = false
+    var showVisualizer: Bool = false
 
     // MARK: - Internal Properties
 
@@ -87,7 +102,7 @@ class PlaybackController: ObservableObject {
     let gaplessThreshold: Double = 5.0  // Pre-load next track when 5 seconds remaining
 
     // Autoplay
-    @Published var isAutoplayEnabled: Bool = false {
+    var isAutoplayEnabled: Bool = false {
         didSet {
             UserDefaults.standard.set(isAutoplayEnabled, forKey: "autoplayEnabled")
             Logger.info("Autoplay \(isAutoplayEnabled ? "enabled" : "disabled")")
@@ -116,6 +131,8 @@ class PlaybackController: ObservableObject {
         setupNotifications()
         setupRemoteCommandCenter()
     }
+
+    // Observation tracking for queue changes is handled in QueuePersistenceManager
 
     // MARK: - Setup
 
@@ -176,7 +193,8 @@ class PlaybackController: ObservableObject {
         Logger.debug("Device change complete notification received")
 
         guard let userInfo = notification.userInfo,
-              let needsReload = userInfo["needsReload"] as? Bool else {
+            let needsReload = userInfo["needsReload"] as? Bool
+        else {
             Logger.warning("Device change complete but no userInfo")
             return
         }
@@ -230,7 +248,7 @@ class PlaybackController: ObservableObject {
     }
 
     @objc private func handleDeviceRemoved(_ notification: Notification) {
-        Logger.warning("⚠️ Audio device was removed - pausing playback")
+        Logger.warning("Audio device was removed - pausing playback")
 
         // Pause playback
         if isPlaying {
@@ -265,7 +283,9 @@ class PlaybackController: ObservableObject {
         let effectiveVolume = Float(isMuted ? 0 : volume) * currentReplayGainMultiplier
         audioEngine.setVolume(effectiveVolume)
 
-        Logger.debug("Applied replay gain: user=\(volume), gain=×\(currentReplayGainMultiplier), effective=\(effectiveVolume)")
+        Logger.debug(
+            "Applied replay gain: user=\(volume), gain=×\(currentReplayGainMultiplier), effective=\(effectiveVolume)"
+        )
     }
 
     @objc func handleStreamEnded() {
@@ -294,7 +314,7 @@ class PlaybackController: ObservableObject {
         Logger.info("Gapless transition triggered (repeat mode: \(repeatMode))")
 
         // IMPORTANT: Check repeat mode first
-        // If repeat mode is .one, don't do gapless - let the stream end and the 
+        // If repeat mode is .one, don't do gapless - let the stream end and the
         // handleStreamEnded callback will handle the repeat
         guard repeatMode != .one else {
             Logger.debug("Repeat one is active - skipping gapless, will repeat current track")

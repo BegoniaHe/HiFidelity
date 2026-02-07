@@ -42,9 +42,9 @@ ffmpeg -loglevel error -y -i "$INPUT" -an -vcodec mjpeg "$COVER"
 HAS_COVER=0
 if [ -f "$COVER" ]; then
     HAS_COVER=1
-    echo "✓ Album art extracted"
+    echo "Album art extracted"
 else
-    echo "⚠ No album art found in input"
+    echo "No album art found in input"
 fi
 
 echo
@@ -158,7 +158,7 @@ if ffmpeg -hide_banner -encoders | grep -q ape; then
         convert_audio ape "$BASE.ape"
     fi
 else
-    echo "⚠ Skipping .ape (encoder not available)"
+    echo "Skipping .ape (encoder not available)"
 fi
 
 
@@ -187,7 +187,7 @@ convert_audio libspeex   "$BASE.spx"
 if ffmpeg -hide_banner -formats | grep -q " mpck"; then
     convert_audio musepack "$BASE.mpc"
 else
-    echo "⚠ Skipping $BASE.mpc (Musepack muxer not supported in your FFmpeg)"
+    echo "Skipping $BASE.mpc (Musepack muxer not supported in your FFmpeg)"
 fi
 
 # WAV / AIFF / CAF
@@ -203,13 +203,13 @@ ffmpeg -loglevel error -y -i "$INPUT" -map 0:a -c:a libopus -f webm "$BASE.webm"
 if ffmpeg -hide_banner -formats | grep -q " dsf"; then
     convert_audio dsd_lsbf "$BASE.dsf"
 else
-    echo "⚠ Skipping $BASE.dsf (DSF muxer not supported in your FFmpeg)"
+    echo "Skipping $BASE.dsf (DSF muxer not supported in your FFmpeg)"
 fi
 
 if ffmpeg -hide_banner -formats | grep -q " dff"; then
     convert_audio dsd_lsbf "$BASE.dff"
 else
-    echo "⚠ Skipping $BASE.dff (DFF muxer not supported in your FFmpeg)"
+    echo "Skipping $BASE.dff (DFF muxer not supported in your FFmpeg)"
 fi
 
 

@@ -60,10 +60,12 @@ extension BASSAudioEngine {
                 Logger.info("  Stream: \(streamInfo.frequency) Hz, \(streamInfo.channels) channels, \(streamInfo.bitDepth)-bit")
 
                 let targetRate = Float64(streamInfo.frequency)
-                if dacManager.setDeviceSampleRate(targetRate) {
-                    Logger.info("  Bit-perfect: Device switched to \(streamInfo.frequency) Hz (no resampling)")
-                } else {
-                    Logger.warning("  Could not switch device rate, BASS will resample")
+                Task { @MainActor in
+                    if self.dacManager.setDeviceSampleRate(targetRate) {
+                        Logger.info("  Bit-perfect: Device switched to \(streamInfo.frequency) Hz (no resampling)")
+                    } else {
+                        Logger.warning("  Could not switch device rate, BASS will resample")
+                    }
                 }
             }
         }
@@ -72,7 +74,9 @@ extension BASSAudioEngine {
         setupStreamEndCallback()
 
         // Apply audio effects to the new stream
-        effectsManager.setStream(currentStream)
+        Task { @MainActor in
+            self.effectsManager.setStream(currentStream)
+        }
 
         return true
     }
@@ -120,7 +124,9 @@ extension BASSAudioEngine {
         guard currentStream != 0 else { return }
 
         // Clear effects before freeing stream
-        effectsManager.clearStream()
+        Task { @MainActor in
+            self.effectsManager.clearStream()
+        }
 
         BASS_ChannelStop(currentStream)
         BASS_StreamFree(currentStream)

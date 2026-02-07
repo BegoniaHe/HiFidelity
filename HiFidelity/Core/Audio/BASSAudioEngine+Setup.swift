@@ -4,9 +4,9 @@
 //  Engine setup and device handling
 //
 
-import Foundation
-import CoreAudio
 import Bass
+import CoreAudio
+import Foundation
 
 extension BASSAudioEngine {
     // MARK: - Engine Setup
@@ -41,9 +41,13 @@ extension BASSAudioEngine {
         isInitialized = true
 
         if let deviceName = dacManager.getDeviceName() {
-            Logger.info("BASS initialized: \(deviceName) (device=\(deviceNumber)), rate=\(Int(sampleRate))Hz, buffer=\(settings.bufferLength)ms")
+            Logger.info(
+                "BASS initialized: \(deviceName) (device=\(deviceNumber)), rate=\(Int(sampleRate))Hz, buffer=\(settings.bufferLength)ms"
+            )
         } else {
-            Logger.info("BASS initialized: device=\(deviceNumber), rate=\(Int(sampleRate))Hz, buffer=\(settings.bufferLength)ms")
+            Logger.info(
+                "BASS initialized: device=\(deviceNumber), rate=\(Int(sampleRate))Hz, buffer=\(settings.bufferLength)ms"
+            )
         }
 
         if settings.synchronizeSampleRate {
@@ -73,13 +77,15 @@ extension BASSAudioEngine {
         while BASS_GetDeviceInfo(deviceIndex, &deviceInfo) != 0 {
             if let deviceName = deviceInfo.name {
                 let bassDeviceName = String(cString: deviceName)
-                Logger.debug("BASS device \(deviceIndex): \(bassDeviceName), enabled: \(deviceInfo.flags & DWORD(BASS_DEVICE_ENABLED) != 0)")
+                Logger.debug(
+                    "BASS device \(deviceIndex): \(bassDeviceName), enabled: \(deviceInfo.flags & DWORD(BASS_DEVICE_ENABLED) != 0)"
+                )
 
                 // Check if this BASS device matches our CoreAudio device
                 // Match by exact name or if one contains the other
-                let namesMatch = bassDeviceName == targetDeviceName ||
-                                bassDeviceName.contains(targetDeviceName) ||
-                                targetDeviceName.contains(bassDeviceName)
+                let namesMatch =
+                    bassDeviceName == targetDeviceName || bassDeviceName.contains(targetDeviceName)
+                    || targetDeviceName.contains(bassDeviceName)
 
                 if namesMatch && deviceInfo.flags & DWORD(BASS_DEVICE_ENABLED) != 0 {
                     Logger.info("Found matching BASS device: \(deviceIndex) - \(bassDeviceName)")
@@ -103,7 +109,8 @@ extension BASSAudioEngine {
         }
 
         // If no match found at all, use device -1 (system default)
-        Logger.warning("No matching BASS device found for '\(targetDeviceName)', using system default")
+        Logger.warning(
+            "No matching BASS device found for '\(targetDeviceName)', using system default")
         return -1
     }
 
@@ -121,12 +128,16 @@ extension BASSAudioEngine {
         // Always use high quality as fallback, even in sync mode
         // When device rate matches track rate, no resampling occurs anyway (bit-perfect)
         // This is a safety net if device rate switch fails
-        BASS_SetConfig(DWORD(BASS_CONFIG_SRC), 4) // 64-point sinc interpolation
+        BASS_SetConfig(DWORD(BASS_CONFIG_SRC), 4)  // 64-point sinc interpolation
 
         if settings.synchronizeSampleRate {
-            Logger.debug("Applied audio settings: buffer=\(settings.bufferLength)ms, native bit depth, sync mode")
+            Logger.debug(
+                "Applied audio settings: buffer=\(settings.bufferLength)ms, native bit depth, sync mode"
+            )
         } else {
-            Logger.debug("Applied audio settings: buffer=\(settings.bufferLength)ms, native bit depth, SRC quality=4")
+            Logger.debug(
+                "Applied audio settings: buffer=\(settings.bufferLength)ms, native bit depth, SRC quality=4"
+            )
         }
     }
 
@@ -136,7 +147,8 @@ extension BASSAudioEngine {
         guard currentStream != 0 else { return }
 
         // Set volume (BASS_ATTRIB_VOL: 0.0 to 1.0)
-        BASS_ChannelSetAttribute(currentStream, DWORD(BASS_ATTRIB_VOL), Float(settings.playbackVolume))
+        BASS_ChannelSetAttribute(
+            currentStream, DWORD(BASS_ATTRIB_VOL), Float(settings.playbackVolume))
 
         Logger.debug("Applied channel settings: volume=\(settings.playbackVolume)")
     }
@@ -220,7 +232,7 @@ extension BASSAudioEngine {
             if result == 0 {
                 Logger.warning("Failed to move stream: \(BASS_ErrorGetCode())")
             } else {
-                Logger.info("✓ Stream moved to reacquired device")
+                Logger.info("Stream moved to reacquired device")
             }
         }
     }
@@ -239,7 +251,8 @@ extension BASSAudioEngine {
         let oldDeviceNumber = BASS_GetDevice()
 
         // Check if stream was playing before the device change
-        let wasPlaying = currentStream != 0 && BASS_ChannelIsActive(currentStream) == DWORD(BASS_ACTIVE_PLAYING)
+        let wasPlaying =
+            currentStream != 0 && BASS_ChannelIsActive(currentStream) == DWORD(BASS_ACTIVE_PLAYING)
         if wasPlaying {
             Logger.debug("Stream was playing before device change")
         }
@@ -263,8 +276,11 @@ extension BASSAudioEngine {
 
         // Step 2: Move stream(s) to new device
         if currentStream != 0 {
-            streamMovedSuccessfully = BASS_ChannelSetDevice(currentStream, DWORD(newDeviceNumber)) != 0
-            Logger.info(streamMovedSuccessfully ? "✓ Stream moved to new device" : "⚠️ Stream move failed - reload needed")
+            streamMovedSuccessfully =
+                BASS_ChannelSetDevice(currentStream, DWORD(newDeviceNumber)) != 0
+            Logger.info(
+                streamMovedSuccessfully
+                    ? "Stream moved to new device" : "⚠️ Stream move failed - reload needed")
 
             // If stream was moved successfully and was playing, ensure it continues playing on new device
             if streamMovedSuccessfully && wasPlaying {
@@ -284,7 +300,7 @@ extension BASSAudioEngine {
                 // Resume playback on the new device
                 let playResult = BASS_ChannelPlay(currentStream, 0)
                 if playResult != 0 {
-                    Logger.info("✓ Resumed playback on new device")
+                    Logger.info("Resumed playback on new device")
                 } else {
                     Logger.error("Failed to resume playback on new device: \(BASS_ErrorGetCode())")
                     streamMovedSuccessfully = false
@@ -302,16 +318,18 @@ extension BASSAudioEngine {
         }
 
         // Step 3: Free old device (if it's different and was initialized)
-        if oldDeviceNumber != DWORD(newDeviceNumber) && oldDeviceNumber != DWORD(bitPattern: Int32.max) {
+        if oldDeviceNumber != DWORD(newDeviceNumber)
+            && oldDeviceNumber != DWORD(bitPattern: Int32.max) {
             var oldDeviceInfo = BASS_DEVICEINFO()
             if BASS_GetDeviceInfo(oldDeviceNumber, &oldDeviceInfo) != 0 {
                 if oldDeviceInfo.flags & DWORD(BASS_DEVICE_INIT) != 0 {
                     // Set context to old device and free it
                     if BASS_SetDevice(oldDeviceNumber) != 0 {
                         BASS_Free()
-                        Logger.info("✓ Freed old device \(oldDeviceNumber)")
+                        Logger.info("Freed old device \(oldDeviceNumber)")
                     } else {
-                        Logger.warning("Could not set old device context to free it: \(BASS_ErrorGetCode())")
+                        Logger.warning(
+                            "Could not set old device context to free it: \(BASS_ErrorGetCode())")
                     }
                 }
             }
@@ -352,9 +370,9 @@ extension BASSAudioEngine {
                 let bassDeviceName = String(cString: deviceName)
 
                 // Match by name
-                let namesMatch = bassDeviceName == targetDeviceName ||
-                                bassDeviceName.contains(targetDeviceName) ||
-                                targetDeviceName.contains(bassDeviceName)
+                let namesMatch =
+                    bassDeviceName == targetDeviceName || bassDeviceName.contains(targetDeviceName)
+                    || targetDeviceName.contains(bassDeviceName)
 
                 if namesMatch && deviceInfo.flags & DWORD(BASS_DEVICE_ENABLED) != 0 {
                     Logger.info("Found matching BASS device: \(deviceIndex) - \(bassDeviceName)")
@@ -377,17 +395,17 @@ extension BASSAudioEngine {
 
         // Only load decoder plugins (exclude core library, effects, and encoding)
         let decoderPlugins = [
-            "libbassflac.dylib",    // FLAC decoder
-            "libbassopus.dylib",    // Opus decoder
-            "libbasswebm.dylib",    // WebM/VP8/VP9 decoder
-            "libbasswv.dylib",      // WavPack decoder
-            "libbassape.dylib",     // APE (Monkey's Audio) decoder
-            "libbassdsd.dylib",     // DSD audio decoder
-            "libbassmidi.dylib",    // MIDI file decoder
-            "libbass_mpc.dylib",    // Musepack decoder
-            "libbass_spx.dylib",    // Speex decoder
-            "libbass_tta.dylib",    // TTA (True Audio) decoder
-            "libbasshls.dylib"      // HLS streaming support
+            "libbassflac.dylib",  // FLAC decoder
+            "libbassopus.dylib",  // Opus decoder
+            "libbasswebm.dylib",  // WebM/VP8/VP9 decoder
+            "libbasswv.dylib",  // WavPack decoder
+            "libbassape.dylib",  // APE (Monkey's Audio) decoder
+            "libbassdsd.dylib",  // DSD audio decoder
+            "libbassmidi.dylib",  // MIDI file decoder
+            "libbass_mpc.dylib",  // Musepack decoder
+            "libbass_spx.dylib",  // Speex decoder
+            "libbass_tta.dylib",  // TTA (True Audio) decoder
+            "libbasshls.dylib"  // HLS streaming support
         ]
 
         Logger.debug("Loading BASS decoder plugins from: \(frameworksPath)")

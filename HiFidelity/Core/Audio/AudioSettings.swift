@@ -6,11 +6,13 @@
 //
 
 import Foundation
-import Combine
+import Observation
 
 /// Audio settings manager with user-friendly options
 /// Settings are applied at runtime without requiring restart
-class AudioSettings: ObservableObject {
+@MainActor
+@Observable
+class AudioSettings {
     static let shared = AudioSettings()
 
     private let defaults = UserDefaults.standard
@@ -18,12 +20,12 @@ class AudioSettings: ObservableObject {
     // MARK: - Published Properties
 
     // Playback Settings (applied at runtime via BASS_ChannelSetAttribute)
-    @Published var playbackVolume: Double {
+    var playbackVolume: Double {
         didSet { save(playbackVolume, forKey: .playbackVolume) }
     }
 
     // Audio Quality Settings (BASS_SetConfig - applied immediately)
-    @Published var bufferLength: Int {
+    var bufferLength: Int {
         didSet {
             save(bufferLength, forKey: .bufferLength)
             postNotification()
@@ -32,7 +34,7 @@ class AudioSettings: ObservableObject {
 
     // DAC/Hog Mode with Native Sample Rate Synchronization
     // Not persisted - resets on app restart for safety
-    @Published var synchronizeSampleRate: Bool = false {
+    var synchronizeSampleRate: Bool = false {
         didSet {
             postNotification()
         }

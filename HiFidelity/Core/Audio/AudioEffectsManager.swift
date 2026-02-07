@@ -6,13 +6,15 @@
 //
 
 import Foundation
+import Observation
 import Bass
-import Combine
 import BassFX
 
 /// Manages audio effects (DSP) for the current audio stream
 /// Supports built-in BASS FX and custom DSP processing
-class AudioEffectsManager: ObservableObject {
+@MainActor
+@Observable
+class AudioEffectsManager {
     static let shared = AudioEffectsManager()
 
     internal let defaults = UserDefaults.standard
@@ -20,17 +22,17 @@ class AudioEffectsManager: ObservableObject {
 
     // MARK: - Properties
 
-    @Published var isEqualizerEnabled = false {
+    var isEqualizerEnabled = false {
         didSet { if !isLoadingSettings { saveSettings() } }
     }
 
     // Equalizer bands (10-band graphic equalizer)
     // Frequencies: 32, 64, 125, 250, 500, 1K, 2K, 4K, 8K, 16K Hz
-    @Published var equalizerBands: [Float] = Array(repeating: 0.0, count: 10) {
+    var equalizerBands: [Float] = Array(repeating: 0.0, count: 10) {
         didSet { if !isLoadingSettings { saveSettings() } }
     }
 
-    @Published var preampGain: Double = 0.0 {
+    var preampGain: Double = 0.0 {
         didSet {
             if !isLoadingSettings {
                 applyPreamp()
@@ -40,20 +42,20 @@ class AudioEffectsManager: ObservableObject {
     }
 
     // Reverb settings
-    @Published var isReverbEnabled = false {
+    var isReverbEnabled = false {
         didSet { if !isLoadingSettings { saveSettings() } }
     }
 
-    @Published var reverbMix: Float = -12.0 {
+    var reverbMix: Float = -12.0 {
         didSet { if !isLoadingSettings { saveSettings() } }
     }
 
     // Custom preset management
-    @Published var customPresets: [CustomEQPreset] = []
+    var customPresets: [CustomEQPreset] = []
 
     // Current preset tracking
-    @Published var currentPresetName: String = "Flat"
-    @Published var currentPresetType: PresetType = .builtin
+    var currentPresetName: String = "Flat"
+    var currentPresetType: PresetType = .builtin
 
     // Effect handles (for removing effects later)
     internal var activeEffects: [String: HFX] = [:]

@@ -25,8 +25,10 @@ extension BASSAudioEngine {
             isInitialized = false
 
             // Release hog mode
-            if dacManager.isInHogMode() {
-                dacManager.disableHogMode()
+            Task { @MainActor in
+                if self.dacManager.isInHogMode() {
+                    self.dacManager.disableHogMode()
+                }
             }
 
             Logger.info("BASS audio engine cleaned up")

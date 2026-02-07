@@ -11,6 +11,7 @@ import Bass        // Core BASS audio library
 
 /// BASS audio engine for high-quality audio playback
 /// Uses BASS library from un4seen.com via CBass Swift wrapper
+@MainActor
 class BASSAudioEngine {
     // MARK: - Properties
 
@@ -18,9 +19,9 @@ class BASSAudioEngine {
     internal var nextStream: HSTREAM = 0  // For gapless playback
     internal var isInitialized = false
     internal var loadedPlugins: [HPLUGIN] = []
-    internal let settings = AudioSettings.shared
-    internal let effectsManager = AudioEffectsManager.shared
-    internal let dacManager = DACManager.shared
+    @MainActor internal var settings: AudioSettings { AudioSettings.shared }
+    @MainActor internal var effectsManager: AudioEffectsManager { AudioEffectsManager.shared }
+    @MainActor internal var dacManager: DACManager { DACManager.shared }
 
     weak var delegate: BASSAudioEngineDelegate?
 
@@ -31,8 +32,10 @@ class BASSAudioEngine {
         observeSettingsChanges()
     }
 
-    deinit {
-        cleanup()
+    nonisolated deinit {
+        MainActor.assumeIsolated {
+            cleanup()
+        }
     }
 
 }

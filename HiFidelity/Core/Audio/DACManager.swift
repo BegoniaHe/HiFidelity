@@ -5,10 +5,10 @@
 //  Created for HiFidelity
 //
 
-import Foundation
-import CoreAudio
 import AudioToolbox
-import Combine
+import CoreAudio
+import Foundation
+import Observation
 
 /// Represents an audio output device
 struct AudioOutputDevice: Identifiable, Equatable {
@@ -25,13 +25,15 @@ struct AudioOutputDevice: Identifiable, Equatable {
 
 /// Manages macOS Audio Device (DAC) in Hog Mode for exclusive, bit-perfect playback
 /// Hog mode gives the application exclusive access to the audio device
-class DACManager: ObservableObject {
+@MainActor
+@Observable
+class DACManager {
     static let shared = DACManager()
 
-    @Published private(set) var currentDeviceID: AudioDeviceID = 0
-    @Published private(set) var availableDevices: [AudioOutputDevice] = []
-    @Published private(set) var currentDevice: AudioOutputDevice?
-    @Published private(set) var deviceWasRemoved: Bool = false
+    private(set) var currentDeviceID: AudioDeviceID = 0
+    private(set) var availableDevices: [AudioOutputDevice] = []
+    private(set) var currentDevice: AudioOutputDevice?
+    private(set) var deviceWasRemoved: Bool = false
 
     private var isHogging = false
     private var deviceListListenerProc: AudioObjectPropertyListenerProc?
@@ -42,8 +44,10 @@ class DACManager: ObservableObject {
         setupDeviceChangeListener()
     }
 
-    deinit {
-        removeDeviceChangeListener()
+    nonisolated deinit {
+        Task { @MainActor [weak self] in
+            self?.removeDeviceChangeListener()
+        }
     }
 
     // MARK: - Device Management
@@ -145,7 +149,8 @@ class DACManager: ObservableObject {
         }
 
         isHogging = true
-        Logger.info("Hog mode enabled on device \(currentDeviceID) - BASS handles sample rate conversion")
+        Logger.info(
+            "Hog mode enabled on device \(currentDeviceID) - BASS handles sample rate conversion")
         // Notify that device needs reacquisition in BASS
         NotificationCenter.default.post(name: .audioDeviceNeedsReacquisition, object: nil)
 
@@ -422,7 +427,8 @@ extension DACManager {
 
         // Get previous device list
         let previousDeviceIDs = Set(availableDevices.map { $0.id })
-        Logger.info("Previous device IDs: \(previousDeviceIDs), current device ID: \(currentDeviceID)")
+        Logger.info(
+            "Previous device IDs: \(previousDeviceIDs), current device ID: \(currentDeviceID)")
 
         // Refresh device list
         refreshDeviceList()
@@ -437,7 +443,9 @@ extension DACManager {
         // If the CURRENT device is in the "removed" list, double-check if it's actually gone from the system.
         if currentDeviceID != 0 && removedDevices.contains(currentDeviceID) {
             if doesDeviceIDExist(currentDeviceID) {
-                Logger.info("⚠️ Device \(currentDeviceID) lost output streams but is still attached. Ignoring removal event.")
+                Logger.info(
+                    "⚠️ Device \(currentDeviceID) lost output streams but is still attached. Ignoring removal event."
+                )
                 // Determine if we should pause playback or just wait.
                 // For now, we simply return to prevent the "Device Removed" shutdown logic.
                 return
@@ -446,9 +454,10 @@ extension DACManager {
 
         // Check if current device was removed
         // Handle two cases: 1) explicit device ID removed, 2) currentDeviceID is 0/invalid and devices were removed
-        if (currentDeviceID != 0 && removedDevices.contains(currentDeviceID)) ||
-           (currentDeviceID == 0 && !removedDevices.isEmpty && !previousDeviceIDs.isEmpty) {
-            Logger.warning("⚠️ Current audio device (ID: \(currentDeviceID)) was removed or invalid!")
+        if (currentDeviceID != 0 && removedDevices.contains(currentDeviceID))
+            || (currentDeviceID == 0 && !removedDevices.isEmpty && !previousDeviceIDs.isEmpty) {
+            Logger.warning(
+                "⚠️ Current audio device (ID: \(currentDeviceID)) was removed or invalid!")
             handleCurrentDeviceRemoved()
         } else if !removedDevices.isEmpty {
             Logger.debug("Removed devices: \(removedDevices) (not current device)")
@@ -457,7 +466,7 @@ extension DACManager {
         // Check for added devices
         let addedDevices = currentDeviceIDs.subtracting(previousDeviceIDs)
         if !addedDevices.isEmpty {
-            Logger.info("✓ \(addedDevices.count) new audio device(s) detected")
+            Logger.info("\(addedDevices.count) new audio device(s) detected")
         }
 
         if !removedDevices.isEmpty {
@@ -497,7 +506,7 @@ extension DACManager {
         if defaultDeviceID != 0 {
             // Build device info for the new default device
             if let deviceName = getDeviceNameForID(defaultDeviceID),
-               let deviceUID = getDeviceUIDForID(defaultDeviceID) {
+                let deviceUID = getDeviceUIDForID(defaultDeviceID) {
 
                 let sampleRate = getCurrentSampleRateForDevice(defaultDeviceID)
                 let channels = getChannelCountForDevice(defaultDeviceID)
@@ -512,7 +521,8 @@ extension DACManager {
 
                 Logger.info("Auto-switching to default device: \(newDevice.name)")
                 if wasHogging {
-                    Logger.info("Sample rate synchronization was disabled - re-enable manually if needed")
+                    Logger.info(
+                        "Sample rate synchronization was disabled - re-enable manually if needed")
                 }
 
                 // Update device on main thread (for UI updates) and post notification
@@ -526,14 +536,18 @@ extension DACManager {
 
                     // Wait a bit for device to stabilize, then notify BASS
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                        Logger.info("Posting audioDeviceChanged notification for: \(newDevice.name)")
-                        NotificationCenter.default.post(name: .audioDeviceChanged, object: newDevice)
+                        Logger.info(
+                            "Posting audioDeviceChanged notification for: \(newDevice.name)")
+                        NotificationCenter.default.post(
+                            name: .audioDeviceChanged, object: newDevice)
                         self?.deviceWasRemoved = false
                     }
                 }
             } else {
                 // Couldn't get info for "default" device - fallback to first available device
-                Logger.warning("Could not get info for default device ID: \(defaultDeviceID), using first available device")
+                Logger.warning(
+                    "Could not get info for default device ID: \(defaultDeviceID), using first available device"
+                )
 
                 if let firstDevice = availableDevices.first {
                     Logger.info("Auto-switching to first available device: \(firstDevice.name)")
@@ -545,8 +559,10 @@ extension DACManager {
                         self.currentDevice = firstDevice
 
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                            Logger.info("Posting audioDeviceChanged notification for: \(firstDevice.name)")
-                            NotificationCenter.default.post(name: .audioDeviceChanged, object: firstDevice)
+                            Logger.info(
+                                "Posting audioDeviceChanged notification for: \(firstDevice.name)")
+                            NotificationCenter.default.post(
+                                name: .audioDeviceChanged, object: firstDevice)
                             self?.deviceWasRemoved = false
                         }
                     }
@@ -560,7 +576,8 @@ extension DACManager {
             }
         } else {
             // System returned 0 for default device - wait and retry
-            Logger.warning("No default device available yet (ID=0), waiting for system to stabilize...")
+            Logger.warning(
+                "No default device available yet (ID=0), waiting for system to stabilize...")
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
                 guard let self = self else { return }
@@ -572,24 +589,29 @@ extension DACManager {
                     Logger.info("Default device now available: \(retryDefaultID), retrying switch")
                     self.refreshDeviceList()
 
-                    if let newDevice = self.availableDevices.first(where: { $0.id == retryDefaultID }) {
+                    if let newDevice = self.availableDevices.first(where: {
+                        $0.id == retryDefaultID
+                    }) {
                         self.currentDeviceID = retryDefaultID
                         self.currentDevice = newDevice
                         Logger.info("Successfully switched to: \(newDevice.name)")
 
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-                            NotificationCenter.default.post(name: .audioDeviceChanged, object: newDevice)
+                            NotificationCenter.default.post(
+                                name: .audioDeviceChanged, object: newDevice)
                             self?.deviceWasRemoved = false
                         }
                     }
                 } else if let firstDevice = self.availableDevices.first {
                     // Still no default, use first available
-                    Logger.warning("Still no default device, using first available: \(firstDevice.name)")
+                    Logger.warning(
+                        "Still no default device, using first available: \(firstDevice.name)")
                     self.currentDeviceID = firstDevice.id
                     self.currentDevice = firstDevice
 
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-                        NotificationCenter.default.post(name: .audioDeviceChanged, object: firstDevice)
+                        NotificationCenter.default.post(
+                            name: .audioDeviceChanged, object: firstDevice)
                         self?.deviceWasRemoved = false
                     }
                 } else {
@@ -661,7 +683,8 @@ extension DACManager {
             }
 
             guard let name = getDeviceNameForID(deviceID),
-                  let uid = getDeviceUIDForID(deviceID) else {
+                let uid = getDeviceUIDForID(deviceID)
+            else {
                 continue
             }
 
@@ -850,7 +873,7 @@ extension DACManager {
         )
 
         guard status == noErr, propertySize > 0 else {
-            return 2 // Default to stereo
+            return 2  // Default to stereo
         }
 
         let bufferListSize = Int(propertySize)
@@ -867,7 +890,7 @@ extension DACManager {
         )
 
         guard status == noErr else {
-            return 2 // Default to stereo
+            return 2  // Default to stereo
         }
 
         let bufferList = bufferListPointer.withMemoryRebound(to: AudioBufferList.self, capacity: 1) { $0.pointee }
@@ -876,7 +899,8 @@ extension DACManager {
         let numBuffers = Int(bufferList.mNumberBuffers)
 
         if numBuffers > 0 {
-            bufferListPointer.withMemoryRebound(to: AudioBufferList.self, capacity: 1) { bufferListPointer in
+            bufferListPointer.withMemoryRebound(to: AudioBufferList.self, capacity: 1) {
+                bufferListPointer in
                 let buffersPointer = UnsafeMutableAudioBufferListPointer(bufferListPointer)
                 for buffer in buffersPointer {
                     totalChannels += Int(buffer.mNumberChannels)
@@ -907,7 +931,9 @@ extension DACManager {
             Logger.debug("Current device ID \(currentDeviceID) no longer available")
         }
 
-        Logger.debug("Found \(availableDevices.count) output devices, current: \(currentDevice?.name ?? "none")")
+        Logger.debug(
+            "Found \(availableDevices.count) output devices, current: \(currentDevice?.name ?? "none")"
+        )
     }
 
     /// Switch to a different audio device
@@ -924,7 +950,9 @@ extension DACManager {
         let wasHogging = isHogging
         if wasHogging {
             disableHogMode()
-            Logger.info("Sample rate synchronization disabled - re-enable manually if needed for new device")
+            Logger.info(
+                "Sample rate synchronization disabled - re-enable manually if needed for new device"
+            )
         }
 
         // Update device state on main thread and notify observers

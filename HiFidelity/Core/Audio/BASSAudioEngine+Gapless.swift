@@ -4,8 +4,19 @@
 //  Gapless playback support
 //
 
-import Foundation
 import Bass
+import Foundation
+
+private func bassGaplessTransitionCallback(
+    _: DWORD, _: DWORD, _: DWORD, _: UnsafeMutableRawPointer?
+) {
+    Task { @MainActor in
+        NotificationCenter.default.post(
+            name: .bassGaplessTransition,
+            object: nil
+        )
+    }
+}
 
 extension BASSAudioEngine {
     // MARK: - Gapless Playback
@@ -37,7 +48,7 @@ extension BASSAudioEngine {
             path,
             0,
             0,
-            DWORD(BASS_STREAM_PRESCAN) // Use native bit depth from source file
+            DWORD(BASS_STREAM_PRESCAN)  // Use native bit depth from source file
         )
 
         if nextStream == 0 {
@@ -47,7 +58,8 @@ extension BASSAudioEngine {
         }
 
         // Get next stream's sample rate and prepare device switch if needed
-        if settings.synchronizeSampleRate {
+        let syncSampleRate = settings.synchronizeSampleRate
+        if syncSampleRate {
             var info = BASS_CHANNELINFO()
             if BASS_ChannelGetInfo(nextStream, &info) != 0 {
                 Logger.debug("Next track: \(info.freq) Hz, \(info.chans) channels")
@@ -74,7 +86,7 @@ extension BASSAudioEngine {
         guard duration != QWORD(bitPattern: -1) else { return }
 
         // Convert 50ms to bytes
-        let triggerOffset = BASS_ChannelSeconds2Bytes(currentStream, 0.05) // 50ms before end
+        let triggerOffset = BASS_ChannelSeconds2Bytes(currentStream, 0.05)  // 50ms before end
         let triggerPosition = duration > triggerOffset ? duration - triggerOffset : duration
 
         // Set position-based sync to trigger just before track ends
@@ -82,18 +94,12 @@ extension BASSAudioEngine {
             currentStream,
             DWORD(BASS_SYNC_POS),
             triggerPosition,
-            { _, _, _, _ in
-                // This callback fires 50ms before the track ends
-                // Post notification to switch to next track
-                NotificationCenter.default.post(
-                    name: .bassGaplessTransition,
-                    object: nil
-                )
-            },
+            bassGaplessTransitionCallback,
             nil
         )
 
-        Logger.debug("Gapless transition sync set at position: \(triggerPosition) bytes (50ms before end)")
+        Logger.debug(
+            "Gapless transition sync set at position: \(triggerPosition) bytes (50ms before end)")
     }
 
     /// Switch to the pre-loaded next track (gapless transition)
@@ -122,9 +128,11 @@ extension BASSAudioEngine {
                 if BASS_ChannelGetInfo(currentStream, &currentInfo) != 0 {
                     if currentInfo.freq != info.freq {
                         needsSampleRateSwitch = true
-                        Logger.debug("Sample rate change needed: \(currentInfo.freq) Hz -> \(info.freq) Hz")
+                        Logger.debug(
+                            "Sample rate change needed: \(currentInfo.freq) Hz -> \(info.freq) Hz")
                     } else {
-                        Logger.debug("Sample rate unchanged: \(info.freq) Hz - no device switch needed")
+                        Logger.debug(
+                            "Sample rate unchanged: \(info.freq) Hz - no device switch needed")
                     }
                 }
             }
@@ -136,7 +144,9 @@ extension BASSAudioEngine {
         // Prepare the next stream completely BEFORE switching
         // Apply volume and effects to next stream
         BASS_ChannelSetAttribute(nextStream, DWORD(BASS_ATTRIB_VOL), volume)
-        effectsManager.setStream(nextStream)
+        Task { @MainActor in
+            self.effectsManager.setStream(nextStream)
+        }
 
         // CRITICAL: Do atomic switch - stop current and start next with minimal gap
         // Store the old stream handle
@@ -171,10 +181,13 @@ extension BASSAudioEngine {
         // Switch device sample rate if needed (do this AFTER starting playback to minimize gap)
         // This only happens when sync mode is ON and the rate is different
         if needsSampleRateSwitch {
-            if dacManager.setDeviceSampleRate(targetRate) {
-                Logger.info("✓ Device switched to \(Int(targetRate)) Hz for bit-perfect playback")
-            } else {
-                Logger.warning("Could not switch device rate - BASS will resample")
+            Task { @MainActor in
+                if self.dacManager.setDeviceSampleRate(targetRate) {
+                    Logger.info(
+                        "✓ Device switched to \(Int(targetRate)) Hz for bit-perfect playback")
+                } else {
+                    Logger.warning("Could not switch device rate - BASS will resample")
+                }
             }
         }
 

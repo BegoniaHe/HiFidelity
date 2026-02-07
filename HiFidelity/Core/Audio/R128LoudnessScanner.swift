@@ -6,21 +6,24 @@
 //
 
 import Foundation
+import Observation
 import Bass
 import GRDB
 
 /// Service for scanning audio files and calculating EBU R128 loudness
 /// This analyzes tracks to determine their integrated loudness (LUFS)
-class R128LoudnessScanner: ObservableObject {
+@MainActor
+@Observable
+class R128LoudnessScanner {
     static let shared = R128LoudnessScanner()
 
     // MARK: - Published Properties
 
-    @Published var isScanning: Bool = false
-    @Published var currentTrack: Track?
-    @Published var scannedCount: Int = 0
-    @Published var totalCount: Int = 0
-    @Published var progress: Double = 0.0
+    var isScanning: Bool = false
+    var currentTrack: Track?
+    var scannedCount: Int = 0
+    var totalCount: Int = 0
+    var progress: Double = 0.0
 
     // MARK: - Private Properties
 
@@ -113,13 +116,11 @@ class R128LoudnessScanner: ObservableObject {
         scanningTask?.cancel()
         scanningTask = nil
 
-        Task { @MainActor in
-            isScanning = false
-            currentTrack = nil
-            scannedCount = 0
-            totalCount = 0
-            progress = 0.0
-        }
+        isScanning = false
+        currentTrack = nil
+        scannedCount = 0
+        totalCount = 0
+        progress = 0.0
 
         Logger.info("R128 scan canceled")
     }
@@ -127,11 +128,9 @@ class R128LoudnessScanner: ObservableObject {
     // MARK: - Private Methods
 
     private func performLibraryScan() async {
-        await MainActor.run {
-            isScanning = true
-            scannedCount = 0
-            progress = 0.0
-        }
+        isScanning = true
+        scannedCount = 0
+        progress = 0.0
 
         Logger.info("Starting R128 library scan")
 
@@ -143,7 +142,7 @@ class R128LoudnessScanner: ObservableObject {
                 .fetchAll(db)
         }) else {
             Logger.error("Failed to fetch tracks for R128 scan")
-            await MainActor.run { isScanning = false }
+            isScanning = false
             return
         }
 
@@ -151,12 +150,10 @@ class R128LoudnessScanner: ObservableObject {
     }
 
     private func performScan(tracks: [Track]) async {
-        await MainActor.run {
-            isScanning = true
-            totalCount = tracks.count
-            scannedCount = 0
-            progress = 0.0
-        }
+        isScanning = true
+        totalCount = tracks.count
+        scannedCount = 0
+        progress = 0.0
 
         Logger.info("Scanning \(tracks.count) tracks for R128 loudness")
 
@@ -167,9 +164,7 @@ class R128LoudnessScanner: ObservableObject {
                 break
             }
 
-            await MainActor.run {
-                currentTrack = track
-            }
+            currentTrack = track
 
             // Analyze track
             if let loudnessData = await analyzeTrack(track) {
@@ -182,26 +177,22 @@ class R128LoudnessScanner: ObservableObject {
             }
 
             // Update progress
-            await MainActor.run {
-                scannedCount = index + 1
-                progress = Double(scannedCount) / Double(totalCount)
-            }
+            scannedCount = index + 1
+            progress = Double(scannedCount) / Double(totalCount)
         }
 
-        await MainActor.run {
-            isScanning = false
-            currentTrack = nil
+        isScanning = false
+        currentTrack = nil
 
-            // Show completion notification
-            if scannedCount > 0 {
-                NotificationManager.shared.addMessage(
-                    .info,
-                    "R128 scan completed: \(scannedCount) track\(scannedCount == 1 ? "" : "s") analyzed"
-                )
-            }
-
-            Logger.info("R128 scan completed: \(scannedCount)/\(totalCount) tracks")
+        // Show completion notification
+        if scannedCount > 0 {
+            NotificationManager.shared.addMessage(
+                .info,
+                "R128 scan completed: \(scannedCount) track\(scannedCount == 1 ? "" : "s") analyzed"
+            )
         }
+
+        Logger.info("R128 scan completed: \(scannedCount)/\(totalCount) tracks")
     }
 
     /// Analyze a single track for R128 loudness

@@ -6,11 +6,13 @@
 //
 
 import Foundation
-import Combine
+import Observation
 
 /// ReplayGain settings and calculation
 /// Implements replay gain normalization for consistent playback loudness
-class ReplayGainSettings: ObservableObject {
+@MainActor
+@Observable
+class ReplayGainSettings {
     static let shared = ReplayGainSettings()
 
     private let defaults = UserDefaults.standard
@@ -18,7 +20,7 @@ class ReplayGainSettings: ObservableObject {
     // MARK: - Published Properties
 
     /// Enable/disable replay gain
-    @Published var isEnabled: Bool {
+    var isEnabled: Bool {
         didSet {
             save(isEnabled, forKey: .enabled)
             postNotification()
@@ -26,7 +28,7 @@ class ReplayGainSettings: ObservableObject {
     }
 
     /// Replay gain mode: track or album
-    @Published var mode: ReplayGainMode {
+    var mode: ReplayGainMode {
         didSet {
             save(mode.rawValue, forKey: .mode)
             postNotification()
@@ -34,7 +36,7 @@ class ReplayGainSettings: ObservableObject {
     }
 
     /// Loudness source preference
-    @Published var source: LoudnessSource {
+    var source: LoudnessSource {
         didSet {
             save(source.rawValue, forKey: .source)
             postNotification()

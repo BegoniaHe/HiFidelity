@@ -81,4 +81,5 @@ enum BASSError: Int {
 extension Notification.Name {
     static let bassStreamEnded = Notification.Name("BASSStreamEnded")
     static let bassGaplessTransition = Notification.Name("BASSGaplessTransition")
+    static let streamInfoDidUpdate = Notification.Name("StreamInfoDidUpdate")
 }
