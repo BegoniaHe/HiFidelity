@@ -1,7 +1,798 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
 
+    },
+    "-%@" : {
+
+    },
+    "(%lld new)" : {
+
+    },
+    "(%lld)" : {
+
+    },
+    "*" : {
+
+    },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@ • %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ • %2$@"
+          }
+        }
+      }
+    },
+    "%@%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@%2$@ %3$@"
+          }
+        }
+      }
+    },
+    "%lld" : {
+
+    },
+    "%lld %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld %2$@"
+          }
+        }
+      }
+    },
+    "%lld albums" : {
+
+    },
+    "%lld artists" : {
+
+    },
+    "%lld dB" : {
+
+    },
+    "%lld genres" : {
+
+    },
+    "%lld Hz" : {
+
+    },
+    "%lld Hz • %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld Hz • %2$@"
+          }
+        }
+      }
+    },
+    "%lld MB" : {
+
+    },
+    "%lld ms" : {
+
+    },
+    "%lld results for \"%@\"" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld results for \"%2$@\""
+          }
+        }
+      }
+    },
+    "%lld selected" : {
+
+    },
+    "%lld tracks" : {
+
+    },
+    "%lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "%lld%%" : {
+
+    },
+    "•" : {
+
+    },
+    "• Sync Mode" : {
+
+    },
+    "⚠️ This will permanently delete all your library data including folders, tracks, and playlists." : {
+
+    },
+    "About HiFidelity" : {
+
+    },
+    "Accent Color Intensity" : {
+
+    },
+    "Add custom artwork to personalize your playlist" : {
+
+    },
+    "Add Folder" : {
+
+    },
+    "Add folders to build your music library" : {
+
+    },
+    "Add music folders to see your library here" : {
+
+    },
+    "Add to Favorites" : {
+
+    },
+    "Add to Playlist" : {
+
+    },
+    "Add to Queue" : {
+
+    },
+    "Add Your First Folder" : {
+
+    },
+    "Album '%@'" : {
+
+    },
+    "Analyzing: %@" : {
+
+    },
+    "Are you sure you want to delete '%@'? This action cannot be undone." : {
+
+    },
+    "Artist '%@'" : {
+
+    },
+    "Artwork" : {
+
+    },
+    "Artwork Cache Size" : {
+
+    },
+    "Ascending" : {
+
+    },
+    "Audio Effects & Equalizer" : {
+
+    },
+    "Audio Output Device" : {
+
+    },
+    "Automatic Folder Monitoring" : {
+
+    },
+    "Automatically download and install updates when available" : {
+
+    },
+    "Autoplay" : {
+
+    },
+    "Autoplay: Automatically add recommended tracks when queue ends" : {
+
+    },
+    "Back" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Change Image" : {
+
+    },
+    "Check for updates automatically" : {
+
+    },
+    "Check for Updates..." : {
+
+    },
+    "Choose Image" : {
+
+    },
+    "Choose your preferred color theme" : {
+
+    },
+    "Clear" : {
+
+    },
+    "Clear all notifications" : {
+
+    },
+    "Clear Filter" : {
+
+    },
+    "Close Mini Player" : {
+
+    },
+    "Color Scheme" : {
+
+    },
+    "Create New Playlist" : {
+
+    },
+    "Create Playlist" : {
+
+    },
+    "Creating..." : {
+
+    },
+    "Custom" : {
+
+    },
+    "Danger Zone" : {
+
+    },
+    "Database" : {
+
+    },
+    "Database Size" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Delete All" : {
+
+    },
+    "Delete Playlist" : {
+
+    },
+    "Delete Preset" : {
+
+    },
+    "Delete the current custom preset" : {
+
+    },
+    "Descending" : {
+
+    },
+    "Description" : {
+
+    },
+    "Deselect All" : {
+
+    },
+    "Disable Bit-Perfect Playback (Hog Mode Active)" : {
+
+    },
+    "Dismiss" : {
+
+    },
+    "Drop LRC file here" : {
+
+    },
+    "Enable Bit-Perfect Playback (Hog Mode Active)" : {
+
+    },
+    "Enable the equalizer to adjust frequency response" : {
+
+    },
+    "Enable to automatically update your library when files change" : {
+
+    },
+    "Enter a name for your custom equalizer preset" : {
+
+    },
+    "Equalizer" : {
+
+    },
+    "Equalizer Disabled" : {
+
+    },
+    "Error" : {
+
+    },
+    "Export as M3U" : {
+
+    },
+    "Export LRC File" : {
+
+    },
+    "Favorite" : {
+
+    },
+    "Filter" : {
+
+    },
+    "Float on Top" : {
+
+    },
+    "Get Info" : {
+
+    },
+    "Go to Album '%@'" : {
+
+    },
+    "Go to Artist '%@'" : {
+
+    },
+    "Go to Current Track" : {
+
+    },
+    "Go to Home" : {
+
+    },
+    "Hide Artwork" : {
+
+    },
+    "Import Folder" : {
+
+    },
+    "Import LRC File" : {
+
+    },
+    "Import M3U" : {
+
+    },
+    "Import playlists from folders (up to 25 folders)" : {
+
+    },
+    "Import playlists from M3U files (up to 25 files)" : {
+
+    },
+    "Import Success" : {
+
+    },
+    "Importing Music" : {
+
+    },
+    "Instrumental" : {
+
+    },
+    "Keep this playlist at the top of your library" : {
+
+    },
+    "Library Statistics" : {
+
+    },
+    "Loading albums..." : {
+
+    },
+    "Loading artists..." : {
+
+    },
+    "Loading folders..." : {
+
+    },
+    "Loading genres..." : {
+
+    },
+    "Loading tracks..." : {
+
+    },
+    "Loudness Analysis" : {
+
+    },
+    "LRC file has been imported successfully" : {
+
+    },
+    "Lyrics" : {
+
+    },
+    "Lyrics Imported" : {
+
+    },
+    "Master" : {
+
+    },
+    "Match All" : {
+
+    },
+    "Match ALL words (exact search)" : {
+
+    },
+    "Match Any" : {
+
+    },
+    "Match ANY word (broader results)" : {
+
+    },
+    "Memory limit for caching album artwork. Larger cache = smoother scrolling." : {
+
+    },
+    "Mini Player" : {
+
+    },
+    "Music Folders" : {
+
+    },
+    "My Awesome Playlist" : {
+
+    },
+    "My Presets" : {
+
+    },
+    "Name" : {
+
+    },
+    "New Playlist..." : {
+
+    },
+    "Next Track" : {
+
+    },
+    "No lyrics available" : {
+
+    },
+    "No Music Folders" : {
+
+    },
+    "No notifications" : {
+
+    },
+    "No output devices found" : {
+
+    },
+    "No playlists" : {
+
+    },
+    "No playlists found" : {
+
+    },
+    "No playlists yet\nCreate your first playlist" : {
+
+    },
+    "No results found" : {
+
+    },
+    "No Track Playing" : {
+
+    },
+    "No Track Selected" : {
+
+    },
+    "No Tracks" : {
+
+    },
+    "No tracks found" : {
+
+    },
+    "No Upcoming Songs" : {
+
+    },
+    "Not Playing" : {
+
+    },
+    "Notifications" : {
+
+    },
+    "OK" : {
+
+    },
+    "Opaque Background" : {
+
+    },
+    "Optimize" : {
+
+    },
+    "Optimizing..." : {
+
+    },
+    "Options" : {
+
+    },
+    "OR" : {
+
+    },
+    "or drag and drop an LRC file here" : {
+
+    },
+    "Pause" : {
+
+    },
+    "Performance" : {
+
+    },
+    "Pin to Top" : {
+
+    },
+    "Plain" : {
+
+    },
+    "Play" : {
+
+    },
+    "Play a song to get started" : {
+
+    },
+    "Play a song to see lyrics" : {
+
+    },
+    "Play a song to see the lyrics here." : {
+
+    },
+    "Play Next" : {
+
+    },
+    "Play Now" : {
+
+    },
+    "Playback" : {
+
+    },
+    "Playlist • %lld %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Playlist • %1$lld %2$@"
+          }
+        }
+      }
+    },
+    "Playlists" : {
+
+    },
+    "Power" : {
+
+    },
+    "Preset" : {
+
+    },
+    "Preset Manager" : {
+
+    },
+    "Preset Name" : {
+
+    },
+    "Previous Track" : {
+
+    },
+    "Queue" : {
+
+    },
+    "Queue is empty" : {
+
+    },
+    "Queue is empty. Play something to get started." : {
+
+    },
+    "Rebuild FTS" : {
+
+    },
+    "Rebuild full-text search indexes to apply enhanced search configuration" : {
+
+    },
+    "Rebuild full-text search tables for better results" : {
+
+    },
+    "Rebuilding..." : {
+
+    },
+    "Refresh Library" : {
+
+    },
+    "Release to import lyrics" : {
+
+    },
+    "Relocate folder if moved" : {
+
+    },
+    "Remove" : {
+
+    },
+    "Remove All" : {
+
+    },
+    "Remove All Folders?" : {
+
+    },
+    "Remove folder" : {
+
+    },
+    "Remove Folder?" : {
+
+    },
+    "Remove from Favorites" : {
+
+    },
+    "Remove from Playlist" : {
+
+    },
+    "Remove from Queue" : {
+
+    },
+    "Remove Lyrics" : {
+
+    },
+    "Repeat" : {
+
+    },
+    "Reset" : {
+
+    },
+    "Reset All" : {
+
+    },
+    "Reset Database" : {
+
+    },
+    "Reset Database?" : {
+
+    },
+    "Reset preamp and all EQ bands to 0 dB" : {
+
+    },
+    "Reset to Defaults" : {
+
+    },
+    "Right-click any track and select 'Get Info' to see detailed information." : {
+
+    },
+    "Save" : {
+
+    },
+    "Save current equalizer settings as a custom preset" : {
+
+    },
+    "Save Custom Preset" : {
+
+    },
+    "Save Preset" : {
+
+    },
+    "Scan All" : {
+
+    },
+    "Scan folder" : {
+
+    },
+    "Scan Library" : {
+
+    },
+    "Scan R128 Loudness" : {
+
+    },
+    "Scan your library to calculate EBU R128 loudness for accurate normalization" : {
+
+    },
+    "Search Index" : {
+
+    },
+    "Search Online" : {
+
+    },
+    "Search playlists" : {
+
+    },
+    "Search Results" : {
+
+    },
+    "Searching..." : {
+
+    },
+    "Seek Backward" : {
+
+    },
+    "Seek Forward" : {
+
+    },
+    "Select a track to play" : {
+
+    },
+    "Select All" : {
+
+    },
+    "Select Audio Output Device" : {
+
+    },
+    "Select Multiple" : {
+
+    },
+    "Select Playlists" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Show Artwork" : {
+
+    },
+    "Show in Finder" : {
+
+    },
+    "Shuffle" : {
+
+    },
+    "Sort by" : {
+
+    },
+    "Sort order" : {
+
+    },
+    "Sort Playlists" : {
+
+    },
+    "Synced" : {
+
+    },
+    "Theme" : {
+
+    },
+    "This %@ has no tracks" : {
+
+    },
+    "This Track" : {
+
+    },
+    "This will delete all your music library data. This action cannot be undone." : {
+
+    },
+    "This will remove '%@' from your library. This cannot be undone." : {
+
+    },
+    "This will remove all %lld folders from your library. This cannot be undone." : {
+
+    },
+    "Toggle Repeat" : {
+
+    },
+    "Toggle Shuffle" : {
+
+    },
+    "Track Info" : {
+
+    },
+    "Transparent Background" : {
+
+    },
+    "Try a different search term" : {
+
+    },
+    "Unpin" : {
+
+    },
+    "View Details" : {
+
+    },
+    "View on GitHub" : {
+
+    },
+    "Volume Down" : {
+
+    },
+    "Volume Up" : {
+
+    },
+    "Watching %lld folder%@ for changes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Watching %1$lld folder%2$@ for changes"
+          }
+        }
+      }
+    },
+    "What do you want to play?" : {
+
+    }
   },
   "version" : "1.1"
 }
