@@ -1,4 +1,5 @@
 # HiFidelity
+
 <img width="170" src="./HiFidelity/Assets.xcassets/AppIcon.appiconset/Icon-macOS-Dark-512x512@1x.png" alt="HiFidelity App Icon" align="left"/>
 
 <div>
@@ -30,31 +31,29 @@
   </a>
 </p>
 
-
-
 ![HiFidelity Music Player](docs/images/musicPlayer.png)
-
 
 ---
 
 ## Guide for DMG Installation
 
 > [!IMPORTANT]
->  
-> After you install the Application and try to open it, you will see message like this: *Apple could not verify “HiFidelity.app” is free of malware that may harm your Mac or compromise your privacy.*
+>
+> After you install the Application and try to open it, you will see message like this: _Apple could not verify “HiFidelity.app” is free of malware that may harm your Mac or compromise your privacy._
 >
 > ## Solution
+>
 > you have to bypass Gatekeeper for this (I don't want to pay apple for opensource apps)
 > This will solve the occupation issue
-> 
-> ` xattr -d com.apple.quarantine /Applications/HiFidelity.app` 
+>
+> ` xattr -d com.apple.quarantine /Applications/HiFidelity.app`
 
 ## ✨ Features
 
 - Powered by the BASS (un4seen) audio library for professional-grade audio quality and TagLib for meta-data reading
 - Support for 10+ audio formats including lossless and high-resolution files
-  - **Lossless & Hi-Res**: FLAC, OGA, WAV, AIFF, AIF, APE, WV, TTA, DFF, DSF  
-  - **Compressed**: MP3, MP2, AAC, OGG, OPUS, M4A, M4B, M4P, MP4, M4V, MPC  
+  - **Lossless & Hi-Res**: FLAC, OGA, WAV, AIFF, AIF, APE, WV, TTA, DFF, DSF
+  - **Compressed**: MP3, MP2, AAC, OGG, OPUS, M4A, M4B, M4P, MP4, M4V, MPC
   - **Specialized**: CAF, WEBM, SPX
 - **Bit-perfect playback** with sample rate synchronization and Obtain Exclusive Access of audio device **(Hog mode)**
 - **Gapless Playback**: Seamless transitions between tracks with no silence or interruption
@@ -77,21 +76,21 @@
 
 - ~~Automatic scanning and updating of the music library~~ ( ✅ [1.0.4](https://github.com/rvarunrathod/HiFidelity/releases/tag/v1.0.4) )
 - ~~A compact Mini Player mode~~ ( ✅ [1.0.5](https://github.com/rvarunrathod/HiFidelity/releases/tag/v1.0.5) )
-- ~~Let user change audio output device from UI~~ ( ✅ [1.0.6](https://github.com/rvarunrathod/HiFidelity/releases/tag/v1.0.6) ) 
-- ~~ReplayGain and volume normalization~~ ( ✅ [1.0.8](https://github.com/rvarunrathod/HiFidelity/releases/tag/v1.0.8) ) 
+- ~~Let user change audio output device from UI~~ ( ✅ [1.0.6](https://github.com/rvarunrathod/HiFidelity/releases/tag/v1.0.6) )
+- ~~ReplayGain and volume normalization~~ ( ✅ [1.0.8](https://github.com/rvarunrathod/HiFidelity/releases/tag/v1.0.8) )
 - Audio visualizers (waveform / spectrum)
-- ... 
+- ...
 
 ## 📷 Screenshots & Demos
 
 #### Audio Features
+
 <div align="center">
   <img src="docs/images/Equalizer.png" alt="Equalizer" width="600" style="margin: 10px;">
 </div>
 
-
-
 #### Smart Features & Demos
+
 <div align="center">
   <table border="0">
     <tr>
@@ -120,7 +119,7 @@
 ## 🛠 Requirements
 
 - **macOS 14.0** (Sonoma) or later
-- Apple Silicon or Intel Macs 
+- Apple Silicon or Intel Macs
 
 ## 📥 Installation
 
@@ -132,18 +131,18 @@ brew install --cask rvarunrathod/tap/hifidelity
 ```
 
 #### Download for macOS
-  
+
 - You can download the latest signed macOS build from the Releases page:
 - **[Download Latest Release](https://github.com/rvarunrathod/HiFidelity/releases/latest)**
 - After downloading, move **HiFidelity.app** to your **Applications** folder.
-  
+
 #### First Launch?
 
 1. Open **Settings → Library** Add folders containing your music files.
 2. HiFidelity will automatically scan and import your music.
 3. Start enjoying your music collection!
 
-## ⚡ Development 
+## ⚡ Development
 
 - Make sure you’re running macOS 14 or later
 - Clone the repository
@@ -163,7 +162,7 @@ brew install --cask rvarunrathod/tap/hifidelity
 - [**TagLib**](https://taglib.org/): Metadata extraction
 - [**GRDB**](https://github.com/groue/GRDB.swift): Fast, reliable local database
 - [**Sparkle**](https://github.com/sparkle-project/Sparkle): A software update framework for macOS
-- [**Lrclib**](https://lrclib.net/): Utility for mass-downloading LRC synced lyrics for your offline music library. 
+- [**Lrclib**](https://lrclib.net/): Utility for mass-downloading LRC synced lyrics for your offline music library.
 
 ---
 
