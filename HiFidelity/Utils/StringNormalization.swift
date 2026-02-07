@@ -20,7 +20,7 @@ extension String {
     /// - Removes special characters
     var normalized: String {
         var result = self.trimmingCharacters(in: .whitespacesAndNewlines)
-        
+
         // Remove leading articles (English only for search)
         let articles = ["the ", "a ", "an "]
         let lowerResult = result.lowercased()
@@ -30,42 +30,42 @@ extension String {
                 break
             }
         }
-        
+
         // Unicode NFC normalization (ensures consistent representation)
         result = result.precomposedStringWithCanonicalMapping
-        
+
         // Case folding (handles special cases like German ß → ss)
         result = result.folding(options: .caseInsensitive, locale: nil)
-        
+
         // Remove diacritics (é → e, ñ → n)
         result = result.folding(options: .diacriticInsensitive, locale: nil)
-        
+
         // Normalize common punctuation
         result = result
             .replacingOccurrences(of: "&", with: "and")
             .replacingOccurrences(of: "+", with: "plus")
             .replacingOccurrences(of: "'", with: "")
             .replacingOccurrences(of: "'", with: "")
-        
+
         // Remove special characters, keep only alphanumeric and spaces
         result = result.components(separatedBy: CharacterSet.alphanumerics.union(.whitespaces).inverted)
             .joined(separator: " ")
-        
+
         // Collapse multiple spaces into one
         result = result.components(separatedBy: .whitespaces)
             .filter { !$0.isEmpty }
             .joined(separator: " ")
-        
+
         return result
     }
-    
+
     /// Creates a sort-friendly version by moving articles to the end
     /// "The Beatles" → "Beatles, The"
     /// "El Camino" → "Camino, El"
     /// Based on MusicBrainz standards
     var sortName: String {
         let trimmed = self.trimmingCharacters(in: .whitespacesAndNewlines)
-        
+
         // Articles to handle (multi-language support)
         let articlesMap: [(language: String, articles: [String])] = [
             ("en", ["the", "a", "an"]),
@@ -75,7 +75,7 @@ extension String {
             ("it", ["il", "lo", "la", "i", "gli", "le"]),
             ("pt", ["o", "a", "os", "as"])
         ]
-        
+
         // Check each language's articles
         for (_, articles) in articlesMap {
             for article in articles {
@@ -92,7 +92,7 @@ extension String {
                 }
             }
         }
-        
+
         return trimmed
     }
 }
@@ -147,4 +147,3 @@ extension String {
  
  This matches industry standards (iTunes, MusicBrainz)
  */
-

@@ -1,0 +1,10 @@
+identifier_name:
+  min_length:
+    warning: 2
+    error: 1
+  max_length:
+    warning: 32
+    error: 40
+  excluded:
+    - id
+    - URL
