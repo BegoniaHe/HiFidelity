@@ -14,14 +14,17 @@
 //
 
 import Foundation
+import Observation
 import GRDB
 
-class DatabaseManager: ObservableObject {
+@MainActor
+@Observable
+class DatabaseManager {
     // MARK: - Properties
-    @Published var isImporting: Bool = false
-    @Published var importProgress: Double = 0.0
-    @Published var importStatusMessage: String = ""
-    @Published var currentImportingFolder: String = ""
+    var isImporting: Bool = false
+    var importProgress: Double = 0.0
+    var importStatusMessage: String = ""
+    var currentImportingFolder: String = ""
 
     let dbQueue: DatabaseQueue
     private let dbPath: String
@@ -160,7 +163,7 @@ class DatabaseManager: ObservableObject {
 
     /// Upgrade FTS5 tables with enhanced configuration (used in migrations)
     /// This drops existing FTS tables and recreates them with new tokenization settings
-    static func upgradeFTSTables(in db: Database) throws {
+    nonisolated static func upgradeFTSTables(in db: Database) throws {
         Logger.info("Upgrading FTS5 tables with enhanced tokenization...")
 
         // Drop old FTS tables and their triggers

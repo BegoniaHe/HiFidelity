@@ -57,23 +57,23 @@ extension DatabaseManager {
 
                 // Search tracks with weighted columns (title > artist > album > genre)
                 // BM25 ranking: title=10.0, artist=5.0, album=3.0, album_artist=3.0, genre=1.0, composer=1.0
-                results.tracks = try searchTracksWeighted(db: db, queries: queries, limit: limit)
+                results.tracks = try Self.searchTracksWeighted(db: db, queries: queries, limit: limit)
 
                 // Search albums with weighted columns (title > normalized_name > album_artist)
                 // BM25 ranking: title=10.0, normalized_name=5.0, album_artist=3.0
-                results.albums = try searchAlbumsWeighted(db: db, queries: queries, limit: limit)
+                results.albums = try Self.searchAlbumsWeighted(db: db, queries: queries, limit: limit)
 
                 // Search artists with weighted columns (name > normalized_name)
                 // BM25 ranking: name=10.0, normalized_name=5.0
-                results.artists = try searchArtistsWeighted(db: db, queries: queries, limit: limit)
+                results.artists = try Self.searchArtistsWeighted(db: db, queries: queries, limit: limit)
 
                 // Search genres with weighted columns (name > normalized_name)
                 // BM25 ranking: name=10.0, normalized_name=5.0
-                results.genres = try searchGenresWeighted(db: db, queries: queries, limit: limit)
+                results.genres = try Self.searchGenresWeighted(db: db, queries: queries, limit: limit)
 
                 // Search playlists with weighted columns (name > description)
                 // BM25 ranking: name=10.0, description=2.0
-                results.playlists = try searchPlaylistsWeighted(db: db, queries: queries, limit: limit)
+                results.playlists = try Self.searchPlaylistsWeighted(db: db, queries: queries, limit: limit)
 
                 return results
             }
@@ -86,7 +86,7 @@ extension DatabaseManager {
 
     // MARK: - Weighted Search Helpers
 
-    private func searchTracksWeighted(db: Database, queries: SearchQueries, limit: Int) throws -> [Track] {
+    nonisolated private static func searchTracksWeighted(db: Database, queries: SearchQueries, limit: Int) throws -> [Track] {
         // Multi-tier search: exact phrase → weighted prefix → fuzzy
         var trackIdScores: [(id: Int64, score: Double)] = []
 
@@ -146,7 +146,7 @@ extension DatabaseManager {
         return topIds.compactMap { id in tracks.first { $0.trackId == id } }
     }
 
-    private func searchAlbumsWeighted(db: Database, queries: SearchQueries, limit: Int) throws -> [Album] {
+    nonisolated private static func searchAlbumsWeighted(db: Database, queries: SearchQueries, limit: Int) throws -> [Album] {
         var albumIdScores: [(id: Int64, score: Double)] = []
 
         // Exact phrase match
@@ -198,7 +198,7 @@ extension DatabaseManager {
         return topIds.compactMap { id in albums.first { $0.id == id } }
     }
 
-    private func searchArtistsWeighted(db: Database, queries: SearchQueries, limit: Int) throws -> [Artist] {
+    nonisolated private static func searchArtistsWeighted(db: Database, queries: SearchQueries, limit: Int) throws -> [Artist] {
         var artistIdScores: [(id: Int64, score: Double)] = []
 
         if let exactQuery = queries.exactPhrase {
@@ -248,7 +248,7 @@ extension DatabaseManager {
         return topIds.compactMap { id in artists.first { $0.id == id } }
     }
 
-    private func searchGenresWeighted(db: Database, queries: SearchQueries, limit: Int) throws -> [Genre] {
+    nonisolated private static func searchGenresWeighted(db: Database, queries: SearchQueries, limit: Int) throws -> [Genre] {
         var genreIdScores: [(id: Int64, score: Double)] = []
 
         if let exactQuery = queries.exactPhrase {
@@ -298,7 +298,7 @@ extension DatabaseManager {
         return topIds.compactMap { id in genres.first { $0.id == id } }
     }
 
-    private func searchPlaylistsWeighted(db: Database, queries: SearchQueries, limit: Int) throws -> [Playlist] {
+    nonisolated private static func searchPlaylistsWeighted(db: Database, queries: SearchQueries, limit: Int) throws -> [Playlist] {
         var playlistIdScores: [(id: Int64, score: Double)] = []
 
         if let exactQuery = queries.exactPhrase {
@@ -466,7 +466,7 @@ extension DatabaseManager {
         let queries = prepareFTSQueries(query, mode: mode)
 
         return try await dbQueue.read { db in
-            return try searchTracksWeighted(db: db, queries: queries, limit: limit)
+            return try Self.searchTracksWeighted(db: db, queries: queries, limit: limit)
         }
     }
 
@@ -477,7 +477,7 @@ extension DatabaseManager {
         let queries = prepareFTSQueries(query, mode: mode)
 
         return try await dbQueue.read { db in
-            return try searchAlbumsWeighted(db: db, queries: queries, limit: limit)
+            return try Self.searchAlbumsWeighted(db: db, queries: queries, limit: limit)
         }
     }
 
@@ -488,7 +488,7 @@ extension DatabaseManager {
         let queries = prepareFTSQueries(query, mode: mode)
 
         return try await dbQueue.read { db in
-            return try searchArtistsWeighted(db: db, queries: queries, limit: limit)
+            return try Self.searchArtistsWeighted(db: db, queries: queries, limit: limit)
         }
     }
 
@@ -499,7 +499,7 @@ extension DatabaseManager {
         let queries = prepareFTSQueries(query, mode: mode)
 
         return try await dbQueue.read { db in
-            return try searchGenresWeighted(db: db, queries: queries, limit: limit)
+            return try Self.searchGenresWeighted(db: db, queries: queries, limit: limit)
         }
     }
 
@@ -510,7 +510,7 @@ extension DatabaseManager {
         let queries = prepareFTSQueries(query, mode: mode)
 
         return try await dbQueue.read { db in
-            return try searchPlaylistsWeighted(db: db, queries: queries, limit: limit)
+            return try Self.searchPlaylistsWeighted(db: db, queries: queries, limit: limit)
         }
     }
 }

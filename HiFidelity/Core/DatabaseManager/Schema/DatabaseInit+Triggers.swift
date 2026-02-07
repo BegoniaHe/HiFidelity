@@ -14,14 +14,14 @@ extension DatabaseManager {
 
     /// Create statistics update triggers for albums, artists, and genres
     /// These triggers automatically update track counts and other statistics when tracks are added, removed, or modified
-    static func createStatisticsUpdateTriggers(in db: Database) throws {
+    nonisolated static func createStatisticsUpdateTriggers(in db: Database) throws {
         try createAlbumStatisticsUpdateTriggers(in: db)
         try createArtistStatisticsUpdateTriggers(in: db)
         try createGenreStatisticsUpdateTriggers(in: db)
         Logger.info("Created statistics update triggers")
     }
 
-    private static func createAlbumStatisticsUpdateTriggers(in db: Database) throws {
+    nonisolated private static func createAlbumStatisticsUpdateTriggers(in db: Database) throws {
         // Trigger: Update album statistics when track is deleted
         try db.execute(sql: """
             CREATE TRIGGER IF NOT EXISTS update_album_stats_on_delete
@@ -88,7 +88,7 @@ extension DatabaseManager {
         """)
     }
 
-    private static func createArtistStatisticsUpdateTriggers(in db: Database) throws {
+    nonisolated private static func createArtistStatisticsUpdateTriggers(in db: Database) throws {
         // Trigger: Update artist statistics when track is deleted
         try db.execute(sql: """
             CREATE TRIGGER IF NOT EXISTS update_artist_stats_on_delete
@@ -159,7 +159,7 @@ extension DatabaseManager {
         """)
     }
 
-    private static func createGenreStatisticsUpdateTriggers(in db: Database) throws {
+    nonisolated private static func createGenreStatisticsUpdateTriggers(in db: Database) throws {
         // Trigger: Update genre statistics when track is deleted
         try db.execute(sql: """
             CREATE TRIGGER IF NOT EXISTS update_genre_stats_on_delete
@@ -216,7 +216,7 @@ extension DatabaseManager {
 
     /// Create triggers to automatically delete orphaned albums, artists, and genres
     /// These triggers fire after track deletion and clean up entities with no remaining tracks
-    static func createOrphanCleanupTriggers(in db: Database) throws {
+    nonisolated static func createOrphanCleanupTriggers(in db: Database) throws {
         // Trigger: Delete album if its last track is deleted
         try db.execute(sql: """
             CREATE TRIGGER IF NOT EXISTS cleanup_orphaned_albums

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Combine
+import Observation
 import GRDB
 
 // MARK: - Database Cache
@@ -18,15 +18,17 @@ import GRDB
 /// For artwork, use ArtworkCache which provides lazy-loading with LRU eviction.
 ///
 /// Thread-safe via internal cacheQueue for concurrent access
-final class DatabaseCache: ObservableObject, @unchecked Sendable {
+@MainActor
+@Observable
+final class DatabaseCache {
     // MARK: - Singleton
     static let shared = DatabaseCache()
 
     // MARK: - Published Properties
-    @Published private(set) var folders: [Folder] = []
-    @Published private(set) var allTracks: [Track] = []
-    @Published private(set) var allPlaylists: [Playlist] = []
-    @Published private(set) var isLoading = false
+    private(set) var folders: [Folder] = []
+    private(set) var allTracks: [Track] = []
+    private(set) var allPlaylists: [Playlist] = []
+    private(set) var isLoading = false
 
     // MARK: - Thread Safety
     private let cacheQueue = DispatchQueue(label: "com.hifidelity.databasecache", attributes: .concurrent)
@@ -94,20 +96,13 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
         lastPlaylistRefresh = nil
 
         // Also clear artwork cache since tracks may have changed
-        Task {
-            ArtworkCache.shared.clearAll()
-        }
+        ArtworkCache.shared.clearAll()
     }
 
     @objc private func invalidateFoldersCache() {
         Logger.debug("Folders cache invalidated due to folder change")
         foldersCache = nil
         lastFolderRefresh = nil
-
-        // Notify UI to refresh
-        Task { @MainActor in
-            self.objectWillChange.send()
-        }
     }
 
     @objc private func invalidatePlaylistsCache() {
@@ -118,11 +113,6 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
         Logger.debug("Playlist cache invalidated")
         playlistsCache = nil
         lastPlaylistRefresh = nil
-
-        // Notify UI to refresh
-        Task { @MainActor in
-            self.objectWillChange.send()
-        }
     }
 
     // MARK: - Folders
@@ -143,10 +133,7 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
             foldersCache = folders
             lastFolderRefresh = Date()
 
-            // Update published property on main thread
-            await MainActor.run {
-                self.folders = folders
-            }
+            self.folders = folders
         }
 
         return foldersCache ?? []
@@ -179,9 +166,7 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
                 }
             }
 
-            await MainActor.run {
-                self.allTracks = tracks
-            }
+            self.allTracks = tracks
         }
 
         return allTracksCache ?? []
@@ -280,10 +265,7 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
             playlistsCache = playlists
             lastPlaylistRefresh = Date()
 
-            // Update published property on main thread
-            await MainActor.run {
-                self.allPlaylists = playlists
-            }
+            self.allPlaylists = playlists
         }
 
         return playlistsCache ?? []
@@ -334,9 +316,7 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
         Logger.info("All caches cleared")
 
         // Also clear artwork cache
-        Task {
-            ArtworkCache.shared.clearAll()
-        }
+        ArtworkCache.shared.clearAll()
     }
 
     // MARK: - Statistics

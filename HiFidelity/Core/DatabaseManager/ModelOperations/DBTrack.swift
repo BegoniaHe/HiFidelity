@@ -106,7 +106,7 @@ extension DatabaseManager {
             // Insert new tracks
             for (track, metadata) in newTracks {
                 do {
-                    try self.processNewTrack(track, metadata: metadata, in: db)
+                    try Self.processNewTrack(track, metadata: metadata, in: db)
                     inserted += 1
                 } catch {
                     Logger.error("Failed to insert track '\(track.title)': \(error)")
@@ -116,7 +116,7 @@ extension DatabaseManager {
             // Update existing tracks
             for (track, metadata) in updatedTracks {
                 do {
-                    try self.processUpdatedTrack(track, metadata: metadata, in: db)
+                    try Self.processUpdatedTrack(track, metadata: metadata, in: db)
                     updated += 1
                 } catch {
                     Logger.error("Failed to update track '\(track.title)': \(error)")
@@ -132,7 +132,7 @@ extension DatabaseManager {
     // MARK: - Track Processing
 
     /// Process a new track with normalized data
-    private func processNewTrack(_ track: Track, metadata: TrackMetadata, in db: Database) throws {
+    nonisolated private static func processNewTrack(_ track: Track, metadata: TrackMetadata, in db: Database) throws {
         var mutableTrack = track
 
         // Determine where to store artwork based on album validity
@@ -174,7 +174,7 @@ extension DatabaseManager {
             let artworkSourceType: String
             if hasValidAlbum, let albumId = mutableTrack.albumId {
                 // Store artwork in album table
-                try storeAlbumArtwork(albumId: albumId, artworkData: artworkData, in: db)
+                try Self.storeAlbumArtwork(albumId: albumId, artworkData: artworkData, in: db)
                 // Remove artwork from track to save space
                 mutableTrack.artworkData = nil
                 artworkSourceType = "album"
@@ -186,7 +186,7 @@ extension DatabaseManager {
 
             // Also store artwork in artist table if artist exists
             if let artistId = mutableTrack.artistId {
-                try storeArtistArtwork(artistId: artistId, artworkData: artworkData, sourceType: artworkSourceType, in: db)
+                try Self.storeArtistArtwork(artistId: artistId, artworkData: artworkData, sourceType: artworkSourceType, in: db)
             }
         }
 
@@ -211,13 +211,13 @@ extension DatabaseManager {
 
             // Log interesting metadata in debug builds
             #if DEBUG
-            logTrackMetadata(mutableTrack)
+            Self.logTrackMetadata(mutableTrack)
             #endif
         }
     }
 
     /// Process an updated track with normalized data
-    private func processUpdatedTrack(_ track: Track, metadata: TrackMetadata, in db: Database) throws {
+    nonisolated private static func processUpdatedTrack(_ track: Track, metadata: TrackMetadata, in db: Database) throws {
         var mutableTrack = track
 
         // Determine where to store artwork based on album validity
@@ -259,7 +259,7 @@ extension DatabaseManager {
             let artworkSourceType: String
             if hasValidAlbum, let albumId = mutableTrack.albumId {
                 // Store artwork in album table
-                try storeAlbumArtwork(albumId: albumId, artworkData: artworkData, in: db)
+                try Self.storeAlbumArtwork(albumId: albumId, artworkData: artworkData, in: db)
                 // Remove artwork from track to save space
                 mutableTrack.artworkData = nil
                 artworkSourceType = "album"
@@ -271,7 +271,7 @@ extension DatabaseManager {
 
             // Also store artwork in artist table if artist exists
             if let artistId = mutableTrack.artistId {
-                try storeArtistArtwork(artistId: artistId, artworkData: artworkData, sourceType: artworkSourceType, in: db)
+                try Self.storeArtistArtwork(artistId: artistId, artworkData: artworkData, sourceType: artworkSourceType, in: db)
             }
         }
 
@@ -290,7 +290,7 @@ extension DatabaseManager {
 
     // MARK: - Metadata Logging
 
-    private func logTrackMetadata(_ track: Track) {
+    nonisolated private static func logTrackMetadata(_ track: Track) {
         // Log interesting metadata for debugging
         if let extendedMetadata = track.extendedMetadata {
             var interestingFields: [String] = []
@@ -433,7 +433,7 @@ extension DatabaseManager {
 
     /// Store artwork data in the album table if not already present
     /// Only updates if album doesn't have artwork yet to preserve user-set custom artwork
-    private func storeAlbumArtwork(albumId: Int64, artworkData: Data, in db: Database) throws {
+    nonisolated private static func storeAlbumArtwork(albumId: Int64, artworkData: Data, in db: Database) throws {
         // Check if album already has artwork
         let hasArtwork = try Album
             .select(Album.Columns.artworkData)
@@ -464,7 +464,7 @@ extension DatabaseManager {
     ///   - artworkData: Artwork binary data
     ///   - sourceType: Source of artwork: "album", "track", or "custom"
     ///   - db: Database connection
-    private func storeArtistArtwork(artistId: Int64, artworkData: Data, sourceType: String, in db: Database) throws {
+    nonisolated private static func storeArtistArtwork(artistId: Int64, artworkData: Data, sourceType: String, in db: Database) throws {
         // Check if artist already has artwork
         let hasArtwork = try Artist
             .select(Artist.Columns.artworkData)

@@ -21,7 +21,7 @@ extension DatabaseManager {
 
     /// Create all tables for the application
     /// Called once during initial database setup
-    static func createAllTables(in db: Database) throws {
+    nonisolated static func createAllTables(in db: Database) throws {
         Logger.info("Creating database schema...")
 
         // Core tables
@@ -61,7 +61,7 @@ extension DatabaseManager {
     // MARK: - Full-Text Search Tables
 
     /// Create FTS5 virtual tables for full-text search
-    static func createFTSTables(in db: Database) throws {
+    nonisolated static func createFTSTables(in db: Database) throws {
         Logger.info("Creating FTS5 virtual tables...")
 
         // FTS for tracks - search by title, artist, album, genre
@@ -136,7 +136,7 @@ extension DatabaseManager {
     }
 
     /// Create triggers to automatically update FTS tables
-    static func createFTSTriggers(in db: Database) throws {
+    nonisolated static func createFTSTriggers(in db: Database) throws {
         // Tracks FTS triggers
         try db.execute(sql: """
             CREATE TRIGGER IF NOT EXISTS tracks_fts_insert AFTER INSERT ON tracks BEGIN
@@ -252,7 +252,7 @@ extension DatabaseManager {
 
     // MARK: - Core Tables
 
-    static func createTracksTable(in db: Database) throws {
+    nonisolated static func createTracksTable(in db: Database) throws {
         try db.createTableIfNotExists("tracks") { tableDefinition in
 
             tableDefinition.autoIncrementedPrimaryKey("id")
@@ -341,7 +341,7 @@ extension DatabaseManager {
 
     // MARK: - 1. Folders Table
 
-    static func createFoldersTable(in db: Database) throws {
+    nonisolated static func createFoldersTable(in db: Database) throws {
         try db.createTableIfNotExists("folders") { tableDefinition in
             tableDefinition.autoIncrementedPrimaryKey("id")
             tableDefinition.column("name", .text).notNull()
@@ -358,7 +358,7 @@ extension DatabaseManager {
 
     // MARK: - 3. Albums Table
 
-    static func createAlbumsTable(in db: Database) throws {
+    nonisolated static func createAlbumsTable(in db: Database) throws {
         try db.create(table: "albums", ifNotExists: true) { tableDefinition in
             tableDefinition.autoIncrementedPrimaryKey("id")
 
@@ -414,7 +414,7 @@ extension DatabaseManager {
 
     // MARK: - 4. Artists Table
 
-    static func createArtistsTable(in db: Database) throws {
+    nonisolated static func createArtistsTable(in db: Database) throws {
         try db.create(table: "artists", ifNotExists: true) { tableDefinition in
             tableDefinition.autoIncrementedPrimaryKey("id")
 
@@ -453,7 +453,7 @@ extension DatabaseManager {
 
     // MARK: - 5. Genres Table
 
-    static func createGenresTable(in db: Database) throws {
+    nonisolated static func createGenresTable(in db: Database) throws {
         try db.create(table: "genres", ifNotExists: true) { tableDefinition in
             tableDefinition.autoIncrementedPrimaryKey("id")
 
@@ -483,7 +483,7 @@ extension DatabaseManager {
 
     // MARK: - 6. Playlists Table
 
-    static func createPlaylistsTable(in db: Database) throws {
+    nonisolated static func createPlaylistsTable(in db: Database) throws {
         try db.create(table: "playlists", ifNotExists: true) { tableDefinition in
             tableDefinition.autoIncrementedPrimaryKey("id")
 
@@ -523,7 +523,7 @@ extension DatabaseManager {
 
     // MARK: - 7. Playlist Tracks (Junction Table)
 
-    static func createPlaylistTracksTable(in db: Database) throws {
+    nonisolated static func createPlaylistTracksTable(in db: Database) throws {
         try db.create(table: "playlist_tracks", ifNotExists: true) { tableDefinition in
             tableDefinition.autoIncrementedPrimaryKey("id")
 
@@ -573,7 +573,7 @@ extension DatabaseManager {
 
     // MARK: - 8. Queue Table
 
-    static func createQueueTable(in db: Database) throws {
+    nonisolated static func createQueueTable(in db: Database) throws {
         try db.create(table: "queue", ifNotExists: true) { tableDefinition in
             tableDefinition.autoIncrementedPrimaryKey("id")
 
@@ -608,7 +608,7 @@ extension DatabaseManager {
 
     // MARK: - 9. Lyrics Table
 
-    static func createLyricsTable(in db: Database) throws {
+    nonisolated static func createLyricsTable(in db: Database) throws {
         try db.create(table: "lyrics", ifNotExists: true) { tableDefinition in
             tableDefinition.autoIncrementedPrimaryKey("id")
 
@@ -650,7 +650,7 @@ extension DatabaseManager {
 
     /// Create song_features table for ML-based recommendations
     /// Stores extracted audio features and embeddings for each track
-    static func createSongFeaturesTable(in db: Database) throws {
+    nonisolated static func createSongFeaturesTable(in db: Database) throws {
         try db.create(table: "song_features", ifNotExists: true) { tableDefinition in
             tableDefinition.autoIncrementedPrimaryKey("id")
 

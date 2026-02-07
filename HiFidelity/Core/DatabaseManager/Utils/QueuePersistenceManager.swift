@@ -6,11 +6,12 @@
 //
 
 import Foundation
-import Combine
+import Observation
 
 /// Manages automatic queue persistence with configurable auto-save intervals
 @MainActor
-final class QueuePersistenceManager: ObservableObject {
+@Observable
+final class QueuePersistenceManager {
     static let shared = QueuePersistenceManager()
 
     // MARK: - Configuration
@@ -23,14 +24,15 @@ final class QueuePersistenceManager: ObservableObject {
 
     // MARK: - State
 
-    @Published private(set) var isSaving: Bool = false
-    @Published private(set) var lastSaveDate: Date?
-    @Published private(set) var lastError: Error?
+    private(set) var isSaving: Bool = false
+    private(set) var lastSaveDate: Date?
+    private(set) var lastError: Error?
 
     private var autoSaveTimer: Timer?
     private var hasUnsavedChanges: Bool = false
     private var lastSaveTime: Date?
-    private var cancellables = Set<AnyCancellable>()
+    private var queueObserverTask: Task<Void, Never>?
+    private var indexObserverTask: Task<Void, Never>?
 
     private let database = DatabaseManager.shared
     private let playback: PlaybackController
@@ -162,21 +164,26 @@ final class QueuePersistenceManager: ObservableObject {
     // MARK: - Auto-Save Management
 
     private func setupObservers() {
-        // Observe queue changes
-        playback.$queue
-            .dropFirst() // Skip initial value
-            .sink { [weak self] _ in
-                self?.markDirty()
-            }
-            .store(in: &cancellables)
+        queueObserverTask?.cancel()
+        indexObserverTask?.cancel()
 
-        // Observe current queue index changes
-        playback.$currentQueueIndex
-            .dropFirst()
-            .sink { [weak self] _ in
-                self?.markDirty()
+        queueObserverTask = Task { [weak self] in
+            guard let self else { return }
+            var first = true
+            for await _ in NotificationCenter.default.notifications(named: .playbackQueueDidChange) {
+                if first { first = false; continue }
+                self.markDirty()
             }
-            .store(in: &cancellables)
+        }
+
+        indexObserverTask = Task { [weak self] in
+            guard let self else { return }
+            var first = true
+            for await _ in NotificationCenter.default.notifications(named: .playbackQueueIndexDidChange) {
+                if first { first = false; continue }
+                self.markDirty()
+            }
+        }
     }
 
     private func markDirty() {
@@ -208,6 +215,13 @@ final class QueuePersistenceManager: ObservableObject {
     private func stopAutoSaveTimer() {
         autoSaveTimer?.invalidate()
         autoSaveTimer = nil
+    }
+
+    nonisolated deinit {
+        MainActor.assumeIsolated {
+            queueObserverTask?.cancel()
+            indexObserverTask?.cancel()
+        }
     }
 
     // MARK: - Manual Save Trigger

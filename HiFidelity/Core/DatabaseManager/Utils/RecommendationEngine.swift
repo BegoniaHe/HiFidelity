@@ -8,6 +8,7 @@ import Foundation
 import GRDB
 
 /// Engine for generating track recommendations based on listening history and track similarity
+@MainActor
 final class RecommendationEngine {
     static let shared = RecommendationEngine()
 

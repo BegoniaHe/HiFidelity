@@ -10,6 +10,7 @@ import GRDB
 
 /// Manages security-scoped bookmarks for folder access
 /// Resolves bookmarks at application startup and maintains access throughout app lifecycle
+@MainActor
 class SecurityScopedBookmarkManager {
     // MARK: - Properties
 
@@ -22,14 +23,15 @@ class SecurityScopedBookmarkManager {
     // MARK: - Initialization
 
     /// Initialize and resolve all security-scoped bookmarks
-    func initializeSecurityScopes() async {
+    func initializeSecurityScopes() {
         Logger.info("Initializing security-scoped bookmarks...")
 
-        do {
-            // Load all folders from database
-            let folders = try await DatabaseManager.shared.dbQueue.read { db in
-                try Folder.fetchAll(db)
-            }
+        Task {
+            do {
+                // Load all folders from database
+                let folders = try await DatabaseManager.shared.dbQueue.read { db in
+                    try Folder.fetchAll(db)
+                }
 
             if folders.isEmpty {
                 Logger.info("No folders in library - skipping bookmark resolution")
@@ -64,13 +66,14 @@ class SecurityScopedBookmarkManager {
             Logger.info("   - Failed: \(failureCount)")
             Logger.info("   - Stale: \(staleCount)")
 
-            // Refresh stale bookmarks
-            if !foldersNeedingRefresh.isEmpty {
-                await refreshStaleBookmarks()
-            }
+                // Refresh stale bookmarks
+                if !foldersNeedingRefresh.isEmpty {
+                    await refreshStaleBookmarks()
+                }
 
-        } catch {
-            Logger.error("Failed to load folders for bookmark resolution: \(error)")
+            } catch {
+                Logger.error("Failed to load folders for bookmark resolution: \(error)")
+            }
         }
     }
 

@@ -19,6 +19,7 @@ import GRDB
 /// - In-flight request deduplication
 /// - Fallback chain: album → track → nil
 /// - Cross-caching (album artwork shared across tracks)
+@MainActor
 final class ArtworkCache {
 
     // MARK: - Singleton
@@ -42,12 +43,21 @@ final class ArtworkCache {
     // In-flight request tracking (prevent duplicate loads)
     var inflightRequests = Set<String>()
     let inflightQueue = DispatchQueue(label: "com.hifidelity.inflightRequests")
+    private let inflightQueueKey = DispatchSpecificKey<Void>()
 
     // MARK: - Initialization
 
     private init() {
         let userCacheSizeMB = UserDefaults.standard.object(forKey: "artworkCacheSize") as? Int ?? 500
         configureCacheSize(sizeMB: userCacheSizeMB)
+        inflightQueue.setSpecific(key: inflightQueueKey, value: ())
+    }
+
+    func inflightSync<T>(_ work: () -> T) -> T {
+        if DispatchQueue.getSpecific(key: inflightQueueKey) != nil {
+            return work()
+        }
+        return inflightQueue.sync(execute: work)
     }
 
     // MARK: - Configuration

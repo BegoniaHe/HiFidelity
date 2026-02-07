@@ -17,7 +17,7 @@ extension ArtworkCache {
     ///   - trackId: Track database ID
     ///   - size: Target size in points (automatically handles Retina scaling)
     ///   - completion: Called on main thread with result
-    func getArtwork(for trackId: Int64, size: CGFloat = 40, completion: @escaping (NSImage?) -> Void) {
+    func getArtwork(for trackId: Int64, size: CGFloat = 40, completion: @escaping @Sendable (NSImage?) -> Void) {
         let trackKey = "track_\(trackId)_\(Int(size))" as NSString
         let cache = size <= 200 ? thumbnailCache : fullSizeCache
 
@@ -25,19 +25,6 @@ extension ArtworkCache {
         if let cachedImage = cache.object(forKey: trackKey) {
             completion(cachedImage)
             return
-        }
-
-        // OPTIMIZATION: Check if we can get albumId from DatabaseCache
-        if let cachedTrack = DatabaseCache.shared.track(trackId),
-           let albumId = cachedTrack.albumId {
-            let albumKey = "album_\(albumId)_\(Int(size))" as NSString
-            if let albumArtwork = cache.object(forKey: albumKey) {
-                // Found album artwork in cache! Use it for this track too
-                let cost = calculateImageCost(albumArtwork)
-                cache.setObject(albumArtwork, forKey: trackKey, cost: cost)
-                completion(albumArtwork)
-                return
-            }
         }
 
         // Thread-safe check if we know this track has no artwork
@@ -55,7 +42,7 @@ extension ArtworkCache {
         // Check if already loading this image
         let requestKey = "track_\(trackId)_\(Int(size))"
         var isInflight = false
-        inflightQueue.sync {
+        inflightSync {
             isInflight = inflightRequests.contains(requestKey)
             if !isInflight {
                 inflightRequests.insert(requestKey)
@@ -79,7 +66,7 @@ extension ArtworkCache {
             guard let self = self else { return }
 
             defer {
-                _ = self.inflightQueue.sync {
+                _ = self.inflightSync {
                     self.inflightRequests.remove(requestKey)
                 }
             }
@@ -146,7 +133,7 @@ extension ArtworkCache {
     ///   - albumId: Album database ID
     ///   - size: Target size in points
     ///   - completion: Called on main thread with result
-    func getAlbumArtwork(for albumId: Int64, size: CGFloat = 160, completion: @escaping (NSImage?) -> Void) {
+    func getAlbumArtwork(for albumId: Int64, size: CGFloat = 160, completion: @escaping @Sendable (NSImage?) -> Void) {
         loadArtwork(
             entityType: ArtworkCache.EntityType.album,
             entityId: albumId,
@@ -160,7 +147,7 @@ extension ArtworkCache {
     ///   - artistId: Artist database ID
     ///   - size: Target size in points
     ///   - completion: Called on main thread with result
-    func getArtistArtwork(for artistId: Int64, size: CGFloat = 160, completion: @escaping (NSImage?) -> Void) {
+    func getArtistArtwork(for artistId: Int64, size: CGFloat = 160, completion: @escaping @Sendable (NSImage?) -> Void) {
         loadArtwork(
             entityType: ArtworkCache.EntityType.artist,
             entityId: artistId,
@@ -228,7 +215,7 @@ extension ArtworkCache {
             self.noArtworkSet.removeAllObjects()
         }
 
-        inflightQueue.sync {
+        inflightSync {
             inflightRequests.removeAll()
         }
 

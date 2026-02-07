@@ -17,7 +17,7 @@ extension ArtworkCache {
         entityType: EntityType,
         entityId: Int64,
         size: CGFloat,
-        completion: @escaping (NSImage?) -> Void
+        completion: @escaping @Sendable (NSImage?) -> Void
     ) {
         let key = cacheKey(entityType: entityType, entityId: entityId, size: size)
         let cache = cache(for: size)
@@ -177,7 +177,7 @@ extension ArtworkCache {
 
     /// Check if request is in-flight
     func isInflightRequest(_ requestKey: String) -> Bool {
-        inflightQueue.sync {
+        inflightSync {
             let isInflight = inflightRequests.contains(requestKey)
             if !isInflight {
                 inflightRequests.insert(requestKey)
@@ -188,7 +188,7 @@ extension ArtworkCache {
 
     /// Mark request as in-flight or complete
     func markInflightRequest(_ requestKey: String, inflight: Bool) {
-        inflightQueue.sync {
+        inflightSync {
             if inflight {
                 inflightRequests.insert(requestKey)
             } else {

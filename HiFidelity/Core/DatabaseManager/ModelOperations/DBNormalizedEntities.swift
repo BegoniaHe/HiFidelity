@@ -28,7 +28,7 @@ extension DatabaseManager {
     ///   - catalogNumber: Catalog number
     ///   - releaseCountry: ISO country code
     /// - Returns: Album ID or nil if title is empty/unknown
-    static func getOrCreateAlbum(
+    nonisolated static func getOrCreateAlbum(
         in db: Database,
         title: String,
         albumArtist: String?,
@@ -89,7 +89,7 @@ extension DatabaseManager {
     /// - Parameters:
     ///   - db: Database connection
     ///   - albumId: Album ID to update
-    static func updateAlbumStatistics(in db: Database, albumId: Int64) throws {
+    nonisolated static func updateAlbumStatistics(in db: Database, albumId: Int64) throws {
         let trackCount = try Track
             .filter(Track.Columns.albumId == albumId)
             .fetchCount(db)
@@ -118,7 +118,7 @@ extension DatabaseManager {
     ///   - artistType: Artist type (Person, Group, etc.)
     ///   - country: ISO country code
     /// - Returns: Artist ID or nil if name is empty/unknown
-    static func getOrCreateArtist(
+    nonisolated static func getOrCreateArtist(
         in db: Database,
         name: String,
         musicbrainzArtistId: String? = nil,
@@ -160,7 +160,7 @@ extension DatabaseManager {
     /// - Parameters:
     ///   - db: Database connection
     ///   - artistId: Artist ID to update
-    static func updateArtistStatistics(in db: Database, artistId: Int64) throws {
+    nonisolated static func updateArtistStatistics(in db: Database, artistId: Int64) throws {
         let trackCount = try Track
             .filter(Track.Columns.artistId == artistId)
             .fetchCount(db)
@@ -188,7 +188,7 @@ extension DatabaseManager {
     ///   - name: Genre name
     ///   - style: Sub-genre or style
     /// - Returns: Genre ID or nil if name is empty/unknown
-    static func getOrCreateGenre(
+    nonisolated static func getOrCreateGenre(
         in db: Database,
         name: String,
         style: String? = nil
@@ -225,7 +225,7 @@ extension DatabaseManager {
     /// - Parameters:
     ///   - db: Database connection
     ///   - genreId: Genre ID to update
-    static func updateGenreStatistics(in db: Database, genreId: Int64) throws {
+    nonisolated static func updateGenreStatistics(in db: Database, genreId: Int64) throws {
         let trackCount = try Track
             .filter(Track.Columns.genreId == genreId)
             .fetchCount(db)
@@ -247,7 +247,7 @@ extension DatabaseManager {
     ///   - albumId: Optional album ID
     ///   - artistId: Optional artist ID
     ///   - genreId: Optional genre ID
-    static func updateEntityStatistics(
+    nonisolated static func updateEntityStatistics(
         in db: Database,
         albumId: Int64? = nil,
         artistId: Int64? = nil,

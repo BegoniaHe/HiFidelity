@@ -62,7 +62,9 @@ extension DatabaseManager {
 
             // Extract tracks using trackId
             let tracks = entries.compactMap { entry -> Track? in
-                DatabaseCache.shared.track(entry.trackId)
+                try? Track.lightweightRequest()
+                    .filter(Track.Columns.trackId == entry.trackId)
+                    .fetchOne(db)
             }
 
             // Load current index from UserDefaults

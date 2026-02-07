@@ -46,12 +46,9 @@ extension ArtworkCache {
     /// Load track artwork with fallback chain: album → track → nil
     /// Optimized: Uses DatabaseCache to avoid extra queries when possible
     func loadTrackArtworkWithFallback(trackId: Int64) throws -> TrackArtworkResult? {
-        // Try to get albumId from DatabaseCache first (zero DB queries)
-        let cachedAlbumId = DatabaseCache.shared.track(trackId)?.albumId
-
         return try DatabaseManager.shared.dbQueue.read { db in
             var trackArtwork: Data?
-            var albumId: Int64? = cachedAlbumId
+            var albumId: Int64?
 
             // Load album ID if not cached
             if albumId == nil {

@@ -9,6 +9,7 @@ import Foundation
 import GRDB
 
 /// Manages recovery of tracks when their file paths become invalid
+@MainActor
 class PathRecoveryManager {
     static let shared = PathRecoveryManager()
 
