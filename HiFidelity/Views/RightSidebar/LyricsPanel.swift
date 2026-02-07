@@ -161,7 +161,7 @@ extension LyricsPanel {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 32)
-                .padding(.bottom, 40)
+                .padding(.bottom, 90)
             }
         }
     }
