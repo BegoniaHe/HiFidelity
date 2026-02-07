@@ -12,7 +12,7 @@ struct AboutMenuView: View {
     @State private var libraryStats: LibraryStats?
     @AppStorage("automaticUpdatesEnabled")
     private var automaticUpdatesEnabled = true
-    
+
     var body: some View {
         VStack(spacing: 24) {
             Spacer()
@@ -30,7 +30,7 @@ struct AboutMenuView: View {
             await loadLibraryStats()
         }
     }
-    
+
     private func loadLibraryStats() async {
         do {
             libraryStats = try await DatabaseCache.shared.getLibraryStats()
@@ -73,7 +73,7 @@ struct AboutMenuView: View {
             Text(AppInfo.version)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-            
+
             Toggle("Check for updates automatically", isOn: $automaticUpdatesEnabled)
                 .help("Automatically download and install updates when available")
                 .onChange(of: automaticUpdatesEnabled) { _, newValue in
@@ -146,28 +146,28 @@ struct AboutMenuView: View {
                 url: URL(string: About.appWebsite)!,
                 tooltip: "Visit project website"
             )
-            
+
             FooterLink(
                 icon: "questionmark.circle",
                 title: "Help",
                 url: URL(string: About.appWiki)!,
                 tooltip: "Visit Help Wiki"
             )
-            
+
             FooterLink(
                 icon: "doc.text",
                 title: "License",
                 url: URL(string: "\(About.appWebsite)/blob/main/LICENSE"),
                 tooltip: "View license"
             )
-            
+
             FooterLink(
                 icon: "folder",
                 title: "App Data",
                 action: {
                     let appDataURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?
                         .appendingPathComponent(Bundle.main.bundleIdentifier ?? About.bundleIdentifier)
-                    
+
                     if let url = appDataURL {
                         NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: url.path)
                     }
@@ -176,16 +176,16 @@ struct AboutMenuView: View {
             )
         }
     }
-    
+
     private struct FooterLink: View {
         let icon: String
         let title: String
         var url: URL?
         var action: (() -> Void)?
         let tooltip: String
-        
+
         @State private var isHovered = false
-        
+
         var body: some View {
             if let url = url {
                 Link(destination: url) {
@@ -201,7 +201,7 @@ struct AboutMenuView: View {
                 .help(tooltip)
             }
         }
-        
+
         private var linkContent: some View {
             HStack(spacing: 4) {
                 Image(systemName: icon)

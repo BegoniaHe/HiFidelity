@@ -13,11 +13,11 @@ struct PlaylistItem: Identifiable, Equatable, Hashable {
     let name: String
     let isPinned: Bool
     let type: PlaylistType
-    
+
     enum PlaylistType: Equatable, Hashable {
         case user(Playlist)
         case smart(SmartPlaylistType)
-        
+
         func hash(into hasher: inout Hasher) {
             switch self {
             case .user(let playlist):
@@ -29,7 +29,7 @@ struct PlaylistItem: Identifiable, Equatable, Hashable {
             }
         }
     }
-    
+
     var icon: String {
         switch type {
         case .user:
@@ -38,7 +38,7 @@ struct PlaylistItem: Identifiable, Equatable, Hashable {
             return smartType.icon
         }
     }
-    
+
     var trackCount: Int {
         switch type {
         case .user(let playlist):
@@ -47,7 +47,7 @@ struct PlaylistItem: Identifiable, Equatable, Hashable {
             return 0 // Will be loaded dynamically
         }
     }
-    
+
     var artworkData: Data? {
         switch type {
         case .user(let playlist):
@@ -56,14 +56,14 @@ struct PlaylistItem: Identifiable, Equatable, Hashable {
             return nil
         }
     }
-    
+
     var isSmart: Bool {
         if case .smart = type {
             return true
         }
         return false
     }
-    
+
     var createdDate: Date? {
         switch type {
         case .user(let playlist):
@@ -72,7 +72,7 @@ struct PlaylistItem: Identifiable, Equatable, Hashable {
             return nil
         }
     }
-    
+
     var modifiedDate: Date? {
         switch type {
         case .user(let playlist):
@@ -81,11 +81,11 @@ struct PlaylistItem: Identifiable, Equatable, Hashable {
             return nil
         }
     }
-    
+
     static func == (lhs: PlaylistItem, rhs: PlaylistItem) -> Bool {
         lhs.id == rhs.id
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
@@ -96,9 +96,9 @@ enum SmartPlaylistType: String, CaseIterable {
     case favorites = "Favorites"
     case topPlayed = "Top 25 Most Played"
     case recentlyPlayed = "Recently Played"
-    
+
     var id: String { rawValue }
-    
+
     var icon: String {
         switch self {
         case .favorites:
@@ -109,7 +109,7 @@ enum SmartPlaylistType: String, CaseIterable {
             return "clock.fill"
         }
     }
-    
+
     var description: String {
         switch self {
         case .favorites:
@@ -128,11 +128,11 @@ enum PlaylistSortOption: String, CaseIterable, Hashable {
     case dateCreated = "Date Created"
     case dateModified = "Date Modified"
     case trackCount = "Track Count"
-    
+
     var label: String {
         rawValue
     }
-    
+
     var ascendingIcon: String {
         switch self {
         case .name:
@@ -143,7 +143,7 @@ enum PlaylistSortOption: String, CaseIterable, Hashable {
             return "arrow.up"
         }
     }
-    
+
     var descendingIcon: String {
         switch self {
         case .name:

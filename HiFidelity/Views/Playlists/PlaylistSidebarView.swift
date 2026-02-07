@@ -14,7 +14,7 @@ struct PlaylistSidebarView: View {
     @ObservedObject var theme = AppTheme.shared
     @Binding var selectedTab: NavigationTab
     @Binding var selectedEntity: EntityType?
-    
+
     @StateObject private var viewModel = PlaylistSidebarViewModel()
     @State private var searchText = ""
     @State private var showCreatePlaylist = false
@@ -23,20 +23,20 @@ struct PlaylistSidebarView: View {
     @State private var sortOption: PlaylistSortOption = .name
     @State private var isSelectionMode = false
     @State private var selectedPlaylistIds: Set<String> = []
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Playlists header
             playlistsHeader
-            
+
             Divider()
                 .opacity(0) // invisible
-            
+
             // Search bar
             searchBar
-            
+
             Divider()
-            
+
             // Playlist items
             if viewModel.isLoading {
                 ProgressView()
@@ -58,7 +58,7 @@ struct PlaylistSidebarView: View {
                                 sectionHeader(title: "Smart Playlists")
                             }
                         }
-                        
+
                         // Pinned Playlists Section
                         if !viewModel.pinnedPlaylists.isEmpty {
                             Section {
@@ -69,7 +69,7 @@ struct PlaylistSidebarView: View {
                                 sectionHeader(title: "Pinned")
                             }
                         }
-                        
+
                         // All Playlists Section
                         if !viewModel.userPlaylists.isEmpty {
                             Section {
@@ -102,8 +102,8 @@ struct PlaylistSidebarView: View {
         .onChange(of: searchText) { _, newValue in
             viewModel.filterPlaylists(query: newValue)
         }
-        .onChange(of: sortOption) { _, newOption in
-            sortOptionId = newOption.rawValue
+        .onChange(of: sortOption.rawValue) { _, newValue in
+            sortOptionId = newValue
             viewModel.sortPlaylists(by: sortOption, ascending: sortAscending)
         }
         .onChange(of: sortAscending) { _, _ in
@@ -119,9 +119,13 @@ struct PlaylistSidebarView: View {
             }
         }
     }
-    
+
+}
+
+extension PlaylistSidebarView {
+
     // MARK: - Header
-    
+
     private var playlistsHeader: some View {
         HStack(spacing: 12) {
             if isSelectionMode {
@@ -135,7 +139,7 @@ struct PlaylistSidebarView: View {
                         .foregroundColor(theme.currentTheme.primaryColor)
                 }
                 .buttonStyle(.plain)
-                
+
                 Button {
                     selectAllPlaylists()
                 } label: {
@@ -147,13 +151,13 @@ struct PlaylistSidebarView: View {
                 }
                 .buttonStyle(.plain)
                 .padding(.leading, 8)
-                
+
                 Spacer()
-                
+
                 Text("\(selectedPlaylistIds.count) selected")
                     .font(AppFonts.labelMedium)
                     .foregroundColor(.secondary)
-                
+
                 Button {
                     deleteSelectedPlaylists()
                 } label: {
@@ -168,17 +172,17 @@ struct PlaylistSidebarView: View {
                 Image(systemName: "music.note.list")
                     .font(.system(size: 22))
                     .foregroundColor(.secondary)
-                
+
                 Text("Playlists")
                     .font(AppFonts.sidebarHeader)
-                
+
                 Spacer()
-                
+
                 // Selection mode toggle button
-                SelectionModeButton(action: { 
-                    isSelectionMode = true 
+                SelectionModeButton(action: {
+                    isSelectionMode = true
                 })
-                
+
                 // Create button
                 CreatePlaylistButton(action: { showCreatePlaylist = true })
             }
@@ -193,7 +197,7 @@ struct PlaylistSidebarView: View {
         @Binding var sortAscending: Bool
         @State private var isHovered = false
         @ObservedObject var theme = AppTheme.shared
-        
+
         var body: some View {
             Menu {
                 // Sort options
@@ -235,12 +239,12 @@ struct PlaylistSidebarView: View {
             .help("Sort Playlists")
         }
     }
-    
+
     private struct CreatePlaylistButton: View {
         let action: () -> Void
         @State private var isHovered = false
         @ObservedObject var theme = AppTheme.shared
-        
+
         var body: some View {
             Button(action: action) {
                 Image(systemName: "plus")
@@ -261,12 +265,12 @@ struct PlaylistSidebarView: View {
             .help("Create New Playlist")
         }
     }
-    
+
     private struct SelectionModeButton: View {
         let action: () -> Void
         @State private var isHovered = false
         @ObservedObject var theme = AppTheme.shared
-        
+
         var body: some View {
             Button(action: action) {
                 Image(systemName: "checkmark.circle")
@@ -288,19 +292,19 @@ struct PlaylistSidebarView: View {
             .help("Select Playlists")
         }
     }
-    
+
     // MARK: - Search Bar
-    
+
     private var searchBar: some View {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.secondary)
                 .font(.system(size: 14))
-            
+
             TextField("Search playlists", text: $searchText)
                 .textFieldStyle(.plain)
                 .font(AppFonts.labelMedium)
-            
+
             if !searchText.isEmpty {
                 Button {
                     searchText = ""
@@ -311,7 +315,7 @@ struct PlaylistSidebarView: View {
                 }
                 .buttonStyle(.plain)
             }
-            
+
             // Sort button
             SortMenuButton(
                 sortOption: $sortOption,
@@ -328,9 +332,9 @@ struct PlaylistSidebarView: View {
         .padding(.vertical, 10)
         .frame(height: 46)
     }
-    
+
     // MARK: - Section Header
-    
+
     private func sectionHeader(title: String) -> some View {
         HStack {
             Text(title)
@@ -343,13 +347,13 @@ struct PlaylistSidebarView: View {
         .padding(.vertical, 8)
         .background(Color(nsColor: .windowBackgroundColor).opacity(0.95))
     }
-    
+
     // MARK: - Playlist Row
-    
+
     private func playlistRow(_ playlist: PlaylistItem) -> some View {
         let isSelected = selectedPlaylistIds.contains(playlist.id)
         let canBeDeleted = if case .user = playlist.type { true } else { false }
-        
+
         return HStack(spacing: 12) {
             // Selection checkbox (only for user playlists in selection mode)
             if isSelectionMode && canBeDeleted {
@@ -357,23 +361,23 @@ struct PlaylistSidebarView: View {
                     .font(.system(size: 20))
                     .foregroundColor(isSelected ? theme.currentTheme.primaryColor : .secondary)
             }
-            
+
             // Artwork
             artworkView(for: playlist)
-            
+
             VStack(alignment: .leading, spacing: 4) {
                 Text(playlist.name)
                     .font(AppFonts.sidebarItem)
                     .foregroundColor(.primary)
                     .lineLimit(1)
-                
+
                 HStack(spacing: 4) {
                     if playlist.isPinned {
                         Image(systemName: "pin.fill")
                             .font(AppFonts.captionSmall)
                             .foregroundColor(theme.currentTheme.primaryColor)
                     }
-                    
+
                     if case .smart(let smartType) = playlist.type {
                         Text(smartType.description)
                             .font(AppFonts.captionMedium)
@@ -387,7 +391,7 @@ struct PlaylistSidebarView: View {
                     }
                 }
             }
-            
+
             Spacer()
         }
         .padding(.horizontal, 8)
@@ -419,10 +423,8 @@ struct PlaylistSidebarView: View {
         }
     }
 
-
-    
     // MARK: - Artwork View
-    
+
     private func artworkView(for playlist: PlaylistItem) -> some View {
         Group {
             if let imageData = playlist.artworkData, let nsImage = NSImage(data: imageData) {
@@ -452,18 +454,18 @@ struct PlaylistSidebarView: View {
             }
         }
     }
-    
+
     // MARK: - Helper Methods
-    
+
     private func isPlaylistSelected(_ playlist: PlaylistItem) -> Bool {
         guard case .playlist(let selectedPlaylist) = selectedEntity else {
             return false
         }
         return selectedPlaylist.id == playlist.id
     }
-    
+
     // MARK: - Context Menu
-    
+
     @ViewBuilder
     private func playlistContextMenu(_ playlist: PlaylistItem) -> some View {
         if case .user(let playlistModel) = playlist.type {
@@ -474,26 +476,26 @@ struct PlaylistSidebarView: View {
             } label: {
                 Label(playlist.isPinned ? "Unpin" : "Pin to Top", systemImage: playlist.isPinned ? "pin.slash" : "pin")
             }
-            
+
             Divider()
-            
+
             Button {
                 exportPlaylistToM3U(playlist: playlistModel)
             } label: {
                 Label("Export as M3U", systemImage: "square.and.arrow.up")
             }
-            
+
             Divider()
-            
+
             Button {
                 isSelectionMode = true
                 selectedPlaylistIds.insert(playlist.id)
             } label: {
                 Label("Select Multiple", systemImage: "checkmark.circle")
             }
-            
+
             Divider()
-            
+
             Button(role: .destructive) {
                 Task {
                     try await databaseManager.deletePlaylist(playlist)
@@ -504,7 +506,6 @@ struct PlaylistSidebarView: View {
         }
     }
 
-    
     private func deleteSelectedPlaylists() {
         // Extract raw database IDs from the selected strings (e.g., "user_123" -> 123)
         let idsToDelete = selectedPlaylistIds.compactMap { idString -> Int64? in
@@ -513,13 +514,13 @@ struct PlaylistSidebarView: View {
             }
             return nil
         }
-        
+
         guard !idsToDelete.isEmpty else { return }
-        
+
         Task {
             do {
                 try await databaseManager.deletePlaylists(ids: idsToDelete)
-                
+
                 await MainActor.run {
                     // Exit selection mode and clear selections ONLY on success
                     isSelectionMode = false
@@ -530,17 +531,17 @@ struct PlaylistSidebarView: View {
             }
         }
     }
-    
+
     private func selectAllPlaylists() {
         // Collect all currently visible user (deletable) playlists
         let visibleSelectable = viewModel.pinnedPlaylists + viewModel.userPlaylists
         let visibleIds = visibleSelectable.map { $0.id }
-        
+
         guard !visibleIds.isEmpty else { return }
-        
+
         // If all visible ones are already selected, deselect them
         let allVisibleSelected = visibleIds.allSatisfy { selectedPlaylistIds.contains($0) }
-        
+
         if allVisibleSelected {
             for id in visibleIds {
                 selectedPlaylistIds.remove(id)
@@ -552,16 +553,16 @@ struct PlaylistSidebarView: View {
             }
         }
     }
-    
+
     private func exportPlaylistToM3U(playlist: Playlist) {
         guard let playlistId = playlist.id else { return }
-        
+
         let panel = NSSavePanel()
         panel.allowedContentTypes = [.init(filenameExtension: "m3u")!]
         panel.nameFieldStringValue = "\(playlist.name).m3u"
         panel.message = "Export playlist to M3U file"
         panel.canCreateDirectories = true
-        
+
         if panel.runModal() == .OK, let url = panel.url {
             Task {
                 do {
@@ -570,9 +571,9 @@ struct PlaylistSidebarView: View {
                         saveURL: url,
                         useRelativePaths: false
                     )
-                    
+
                     Logger.info("Successfully exported playlist '\(playlist.name)' to \(url.path)")
-                    
+
                     // Show success notification
                     await MainActor.run {
                         NSWorkspace.shared.activateFileViewerSelecting([url])
@@ -583,15 +584,15 @@ struct PlaylistSidebarView: View {
             }
         }
     }
-    
+
     // MARK: - Empty State
-    
+
     private var emptyStateView: some View {
         VStack(spacing: 12) {
             Image(systemName: "music.note.list")
                 .font(.system(size: 48))
                 .foregroundColor(.secondary.opacity(0.5))
-            
+
             Text(searchText.isEmpty ? "No playlists yet\nCreate your first playlist" : "No playlists found")
                 .font(AppFonts.labelMedium)
                 .foregroundColor(.secondary)
@@ -601,130 +602,13 @@ struct PlaylistSidebarView: View {
     }
 }
 
-// MARK: - Playlist Sidebar ViewModel
-
-@MainActor
-final class PlaylistSidebarViewModel: ObservableObject {
-    @Published var allPlaylists: [PlaylistItem] = []
-    @Published var smartPlaylists: [PlaylistItem] = []
-    @Published var pinnedPlaylists: [PlaylistItem] = []
-    @Published var userPlaylists: [PlaylistItem] = []
-    @Published var isLoading = false
-    
-    private let database = DatabaseManager.shared
-    
-    func loadPlaylists() async {
-        isLoading = true
-        defer { isLoading = false }
-        
-        do {
-            // Load smart playlists
-            smartPlaylists = SmartPlaylistType.allCases.map { type in
-                PlaylistItem(
-                    id: "smart_\(type.rawValue)",
-                    name: type.rawValue,
-                    isPinned: false,
-                    type: .smart(type)
-                )
-            }
-            
-            // Load user playlists from cache for better performance
-            let userPlaylistModels = try await DatabaseCache.shared.getAllPlaylists()
-            let userPlaylistItems = userPlaylistModels.map { playlist in
-                PlaylistItem(
-                    id: "user_\(playlist.id ?? 0)",
-                    name: playlist.name,
-                    isPinned: playlist.isFavorite,
-                    type: .user(playlist)
-                )
-            }
-            
-            // Separate pinned and regular playlists
-            pinnedPlaylists = userPlaylistItems.filter { $0.isPinned }
-            userPlaylists = userPlaylistItems.filter { !$0.isPinned }
-            
-            allPlaylists = smartPlaylists + userPlaylistItems
-            
-            Logger.debug("Loaded \(smartPlaylists.count) smart playlists, \(userPlaylistItems.count) user playlists from cache")
-        } catch {
-            Logger.error("Failed to load playlists: \(error)")
-        }
-    }
-    
-    func filterPlaylists(query: String) {
-        guard !query.isEmpty else {
-            // Reset filtering by reloading
-            Task { await loadPlaylists() }
-            return
-        }
-        
-        let lowercased = query.lowercased()
-        
-        smartPlaylists = smartPlaylists.filter { $0.name.lowercased().contains(lowercased) }
-        pinnedPlaylists = pinnedPlaylists.filter { $0.name.lowercased().contains(lowercased) }
-        userPlaylists = userPlaylists.filter { $0.name.lowercased().contains(lowercased) }
-    }
-    
-    func sortPlaylists(by option: PlaylistSortOption, ascending: Bool) {
-        let sortFunction: (PlaylistItem, PlaylistItem) -> Bool = { item1, item2 in
-            let result: Bool
-            
-            switch option {
-            case .name:
-                result = item1.name.localizedCaseInsensitiveCompare(item2.name) == .orderedAscending
-            case .dateCreated:
-                let date1 = item1.createdDate ?? Date.distantPast
-                let date2 = item2.createdDate ?? Date.distantPast
-                result = date1 < date2
-            case .dateModified:
-                let date1 = item1.modifiedDate ?? Date.distantPast
-                let date2 = item2.modifiedDate ?? Date.distantPast
-                result = date1 < date2
-            case .trackCount:
-                result = item1.trackCount < item2.trackCount
-            }
-            
-            return ascending ? result : !result
-        }
-        
-        pinnedPlaylists.sort(by: sortFunction)
-        userPlaylists.sort(by: sortFunction)
-    }
-    
-    func togglePin(playlist: PlaylistItem) async {
-        guard case .user(var playlistModel) = playlist.type else { return }
-        
-        do {
-            playlistModel.isFavorite.toggle()
-            try await database.updatePlaylist(playlistModel)
-            await loadPlaylists()
-        } catch {
-            Logger.error("Failed to toggle pin: \(error)")
-        }
-    }
-}
-
-
-// MARK: - View Extension
-
-extension View {
-    @ViewBuilder
-    func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
-        if condition {
-            transform(self)
-        } else {
-            self
-        }
-    }
-}
-
 // MARK: - Preview
 
 #Preview {
     struct PreviewWrapper: View {
         @State private var selectedTab: NavigationTab = .home
         @State private var selectedEntity: EntityType?
-        
+
         var body: some View {
             PlaylistSidebarView(
                 selectedTab: $selectedTab,
@@ -734,8 +618,6 @@ extension View {
             .frame(width: 280, height: 800)
         }
     }
-    
+
     return PreviewWrapper()
 }
-
-

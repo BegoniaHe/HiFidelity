@@ -12,7 +12,7 @@ struct ModernPlayerLayout: View {
     @EnvironmentObject var databaseManager: DatabaseManager
     @EnvironmentObject var appCoordinator: AppCoordinator
     @StateObject private var trackInfoManager = TrackInfoManager()
-    
+
     @State private var selectedTab: NavigationTab = .home
     @State private var selectedEntity: EntityType?
     @State private var showSettings = false
@@ -21,7 +21,7 @@ struct ModernPlayerLayout: View {
     @AppStorage("showLeftSidebar") private var showLeftSidebar = true
     @State private var searchText = ""
     @State private var isSearchActive = false
-    
+
     // Dynamic minimum width based on visible panels
     private var minimumWidth: CGFloat {
         switch (showLeftSidebar, showRightPanel) {
@@ -31,7 +31,7 @@ struct ModernPlayerLayout: View {
         case (false, false): return 900   // No panels open (just main content)
         }
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Top: App Header
@@ -43,9 +43,9 @@ struct ModernPlayerLayout: View {
                 showRightPanel: $showRightPanel,
                 showSettings: $showSettings
             )
-            
+
             Divider()
-            
+
             // Main content area with responsive layout
             ResponsiveMainLayout(
                 showLeftSidebar: $showLeftSidebar,
@@ -140,7 +140,7 @@ enum NavigationTab: String, CaseIterable, Identifiable {
     case home
     case playlists
     case discover
-    
+
     var id: String { rawValue }
 }
 // MARK: - Preview
@@ -150,5 +150,3 @@ enum NavigationTab: String, CaseIterable, Identifiable {
         .environmentObject(DatabaseManager.shared)
         .frame(width: 1200, height: 800)
 }
-
-

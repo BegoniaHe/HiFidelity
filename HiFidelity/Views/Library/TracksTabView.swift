@@ -10,11 +10,11 @@ import SwiftUI
 /// Tracks tab view displaying all library tracks with list/grid view and sorting
 struct TracksTabView: View {
     let isVisible: Bool
-    
+
     @EnvironmentObject var databaseManager: DatabaseManager
     @ObservedObject var theme = AppTheme.shared
     @ObservedObject var playback = PlaybackController.shared
-    
+
     @State private var tracks: [Track] = []
     @State private var filteredTracks: [Track] = []
     @State private var sortedTracks: [Track] = []
@@ -26,19 +26,19 @@ struct TracksTabView: View {
     @State private var viewType: ViewType = .list
     @State private var selectedTrack: Track.ID?
     @State private var sortOrder: [KeyPathComparator<Track>] = [KeyPathComparator(\Track.title, order: .forward)]
-    @State private var selectedFilter: TrackFilter? = nil
-    
+    @State private var selectedFilter: TrackFilter?
+
     init(isVisible: Bool = true) {
         self.isVisible = isVisible
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Toolbar
             toolbar
-            
+
             Divider()
-            
+
             // Content
             if isLoading {
                 loadingView
@@ -59,12 +59,12 @@ struct TracksTabView: View {
         .onAppear {
             // Restore saved view type
             viewType = savedViewType == "grid" ? .grid : .list
-            
+
             // Restore saved sort order
             if let field = TrackSortField.allFields.first(where: { $0.rawValue == savedSortField }) {
                 sortOrder = field.getComparators(ascending: savedSortAscending)
             }
-            
+
             if isVisible && !hasLoadedOnce {
                 Task {
                     await loadTracks()
@@ -92,25 +92,25 @@ struct TracksTabView: View {
             applyFilter()
         }
     }
-    
+
     // MARK: - Toolbar
-    
+
     private var toolbar: some View {
         HStack(spacing: 16) {
             // Track count
             Text("\(sortedTracks.count) tracks")
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.secondary)
-                        
+
             Spacer()
-            
+
             // Sort and Filter dropdown
             TrackTableOptionsDropdown(
                 sortOrder: $sortOrder,
                 selectedFilter: $selectedFilter
             )
             .frame(width: 32)
-            
+
             viewToggle
         }
         .padding(.horizontal, 20)
@@ -118,8 +118,7 @@ struct TracksTabView: View {
         .frame(height: 46)
         .background(Color(nsColor: .windowBackgroundColor))
     }
-    
-    
+
     private var viewToggle: some View {
         // View type toggle
         HStack(spacing: 0) {
@@ -137,7 +136,7 @@ struct TracksTabView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            
+
             Button {
                 viewType = .grid
                 savedViewType = "grid"
@@ -159,9 +158,9 @@ struct TracksTabView: View {
         )
         .clipShape(RoundedRectangle(cornerRadius: 6))
     }
-    
+
     // MARK: - Track Content
-    
+
     @ViewBuilder
     private var trackContent: some View {
         if viewType == .list {
@@ -170,9 +169,9 @@ struct TracksTabView: View {
             trackGridView
         }
     }
-    
+
     // MARK: - List View
-    
+
     private var trackListView: some View {
         TrackTableView(
             tracks: sortedTracks,
@@ -182,9 +181,9 @@ struct TracksTabView: View {
             isCurrentTrack: isCurrentTrack
         )
     }
-    
+
     // MARK: - Grid View
-    
+
     private var trackGridView: some View {
         ScrollView {
             LazyVGrid(columns: [
@@ -199,86 +198,86 @@ struct TracksTabView: View {
             .padding(16)
         }
     }
-    
+
     // MARK: - Empty State
-    
+
     private var emptyState: some View {
         VStack {
             Spacer()
-            
+
             VStack(spacing: 18) {
                 Image(systemName: "music.note")
                     .font(.system(size: 48))
                     .foregroundColor(.secondary.opacity(0.3))
-                
+
                 Text("No Tracks")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.primary)
-                
+
                 Text("Add music folders to see your library here")
                     .font(.system(size: 12))
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
             }
-            
+
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
+
     // MARK: - Loading View
-    
+
     private var loadingView: some View {
         VStack {
             Spacer()
-            
+
             VStack(spacing: 16) {
                 ProgressView()
                     .scaleEffect(1.2)
                     .tint(theme.currentTheme.primaryColor)
-                
+
                 Text("Loading tracks...")
                     .font(.system(size: 14))
                     .foregroundColor(.secondary)
             }
-            
+
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
+
     // MARK: - Helper Methods
-    
+
     private func isCurrentTrack(_ track: Track) -> Bool {
         guard let currentTrack = playback.currentTrack else { return false }
         return currentTrack.url.path == track.url.path
     }
-    
+
     private func playTrack(_ track: Track) {
         guard let trackIndex = sortedTracks.firstIndex(where: { $0.id == track.id }) else {
             playback.playTracks([track], startingAt: 0)
             return
         }
-        
+
         playback.playTracks(sortedTracks, startingAt: trackIndex)
     }
-    
+
     // MARK: - Data Loading
-    
+
     private func loadTracks() async {
         isLoading = true
-        
+
         do {
             tracks = try await DatabaseCache.shared.getAllTracks(forceRefresh: true)
         } catch {
             Logger.error("Failed to load tracks: \(error)")
         }
-        
+
         isLoading = false
     }
-    
+
     // MARK: - Filtering
-    
+
     private func applyFilter() {
         if let filter = selectedFilter {
             switch filter {
@@ -286,7 +285,7 @@ struct TracksTabView: View {
                 filteredTracks = tracks.filter { $0.isFavorite }
             case .recentlyAdded:
                 let thirtyDaysAgo = Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
-                filteredTracks = tracks.filter { 
+                filteredTracks = tracks.filter {
                     guard let dateAdded = $0.dateAdded else { return false }
                     return dateAdded >= thirtyDaysAgo
                 }
@@ -296,18 +295,18 @@ struct TracksTabView: View {
         } else {
             filteredTracks = tracks
         }
-        
+
         // Re-sort after filtering
         initializeSortedTracks()
     }
-    
+
     // MARK: - Sorting Helpers
-    
+
     private func initializeSortedTracks() {
         // Use current sort order instead of resetting to default
         sortedTracks = filteredTracks.sorted(using: sortOrder)
     }
-    
+
     private func performBackgroundSort(with newSortOrder: [KeyPathComparator<Track>]) {
         let tracksToSort = self.filteredTracks
         Task.detached(priority: .userInitiated) {
@@ -317,13 +316,13 @@ struct TracksTabView: View {
             }
         }
     }
-    
+
     private func saveSortOrder(_ sortOrder: [KeyPathComparator<Track>]) {
         guard let firstSort = sortOrder.first else { return }
-        
+
         let sortString = String(describing: firstSort)
         let isAscending = sortString.contains("forward")
-        
+
         // Map comparator to field
         let sortKeyMap: [String: TrackSortField] = [
             "title": .title,
@@ -338,9 +337,9 @@ struct TracksTabView: View {
             "filename": .filename,
             "trackNumber": .trackNumber,
             "discNumber": .discNumber,
-            "playlistPosition": .playlistOrder,
+            "playlistPosition": .playlistOrder
         ]
-        
+
         for (key, field) in sortKeyMap {
             if sortString.contains(key) {
                 savedSortField = field.rawValue
@@ -382,7 +381,7 @@ enum TrackSortField: String, Hashable {
     case trackNumber
     case discNumber
     case playlistOrder
-    
+
     var displayName: String {
         switch self {
         case .title: return "Title"
@@ -400,18 +399,18 @@ enum TrackSortField: String, Hashable {
         case .playlistOrder: return "Playlist Order"
         }
     }
-    
+
     static var regularFields: [TrackSortField] {
         [.title, .artist, .album, .genre, .year, .duration, .playCount, .codec, .dateAdded, .filename, .trackNumber, .discNumber, .playlistOrder]
     }
-    
+
     static var allFields: [TrackSortField] {
         [.title, .artist, .album, .genre, .year, .duration, .playCount, .codec, .dateAdded, .filename, .trackNumber, .discNumber, .playlistOrder]
     }
-    
+
     func getComparator(ascending: Bool) -> KeyPathComparator<Track> {
         let order: SortOrder = ascending ? .forward : .reverse
-        
+
         switch self {
         case .title:
             return KeyPathComparator(\Track.title, order: order)
@@ -441,10 +440,10 @@ enum TrackSortField: String, Hashable {
             return KeyPathComparator(\Track.playlistPosition, order: order)
         }
     }
-    
+
     func getComparators(ascending: Bool) -> [KeyPathComparator<Track>] {
         let order: SortOrder = ascending ? .forward : .reverse
-        
+
         switch self {
         case .trackNumber:
             // Sort by disc first, then track number
@@ -470,18 +469,18 @@ enum TrackSortField: String, Hashable {
 struct TrackTableOptionsDropdown: View {
     @Binding var sortOrder: [KeyPathComparator<Track>]
     @Binding var selectedFilter: TrackFilter?
-    
+
     @ObservedObject private var theme = AppTheme.shared
-    
+
     private var availableFields: [TrackSortField] {
         TrackSortField.regularFields
     }
-    
+
     private var currentSortField: TrackSortField {
         guard let firstSort = sortOrder.first else { return .title }
-        
+
         let sortString = String(describing: firstSort)
-        
+
         let sortKeyMap: [String: TrackSortField] = [
             "title": .title,
             "artist": .artist,
@@ -495,23 +494,23 @@ struct TrackTableOptionsDropdown: View {
             "filename": .filename,
             "trackNumber": .trackNumber,
             "discNumber": .discNumber,
-            "playlistPosition": .playlistOrder,
+            "playlistPosition": .playlistOrder
         ]
-        
+
         for (key, field) in sortKeyMap {
             if sortString.contains(key) {
                 return field
             }
         }
-        
+
         return .title
     }
-    
+
     private var isAscending: Bool {
         guard let firstSort = sortOrder.first else { return true }
         return String(describing: firstSort).contains("forward")
     }
-    
+
     var body: some View {
         Menu {
             Section("Sort by") {
@@ -528,9 +527,9 @@ struct TrackTableOptionsDropdown: View {
                     }
                 }
             }
-            
+
             Divider()
-            
+
             Section("Sort order") {
                 Button {
                     setSortAscending(true)
@@ -542,7 +541,7 @@ struct TrackTableOptionsDropdown: View {
                         }
                     }
                 }
-                
+
                 Button {
                     setSortAscending(false)
                 } label: {
@@ -554,9 +553,9 @@ struct TrackTableOptionsDropdown: View {
                     }
                 }
             }
-            
+
             Divider()
-            
+
             Section("Filter") {
                 ForEach(TrackFilter.allCases, id: \.self) { filter in
                     Button {
@@ -570,7 +569,7 @@ struct TrackTableOptionsDropdown: View {
                         }
                     }
                 }
-                
+
                 if selectedFilter != nil {
                     Button("Clear Filter") {
                         selectedFilter = nil
@@ -597,16 +596,15 @@ struct TrackTableOptionsDropdown: View {
         .menuStyle(.borderlessButton)
         .buttonStyle(.plain)
     }
-    
+
     private func setSortField(_ field: TrackSortField) {
         sortOrder = field.getComparators(ascending: isAscending)
     }
-    
+
     private func setSortAscending(_ ascending: Bool) {
         sortOrder = currentSortField.getComparators(ascending: ascending)
     }
 }
-
 
 #Preview {
     TracksTabView()

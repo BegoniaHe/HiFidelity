@@ -10,11 +10,11 @@ import SwiftUI
 struct ProgressBarControl: View {
     @ObservedObject var playback = PlaybackController.shared
     @ObservedObject var theme = AppTheme.shared
-    
+
     @State private var isHovering = false
     @State private var isDragging = false
     @State private var tempProgress: Double = 0
-    
+
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
@@ -22,7 +22,7 @@ struct ProgressBarControl: View {
                 RoundedRectangle(cornerRadius: isHovering ? 4 : 2)
                     .fill(Color.secondary.opacity(isHovering ? 0.3 : 0.2))
                     .frame(height: isHovering ? 8 : 4)
-                
+
                 // Progress fill
                 RoundedRectangle(cornerRadius: isHovering ? 4 : 2)
                     .fill(progressGradient)
@@ -30,7 +30,7 @@ struct ProgressBarControl: View {
                         width: geometry.size.width * currentProgress,
                         height: isHovering ? 10 : 4
                     )
-                
+
                 // Scrubber handle
                 if isHovering || isDragging {
                     scrubberHandle
@@ -66,9 +66,9 @@ struct ProgressBarControl: View {
         .frame(height: isHovering ? 10 : 4)
         .animation(.easeInOut(duration: 0.2), value: isHovering)
     }
-    
+
     // MARK: - Subviews
-    
+
     private var progressGradient: LinearGradient {
         LinearGradient(
             colors: [
@@ -79,27 +79,27 @@ struct ProgressBarControl: View {
             endPoint: .trailing
         )
     }
-    
+
     private var scrubberHandle: some View {
         ZStack {
             Circle()
                 .fill(Color.white)
                 .frame(width: 16, height: 16)
                 .shadow(color: .black.opacity(0.3), radius: 3, x: 0, y: 2)
-            
+
             Circle()
                 .fill(theme.currentTheme.primaryColor)
                 .frame(width: 12, height: 12)
         }
         .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovering)
     }
-    
+
     // MARK: - Computed Properties
-    
+
     private var currentProgress: Double {
         isDragging ? tempProgress : playback.progress
     }
-    
+
 }
 
 // MARK: - Preview
@@ -112,4 +112,3 @@ struct ProgressBarControl: View {
     }
     .frame(width: 600, height: 100)
 }
-

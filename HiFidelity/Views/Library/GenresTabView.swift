@@ -11,10 +11,10 @@ import SwiftUI
 struct GenresTabView: View {
     @Binding var selectedEntity: EntityType?
     let isVisible: Bool
-    
+
     @EnvironmentObject var databaseManager: DatabaseManager
     @ObservedObject var theme = AppTheme.shared
-    
+
     @State private var genres: [Genre] = []
     @State private var filteredGenres: [Genre] = []
     @State private var isLoading = false
@@ -22,30 +22,30 @@ struct GenresTabView: View {
     @AppStorage("genresSortOptionId") private var sortOptionId: String = "name"
     @AppStorage("genresSortAscending") private var sortAscending: Bool = true
     @State private var selectedSort = SortOption(id: "name", title: "Name", type: .alphabetical, ascending: true)
-    @State private var selectedFilter: FilterOption? = nil
-    
+    @State private var selectedFilter: FilterOption?
+
     init(selectedEntity: Binding<EntityType?>, isVisible: Bool = true) {
         self._selectedEntity = selectedEntity
         self.isVisible = isVisible
     }
-    
+
     private let sortOptions = [
         SortOption(id: "name", title: "Name", type: .alphabetical, ascending: true),
         SortOption(id: "tracks", title: "Track Count", type: .trackCount, ascending: false)
     ]
-    
+
     private let filterOptions = [
         FilterOption(id: "popular", title: "Popular (20+ tracks)", predicate: "trackCount >= 20"),
         FilterOption(id: "medium", title: "Medium (10+ tracks)", predicate: "trackCount >= 10")
     ]
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Toolbar
             toolbar
-            
+
             Divider()
-            
+
             // Content
             if isLoading {
                 loadingView
@@ -90,7 +90,7 @@ struct GenresTabView: View {
                     ascending: sortAscending
                 )
             }
-            
+
             if isVisible && !hasLoadedOnce {
                 Task {
                     await loadGenres()
@@ -112,39 +112,39 @@ struct GenresTabView: View {
             applyFiltersAndSort()
         }
     }
-    
+
     // MARK: - Loading View
-    
+
     private var loadingView: some View {
         VStack {
             Spacer()
-            
+
             VStack(spacing: 16) {
                 ProgressView()
                     .scaleEffect(1.2)
                     .tint(theme.currentTheme.primaryColor)
-                
+
                 Text("Loading genres...")
                     .font(.system(size: 14))
                     .foregroundColor(.secondary)
             }
-            
+
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
+
     // MARK: - Toolbar
-    
+
     private var toolbar: some View {
         HStack(spacing: 16) {
             // Count label
             Text("\(filteredGenres.count) genres")
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.secondary)
-            
+
             Spacer()
-            
+
             // Sort and Filter dropdown
             GenreOptionsDropdown(
                 selectedSort: $selectedSort,
@@ -159,11 +159,11 @@ struct GenresTabView: View {
         .frame(height: 46)
         .background(Color(nsColor: .windowBackgroundColor))
     }
-    
+
     private func loadGenres() async {
         isLoading = true
         defer { isLoading = false }
-        
+
         do {
             genres = try await databaseManager.getAllGenres()
             applyFiltersAndSort()
@@ -171,10 +171,10 @@ struct GenresTabView: View {
             Logger.error("Failed to load genres: \(error)")
         }
     }
-    
+
     private func applyFiltersAndSort() {
         var result = genres
-        
+
         // Apply track count filters
         if let filter = selectedFilter {
             switch filter.id {
@@ -186,7 +186,7 @@ struct GenresTabView: View {
                 break
             }
         }
-        
+
         // Apply sort
         switch selectedSort.type {
         case .alphabetical:
@@ -196,11 +196,11 @@ struct GenresTabView: View {
         default:
             break
         }
-        
+
         if !selectedSort.ascending {
             result.reverse()
         }
-        
+
         filteredGenres = result
     }
 }
@@ -212,9 +212,9 @@ private struct GenreOptionsDropdown: View {
     @Binding var selectedFilter: FilterOption?
     let sortOptions: [SortOption]
     let filterOptions: [FilterOption]
-    
+
     @ObservedObject private var theme = AppTheme.shared
-    
+
     var body: some View {
         Menu {
             Section("Sort by") {
@@ -231,9 +231,9 @@ private struct GenreOptionsDropdown: View {
                     }
                 }
             }
-            
+
             Divider()
-            
+
             Section("Sort order") {
                 Button {
                     selectedSort = SortOption(
@@ -250,7 +250,7 @@ private struct GenreOptionsDropdown: View {
                         }
                     }
                 }
-                
+
                 Button {
                     selectedSort = SortOption(
                         id: selectedSort.id,
@@ -267,9 +267,9 @@ private struct GenreOptionsDropdown: View {
                     }
                 }
             }
-            
+
             Divider()
-            
+
             Section("Filter") {
                 ForEach(filterOptions) { filter in
                     Button {
@@ -283,7 +283,7 @@ private struct GenreOptionsDropdown: View {
                         }
                     }
                 }
-                
+
                 if selectedFilter != nil {
                     Button("Clear Filter") {
                         selectedFilter = nil
@@ -311,4 +311,3 @@ private struct GenreOptionsDropdown: View {
         .buttonStyle(.plain)
     }
 }
-

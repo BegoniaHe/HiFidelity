@@ -10,7 +10,7 @@ import SwiftUI
 struct VolumeControlSection: View {
     @ObservedObject var playback = PlaybackController.shared
     @ObservedObject var theme = AppTheme.shared
-    
+
     var body: some View {
         HStack(spacing: 10) {
             // Mute button
@@ -18,7 +18,7 @@ struct VolumeControlSection: View {
                 icon: volumeIcon,
                 action: { playback.toggleMute() }
             )
-            
+
             // Volume slider
             Slider(
                 value: volumeBinding,
@@ -28,13 +28,13 @@ struct VolumeControlSection: View {
             .accentColor(theme.currentTheme.primaryColor)
         }
     }
-    
+
     private struct VolumeButton: View {
         let icon: String
         let action: () -> Void
-        
+
         @State private var isHovered = false
-        
+
         var body: some View {
             Button(action: action) {
                 Image(systemName: icon)
@@ -56,9 +56,9 @@ struct VolumeControlSection: View {
             }
         }
     }
-    
+
     // MARK: - Computed Properties
-    
+
     private var volumeIcon: String {
         if playback.isMuted || playback.volume == 0 {
             return "speaker.slash.fill"
@@ -70,7 +70,7 @@ struct VolumeControlSection: View {
             return "speaker.wave.3.fill"
         }
     }
-    
+
     private var volumeBinding: Binding<Double> {
         Binding(
             get: { playback.isMuted ? 0 : playback.volume },
@@ -91,4 +91,3 @@ struct VolumeControlSection: View {
         .frame(width: 150, height: 40)
         .padding()
 }
-

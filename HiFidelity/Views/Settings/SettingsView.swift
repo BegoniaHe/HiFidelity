@@ -11,24 +11,23 @@ import SwiftUI
 struct SettingsView: View {
     @ObservedObject var theme = AppTheme.shared
     @Environment(\.dismiss) var dismiss
-    
+
     @State private var selectedTab: SettingsTab = .appearance
-    
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Header
             header
-            
+
             Divider()
-            
+
             HStack {
                 // Sidebar
                 settingsSidebar
                     .frame(minWidth: 200, maxWidth: 200)
-                
+
                 Divider()
-                
+
                 // Content
                 settingsContent
                     .frame(minWidth: 500)
@@ -41,17 +40,17 @@ struct SettingsView: View {
             }
         }
     }
-    
+
     // MARK: - Header
-    
+
     private var header: some View {
         HStack {
             Text("Settings")
                 .font(.title2)
                 .fontWeight(.bold)
-            
+
             Spacer()
-            
+
             Button {
                 dismiss()
             } label: {
@@ -65,9 +64,9 @@ struct SettingsView: View {
         .padding(.horizontal, 24)
         .padding(.vertical, 16)
     }
-    
+
     // MARK: - Sidebar
-    
+
     private var settingsSidebar: some View {
         VStack(alignment: .leading, spacing: 4) {
             ForEach(SettingsTab.allCases) { tab in
@@ -79,14 +78,14 @@ struct SettingsView: View {
                     selectedTab = tab
                 }
             }
-            
+
             Spacer()
         }
         .padding(12)
     }
-    
+
     // MARK: - Content
-    
+
     @ViewBuilder
     private var settingsContent: some View {
         Group {
@@ -126,9 +125,9 @@ enum SettingsTab: String, CaseIterable, Identifiable {
     case library
     case advanced
     case about
-    
+
     var id: String { rawValue }
-    
+
     var title: String {
         switch self {
         case .appearance: return "Appearance"
@@ -138,7 +137,7 @@ enum SettingsTab: String, CaseIterable, Identifiable {
         case .about: return "About"
         }
     }
-    
+
     var icon: String {
         switch self {
         case .appearance: return "paintbrush.fill"
@@ -157,9 +156,9 @@ private struct SettingsSidebarButton: View {
     let tab: SettingsTab
     let isSelected: Bool
     let action: () -> Void
-    
+
     @State private var isHovered = false
-    
+
     var body: some View {
         Button(action: action) {
             HStack(spacing: 12) {
@@ -167,11 +166,11 @@ private struct SettingsSidebarButton: View {
                     .font(.system(size: 16, weight: isSelected ? .semibold : .medium))
                     .foregroundColor(iconColor)
                     .frame(width: 24)
-                
+
                 Text(tab.title)
                     .font(.system(size: 14, weight: isSelected ? .semibold : .regular))
                     .foregroundColor(textColor)
-                
+
                 Spacer()
             }
             .padding(.horizontal, 12)
@@ -186,15 +185,15 @@ private struct SettingsSidebarButton: View {
             }
         }
     }
-    
+
     private var iconColor: Color {
         isSelected ? theme.currentTheme.primaryColor : (isHovered ? .primary : .secondary)
     }
-    
+
     private var textColor: Color {
         isSelected ? .primary : (isHovered ? .primary.opacity(0.9) : .secondary)
     }
-    
+
     private var backgroundColor: Color {
         isSelected ? theme.currentTheme.primaryColor.opacity(0.15) : (isHovered ? Color(nsColor: .windowBackgroundColor) : .clear)
     }
@@ -204,4 +203,3 @@ private struct SettingsSidebarButton: View {
     SettingsView()
         .environmentObject(DatabaseManager.shared)
 }
-

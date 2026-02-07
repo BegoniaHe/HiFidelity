@@ -12,21 +12,21 @@ struct LibraryHeader: View {
     let count: Int
     let sortOptions: [SortOption]
     let filterOptions: [FilterOption]?
-    
+
     @Binding var selectedSort: SortOption
     @Binding var selectedFilter: FilterOption?
-    
+
     @ObservedObject var theme = AppTheme.shared
-    
+
     var body: some View {
         HStack(spacing: 16) {
             // Count label
             Text(title)
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.secondary)
-            
+
             Spacer()
-            
+
             // Sort order toggle (ascending/descending)
             Button {
                 selectedSort = SortOption(
@@ -46,7 +46,7 @@ struct LibraryHeader: View {
                     )
             }
             .buttonStyle(.plain)
-            
+
             // Sort menu - single icon with context menu
             Menu {
                 ForEach(sortOptions) { option in
@@ -73,7 +73,7 @@ struct LibraryHeader: View {
             }
             .menuStyle(.borderlessButton)
             .buttonStyle(.plain)
-            
+
             // Filter button
             if let filters = filterOptions, !filters.isEmpty {
                 Menu {
@@ -89,7 +89,7 @@ struct LibraryHeader: View {
                             }
                         }
                     }
-                    
+
                     if selectedFilter != nil {
                         Divider()
                         Button("Clear Filter") {
@@ -132,7 +132,7 @@ struct SortOption: Identifiable, Equatable {
     let title: String
     let type: SortType
     var ascending: Bool
-    
+
     enum SortType {
         case alphabetical
         case dateAdded
@@ -155,19 +155,19 @@ struct FilterOption: Identifiable, Equatable {
 #Preview {
     struct PreviewWrapper: View {
         @State private var selectedSort = SortOption(id: "name", title: "Name", type: .alphabetical, ascending: true)
-        @State private var selectedFilter: FilterOption? = nil
-        
+        @State private var selectedFilter: FilterOption?
+
         let sortOptions = [
             SortOption(id: "name", title: "Name", type: .alphabetical, ascending: true),
             SortOption(id: "recent", title: "Recently Added", type: .dateAdded, ascending: false),
             SortOption(id: "tracks", title: "Track Count", type: .trackCount, ascending: false)
         ]
-        
+
         let filterOptions = [
             FilterOption(id: "2020s", title: "2020s", predicate: "year >= 2020"),
             FilterOption(id: "2010s", title: "2010s", predicate: "year >= 2010 AND year < 2020")
         ]
-        
+
         var body: some View {
             LibraryHeader(
                 title: "150 albums",
@@ -180,7 +180,6 @@ struct FilterOption: Identifiable, Equatable {
             .frame(width: 800)
         }
     }
-    
+
     return PreviewWrapper()
 }
-

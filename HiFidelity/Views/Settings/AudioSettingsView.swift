@@ -12,7 +12,7 @@ struct AudioSettingsView: View {
     @ObservedObject var effectsManager = AudioEffectsManager.shared
     @ObservedObject var replayGainSettings = ReplayGainSettings.shared
     @ObservedObject var r128Scanner = R128LoudnessScanner.shared
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
 
@@ -20,30 +20,30 @@ struct AudioSettingsView: View {
             settingsSection(title: "Output Device", icon: "speaker.wave.3") {
                 deviceSettings
             }
-            
+
             Divider()
 
             // Audio Effects
             settingsSection(title: "Audio Effects", icon: "waveform.badge.magnifyingglass") {
                 effectsSettings
             }
-            
+
             Divider()
-            
+
             // ReplayGain
             settingsSection(title: "ReplayGain", icon: "waveform.path.ecg") {
                 replayGainSettingsView
             }
-            
+
             Divider()
-            
+
             // Audio Quality
             settingsSection(title: "Audio Quality", icon: "waveform") {
                 qualitySettings
             }
-            
+
             Divider()
-            
+
             // Reset Button
             HStack {
                 Spacer()
@@ -56,9 +56,9 @@ struct AudioSettingsView: View {
             .padding(.top, 8)
         }
     }
-    
+
     // MARK: - Settings Sections
-    
+
     private var effectsSettings: some View {
         VStack(alignment: .leading, spacing: 16) {
             // Reverb Toggle
@@ -72,7 +72,7 @@ struct AudioSettingsView: View {
                 ))
                 .toggleStyle(.switch)
             }
-            
+
             // Reverb Mix
             if effectsManager.isReverbEnabled {
             settingRow(
@@ -85,7 +85,7 @@ struct AudioSettingsView: View {
                             set: { effectsManager.setReverbMix(Float($0)) }
                         ), in: -96...0, step: 1)
                         .frame(width: 150)
-                    
+
                         Text("\(Int(effectsManager.reverbMix)) dB")
                             .frame(width: 60, alignment: .trailing)
                         .foregroundColor(.secondary)
@@ -95,7 +95,7 @@ struct AudioSettingsView: View {
             }
         }
     }
-    
+
     private var replayGainSettingsView: some View {
         VStack(alignment: .leading, spacing: 16) {
             // ReplayGain Toggle
@@ -106,7 +106,7 @@ struct AudioSettingsView: View {
                 Toggle("", isOn: $replayGainSettings.isEnabled)
                     .toggleStyle(.switch)
             }
-            
+
             // Mode & Source Pickers
             if replayGainSettings.isEnabled {
                 settingRow(
@@ -120,7 +120,7 @@ struct AudioSettingsView: View {
                     }
                     .frame(width: 150)
                 }
-                
+
                 settingRow(
                     label: "Source",
                     description: replayGainSettings.source.description
@@ -132,7 +132,7 @@ struct AudioSettingsView: View {
                     }
                     .frame(width: 220)
                 }
-                
+
                 // R128 Loudness Analysis
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
@@ -143,9 +143,9 @@ struct AudioSettingsView: View {
                                 .font(.system(size: 11))
                                 .foregroundColor(.secondary)
                         }
-                        
+
                         Spacer()
-                        
+
                         if r128Scanner.isScanning {
                             Button("Cancel") {
                                 r128Scanner.cancelScan()
@@ -158,20 +158,20 @@ struct AudioSettingsView: View {
                             .buttonStyle(.borderedProminent)
                         }
                     }
-                    
+
                     // Progress indicator
                     if r128Scanner.isScanning {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
                                 ProgressView(value: r128Scanner.progress)
                                     .frame(maxWidth: .infinity)
-                                
+
                                 Text("\(r128Scanner.scannedCount)/\(r128Scanner.totalCount)")
                                     .font(.system(size: 11))
                                     .foregroundColor(.secondary)
                                     .monospacedDigit()
                             }
-                            
+
                             if let currentTrack = r128Scanner.currentTrack {
                                 Text("Analyzing: \(currentTrack.title)")
                                     .font(.system(size: 10))
@@ -185,7 +185,7 @@ struct AudioSettingsView: View {
             }
         }
     }
-    
+
     private var qualitySettings: some View {
         VStack(alignment: .leading, spacing: 16) {
             // Buffer Length
@@ -199,7 +199,7 @@ struct AudioSettingsView: View {
                         set: { settings.bufferLength = Int($0) }
                     ), in: 100...2000, step: 100)
                     .frame(width: 150)
-                    
+
                     Text("\(settings.bufferLength) ms")
                         .frame(width: 70, alignment: .trailing)
                         .foregroundColor(.secondary)
@@ -207,7 +207,7 @@ struct AudioSettingsView: View {
             }
         }
     }
-    
+
     private var deviceSettings: some View {
         VStack(alignment: .leading, spacing: 16) {
             // Synchronize Sample Rate
@@ -218,15 +218,19 @@ struct AudioSettingsView: View {
                 Toggle("", isOn: $settings.synchronizeSampleRate)
                     .toggleStyle(.switch)
             }
-            
+
             // Info text when enabled
             if settings.synchronizeSampleRate {
                 HStack(spacing: 8) {
                     Image(systemName: "info.circle")
                         .foregroundColor(.secondary)
                         .font(.system(size: 12))
-                    
-                    Text("When enabled, the app takes exclusive control (hog mode) of your audio device and automatically switches the device sample rate to match each track (44.1kHz, 48kHz, 96kHz, etc.) preventing BASS from resampling for true bit-perfect playback.")
+
+                    Text(
+                        "When enabled, the app takes exclusive control (hog mode) of your audio device and " +
+                        "automatically switches the device sample rate to match each track (44.1kHz, 48kHz, " +
+                        "96kHz, etc.) preventing BASS from resampling for true bit-perfect playback."
+                    )
                         .font(.system(size: 11))
                         .foregroundColor(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -236,9 +240,9 @@ struct AudioSettingsView: View {
             }
         }
     }
-    
+
     // MARK: - Helper Views
-    
+
     private func settingsSection<Content: View>(
         title: String,
         icon: String,
@@ -249,15 +253,15 @@ struct AudioSettingsView: View {
                 Image(systemName: icon)
                     .font(.system(size: 18))
                     .foregroundColor(.accentColor)
-                
+
                 Text(title)
                     .font(.headline)
             }
-            
+
             content()
         }
     }
-    
+
     private func settingRow<Content: View>(
         label: String,
         description: String,
@@ -267,14 +271,14 @@ struct AudioSettingsView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(label)
                     .font(.system(size: 13, weight: .medium))
-                
+
                 Text(description)
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
             }
-            
+
             Spacer()
-            
+
             control()
         }
         .padding(.vertical, 4)

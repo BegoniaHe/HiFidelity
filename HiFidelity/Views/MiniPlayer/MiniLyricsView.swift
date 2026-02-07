@@ -13,22 +13,22 @@ struct MiniLyricsView: View {
     @ObservedObject var playback = PlaybackController.shared
     @ObservedObject var theme = AppTheme.shared
     @ObservedObject var database = DatabaseManager.shared
-    
+
     @State private var lyrics: Lyrics?
-    @State private var currentLineIndex: Int? = nil
+    @State private var currentLineIndex: Int?
     @State private var isImportingLRC = false
     @State private var isSearchingLyrics = false
     @State private var isDraggingOver = false
-    
+
     let onClose: () -> Void
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Header
             header
-            
+
             Divider()
-            
+
             // Content
             if let track = playback.currentTrack {
                 lyricsContent(track: track)
@@ -47,17 +47,17 @@ struct MiniLyricsView: View {
             loadLyricsFor(track: playback.currentTrack)
         }
     }
-    
+
     // MARK: - Header
-    
+
     private var header: some View {
         HStack {
             Text("Lyrics")
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(.primary)
-            
+
             Spacer()
-            
+
             // Close button
             Button(action: onClose) {
                 Image(systemName: "chevron.down.circle.fill")
@@ -69,9 +69,9 @@ struct MiniLyricsView: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
     }
-    
+
     // MARK: - Lyrics Content
-    
+
     private func lyricsContent(track: Track) -> some View {
         Group {
             if let lyrics = lyrics, !lyrics.lines.isEmpty {
@@ -80,11 +80,11 @@ struct MiniLyricsView: View {
                         VStack(spacing: 0) {
                             // Spacer at top for better scrolling
                             Color.clear.frame(height: 30)
-                            
+
                             ForEach(Array(lyrics.lines.enumerated()), id: \.element.id) { index, line in
                                 let isCurrent = currentLineIndex == index
                                 let isPast = (currentLineIndex ?? -1) > index
-                                
+
                                 lyricLine(
                                     text: line.text,
                                     isCurrent: isCurrent,
@@ -100,7 +100,7 @@ struct MiniLyricsView: View {
                                     }
                                 }
                             }
-                            
+
                             // Spacer at bottom
                             Color.clear.frame(height: 30)
                         }
@@ -111,7 +111,7 @@ struct MiniLyricsView: View {
             }
         }
     }
-    
+
     private func lyricLine(text: String, isCurrent: Bool, isPast: Bool) -> some View {
         Text(text)
             .font(isCurrent ? .system(size: 14, weight: .semibold) : .system(size: 12))
@@ -125,13 +125,13 @@ struct MiniLyricsView: View {
             .padding(.horizontal, 12)
             .animation(.easeInOut(duration: 0.25), value: isCurrent)
     }
-    
+
     private var noLyricsView: some View {
         VStack(spacing: 12) {
             Image(systemName: "text.quote")
                 .font(.system(size: 32))
                 .foregroundColor(.secondary.opacity(0.3))
-            
+
             Text("No lyrics available")
                 .font(.system(size: 12))
                 .foregroundColor(.secondary)
@@ -139,24 +139,24 @@ struct MiniLyricsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()
     }
-    
+
     // MARK: - Empty State
-    
+
     private var emptyState: some View {
         VStack(spacing: 12) {
             Image(systemName: "text.quote")
                 .font(.system(size: 32))
                 .foregroundColor(.secondary.opacity(0.3))
-            
+
             Text("Play a song to see lyrics")
                 .font(.system(size: 12))
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
+
     // MARK: - Helper Methods
-    
+
     private func loadLyricsFor(track: Track?) {
         guard let track = track,
               let trackId = track.trackId else {
@@ -164,7 +164,7 @@ struct MiniLyricsView: View {
             currentLineIndex = nil
             return
         }
-        
+
         Task {
             do {
                 if let trackLyrics = try await database.getLyrics(forTrackId: trackId) {
@@ -187,16 +187,16 @@ struct MiniLyricsView: View {
             }
         }
     }
-    
+
     private func updateCurrentLine() {
         guard let lyrics = lyrics else {
             currentLineIndex = nil
             return
         }
-        
+
         currentLineIndex = lyrics.currentLineIndex(at: playback.currentTime)
     }
-    
+
 }
 
 // MARK: - Preview
@@ -205,4 +205,3 @@ struct MiniLyricsView: View {
     MiniLyricsView(onClose: {})
         .frame(width: 550, height: 300)
 }
-

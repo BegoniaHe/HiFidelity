@@ -10,11 +10,11 @@ import SwiftUI
 /// Generic entity detail view showing tracks
 struct EntityDetailView: View {
     let entity: EntityType
-    
+
     @EnvironmentObject var databaseManager: DatabaseManager
     @ObservedObject var theme = AppTheme.shared
     @ObservedObject var playback = PlaybackController.shared
-    
+
     @State private var tracks: [Track] = []
     @State private var filteredTracks: [Track] = []
     @State private var sortedTracks: [Track] = []
@@ -22,7 +22,7 @@ struct EntityDetailView: View {
     @State private var selectedTrack: Track.ID?
     @State private var sortOrder = [KeyPathComparator(\Track.title, order: .forward)]
     @State private var selectedFilter: TrackFilter?
-    
+
     // Sorting persistence - separate storage for each entity type
     @AppStorage("albumDetailSortField") private var albumSortField: String = "title"
     @AppStorage("albumDetailSortAscending") private var albumSortAscending: Bool = true
@@ -32,7 +32,7 @@ struct EntityDetailView: View {
     @AppStorage("genreDetailSortAscending") private var genreSortAscending: Bool = true
     @AppStorage("playlistDetailSortField") private var playlistSortField: String = "playlistOrder"
     @AppStorage("playlistDetailSortAscending") private var playlistSortAscending: Bool = true
-    
+
     // Helper computed properties for current entity's sort storage
     private var currentSortField: Binding<String> {
         switch entity {
@@ -42,7 +42,7 @@ struct EntityDetailView: View {
         case .playlist: return $playlistSortField
         }
     }
-    
+
     private var currentSortAscending: Binding<Bool> {
         switch entity {
         case .album: return $albumSortAscending
@@ -51,7 +51,7 @@ struct EntityDetailView: View {
         case .playlist: return $playlistSortAscending
         }
     }
-    
+
     // Playlist context for remove functionality
     private var playlistContext: NSTrackTableView.PlaylistContext? {
         guard case .playlist(let playlist) = entity, !playlist.isSmart else {
@@ -64,7 +64,7 @@ struct EntityDetailView: View {
             }
         )
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Entity header
@@ -85,7 +85,7 @@ struct EntityDetailView: View {
                 }
                 .padding([.bottom, .trailing], 12)
             }
-            
+
             // Tracks list
             if isLoading {
                 loadingView
@@ -116,9 +116,9 @@ struct EntityDetailView: View {
             applyFilter()
         }
     }
-    
+
     // MARK: - Tracks List
-    
+
     private var tracksList: some View {
         TrackTableView(
             tracks: sortedTracks,
@@ -129,90 +129,90 @@ struct EntityDetailView: View {
             playlistContext: playlistContext
         )
     }
-    
+
     // MARK: - Loading View
-    
+
     private var loadingView: some View {
         VStack {
             Spacer()
-            
+
             VStack(spacing: 16) {
                 ProgressView()
                     .scaleEffect(1.5)
                     .tint(theme.currentTheme.primaryColor)
-                
+
                 Text("Loading tracks...")
                     .font(.system(size: 14))
                     .foregroundColor(.secondary)
             }
-            
+
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
+
     // MARK: - Empty State
-    
+
     private var emptyStateView: some View {
         VStack(spacing: 18) {
             Image(systemName: entity.icon)
                 .font(.system(size: 48))
                 .foregroundColor(.secondary.opacity(0.3))
-            
+
             Text("No tracks found")
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(.primary)
-            
+
             Text("This \(entity.displayName.lowercased()) has no tracks")
                 .font(.system(size: 12))
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
+
     // MARK: - Helper Methods
-    
+
     private func isCurrentTrack(_ track: Track) -> Bool {
         guard let currentTrack = playback.currentTrack else { return false }
         return currentTrack.url.path == track.url.path
     }
-    
+
     private func playTrack(_ track: Track) {
         guard let trackIndex = sortedTracks.firstIndex(where: { $0.id == track.id }) else {
             playback.playTracks([track], startingAt: 0)
             return
         }
-        
+
         playback.playTracks(sortedTracks, startingAt: trackIndex)
     }
-    
+
     private func playAll() {
         playback.playTracks(sortedTracks)
     }
-    
+
     private func shuffleAll() {
         playback.playTracksShuffled(sortedTracks)
     }
-    
+
     private func calculateTotalDuration() -> Double {
         sortedTracks.reduce(0) { $0 + ($1.duration) }
     }
-    
+
     // MARK: - Data Loading
-    
+
     private func loadTracks() async {
         isLoading = true
         defer { isLoading = false }
-        
+
         do {
             tracks = try await entity.loadTracks(from: databaseManager)
         } catch {
             Logger.error("Failed to load tracks for \(entity.displayName): \(error)")
         }
     }
-    
+
     // MARK: - Filtering
-    
+
     private func applyFilter() {
         if let filter = selectedFilter {
             switch filter {
@@ -220,7 +220,7 @@ struct EntityDetailView: View {
                 filteredTracks = tracks.filter { $0.isFavorite }
             case .recentlyAdded:
                 let thirtyDaysAgo = Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
-                filteredTracks = tracks.filter { 
+                filteredTracks = tracks.filter {
                     guard let dateAdded = $0.dateAdded else { return false }
                     return dateAdded >= thirtyDaysAgo
                 }
@@ -230,18 +230,18 @@ struct EntityDetailView: View {
         } else {
             filteredTracks = tracks
         }
-        
+
         // Re-sort after filtering
         initializeSortedTracks()
     }
-    
+
     // MARK: - Sorting Helpers
-    
+
     private func initializeSortedTracks() {
         // Use current sort order instead of resetting to default
         sortedTracks = filteredTracks.sorted(using: sortOrder)
     }
-    
+
     private func performBackgroundSort(with newSortOrder: [KeyPathComparator<Track>]) {
         let tracksToSort = self.filteredTracks
         Task.detached(priority: .userInitiated) {
@@ -251,24 +251,24 @@ struct EntityDetailView: View {
             }
         }
     }
-    
+
     // MARK: - Sort Order Persistence
-    
+
     private func restoreSortOrder() {
         let field = currentSortField.wrappedValue
         let isAscending = currentSortAscending.wrappedValue
-        
+
         if let sortField = TrackSortField.allFields.first(where: { $0.rawValue == field }) {
             sortOrder = sortField.getComparators(ascending: isAscending)
         }
     }
-    
+
     private func saveSortOrder(_ sortOrder: [KeyPathComparator<Track>]) {
         guard let firstSort = sortOrder.first else { return }
-        
+
         let sortString = String(describing: firstSort)
         let isAscending = sortString.contains("forward")
-        
+
         // Map comparator to field
         let sortKeyMap: [String: TrackSortField] = [
             "title": .title,
@@ -283,9 +283,9 @@ struct EntityDetailView: View {
             "filename": .filename,
             "trackNumber": .trackNumber,
             "discNumber": .discNumber,
-            "playlistPosition": .playlistOrder,
+            "playlistPosition": .playlistOrder
         ]
-        
+
         for (key, field) in sortKeyMap {
             if sortString.contains(key) {
                 currentSortField.wrappedValue = field.rawValue
@@ -303,7 +303,7 @@ enum EntityType: Identifiable, Hashable {
     case artist(Artist)
     case genre(Genre)
     case playlist(PlaylistItem)
-    
+
     var id: String {
         switch self {
         case .album(let album): return "album_\(album.id ?? 0)"
@@ -312,9 +312,9 @@ enum EntityType: Identifiable, Hashable {
         case .playlist(let playlist): return "playlist_\(playlist.id)"
         }
     }
-    
+
     var uniqueId: String { id }
-    
+
     var displayName: String {
         switch self {
         case .album(let album): return album.title
@@ -323,7 +323,7 @@ enum EntityType: Identifiable, Hashable {
         case .playlist(let playlist): return playlist.name
         }
     }
-    
+
     var icon: String {
         switch self {
         case .album: return "square.stack"
@@ -332,12 +332,12 @@ enum EntityType: Identifiable, Hashable {
         case .playlist(let playlist): return playlist.icon
         }
     }
-    
+
     var subtitle: String? {
         switch self {
         case .album(let album): return album.year
-        case .artist(_): return nil
-        case .genre(_): return nil
+        case .artist: return nil
+        case .genre: return nil
         case .playlist(let playlist):
             if case .smart(let smartType) = playlist.type {
                 return smartType.description
@@ -345,7 +345,7 @@ enum EntityType: Identifiable, Hashable {
             return nil
         }
     }
-    
+
     var artworkData: Data? {
         switch self {
         case .album(let album): return album.artworkData
@@ -354,38 +354,38 @@ enum EntityType: Identifiable, Hashable {
         case .playlist(let playlist): return playlist.artworkData
         }
     }
-    
+
     var entityId: Int64? {
         switch self {
         case .album(let album): return album.id
         case .artist(let artist): return artist.id
         case .genre(let genre): return genre.id
         case .playlist(let playlist):
-            if case .user(let p) = playlist.type {
-                return p.id
+            if case .user(let playlistEntry) = playlist.type {
+                return playlistEntry.id
             }
             return nil
         }
     }
-    
+
     var isPinned: Bool {
         switch self {
         case .album, .artist, .genre: return false
         case .playlist(let playlist): return playlist.isPinned
         }
     }
-    
+
     var colorScheme: String? {
         switch self {
         case .album, .artist, .genre: return nil
         case .playlist(let playlist):
-            if case .user(let p) = playlist.type {
-                return p.colorScheme
+            if case .user(let playlistEntry) = playlist.type {
+                return playlistEntry.colorScheme
             }
             return nil
         }
     }
-    
+
     var badgeText: String {
         switch self {
         case .album: return "ALBUM"
@@ -398,7 +398,7 @@ enum EntityType: Identifiable, Hashable {
             return "PLAYLIST"
         }
     }
-    
+
     var badgeIcon: String {
         switch self {
         case .album: return "square.stack"
@@ -411,27 +411,27 @@ enum EntityType: Identifiable, Hashable {
             return "music.note.list"
         }
     }
-    
+
     func loadTracks(from database: DatabaseManager) async throws -> [Track] {
         switch self {
         case .album(let album):
             guard let albumId = album.id else { return [] }
             return try await database.getTracksForAlbum(albumId: albumId)
-            
+
         case .artist(let artist):
             guard let artistId = artist.id else { return [] }
             return try await database.getTracksForArtist(artistId: artistId)
-            
+
         case .genre(let genre):
             guard let genreId = genre.id else { return [] }
             return try await database.getTracksForGenre(genreId: genreId)
-            
+
         case .playlist(let playlist):
             switch playlist.type {
-            case .user(let p):
-                guard let playlistId = p.id else { return [] }
+            case .user(let playlistEntry):
+                guard let playlistId = playlistEntry.id else { return [] }
                 return try await database.getTracksForPlaylist(playlistId: playlistId)
-                
+
             case .smart(let smartType):
                 switch smartType {
                 case .favorites:
@@ -454,17 +454,17 @@ struct EntityHeader: View {
     let totalDuration: Double
     let onPlay: () -> Void
     let onShuffle: () -> Void
-    
+
     @ObservedObject var theme = AppTheme.shared
     @State private var isPlayHovered = false
     @State private var isShuffleHovered = false
-    
+
     var body: some View {
         HStack(spacing: 40) {
             // Artwork
             artworkView
                 .padding(.leading, 12)
-            
+
             // Info and controls
             VStack(alignment: .leading, spacing: 16) {
                 // Entity badge
@@ -475,24 +475,24 @@ struct EntityHeader: View {
                         .font(.system(size: 11, weight: .bold))
                 }
                 .foregroundColor(entity.isPinned ? theme.currentTheme.primaryColor : .secondary)
-                
+
                 // Entity name
                 Text(entity.displayName)
                     .font(.title)
                     .fontWeight(.bold)
                     .foregroundColor(.primary)
                     .lineLimit(2)
-                
+
                 // Subtitle and stats
                 VStack(alignment: .leading, spacing: 4) {
-                    
+
                     HStack(spacing: 8) {
                         if entity.isPinned {
                             Image(systemName: "pin.fill")
                                 .font(.system(size: 12))
                                 .foregroundColor(theme.currentTheme.primaryColor)
                         }
-                        
+
                         if let subtitle = entity.subtitle {
                             Text(subtitle)
                                 .font(.system(size: 12, weight: .medium))
@@ -500,22 +500,22 @@ struct EntityHeader: View {
                             Text("•")
                                 .foregroundColor(.secondary.opacity(0.5))
                         }
-                        
+
                         Text("\(trackCount) \(trackCount == 1 ? "song" : "songs")")
                             .font(.system(size: 12, weight: .medium))
                             .foregroundColor(.secondary)
-                        
+
                         if totalDuration > 0 {
                             Text("•")
                                 .foregroundColor(.secondary.opacity(0.5))
-                            
+
                             Text(formatDuration(totalDuration))
                                 .font(.system(size: 12, weight: .medium))
                                 .foregroundColor(.secondary)
                         }
                     }
                 }
-                
+
                 // Action buttons
                 HStack(spacing: 12) {
                     // Play button
@@ -541,7 +541,7 @@ struct EntityHeader: View {
                         isPlayHovered = hovering
                     }
                     .disabled(trackCount == 0)
-                    
+
                     // Shuffle button
                     Button(action: onShuffle) {
                         HStack(spacing: 8) {
@@ -567,7 +567,7 @@ struct EntityHeader: View {
                 }
                 .padding(.top, 8)
             }
-            
+
             Spacer()
         }
         .padding(20)
@@ -575,9 +575,9 @@ struct EntityHeader: View {
 //        .background(gradientBackground)
         .textSelection(.enabled)
     }
-    
+
     // MARK: - Artwork View
-    
+
     @ViewBuilder
     private var artworkView: some View {
         ZStack {
@@ -600,7 +600,7 @@ struct EntityHeader: View {
         }
         .id(entity.id) // Stabilize artwork view
     }
-    
+
     private var placeholderArtwork: some View {
         Group {
             if entity.isArtist {
@@ -626,7 +626,7 @@ struct EntityHeader: View {
             }
         }
     }
-    
+
     private var entityGradient: LinearGradient {
         LinearGradient(
             colors: [
@@ -637,7 +637,7 @@ struct EntityHeader: View {
             endPoint: .bottomTrailing
         )
     }
-    
+
     private var gradientBackground: some View {
         LinearGradient(
             colors: [
@@ -648,11 +648,11 @@ struct EntityHeader: View {
             endPoint: .bottomTrailing
         )
     }
-    
+
     private func formatDuration(_ duration: Double) -> String {
         let hours = Int(duration) / 3600
         let minutes = (Int(duration) % 3600) / 60
-        
+
         if hours > 0 {
             return "\(hours) hr \(minutes) min"
         } else {
@@ -668,17 +668,17 @@ extension EntityType {
         if case .album = self { return true }
         return false
     }
-    
+
     var isArtist: Bool {
         if case .artist = self { return true }
         return false
     }
-    
+
     var isGenre: Bool {
         if case .genre = self { return true }
         return false
     }
-    
+
     var isPlaylist: Bool {
         if case .playlist = self { return true }
         return false
@@ -690,9 +690,8 @@ extension EntityType {
 /// Playlist detail view using generic EntityDetailView
 struct PlaylistDetailView: View {
     let playlist: PlaylistItem
-    
+
     var body: some View {
         EntityDetailView(entity: .playlist(playlist))
     }
 }
-

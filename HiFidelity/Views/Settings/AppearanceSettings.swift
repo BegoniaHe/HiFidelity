@@ -11,14 +11,14 @@ import SwiftUI
 struct AppearanceSettings: View {
     @ObservedObject var theme: AppTheme
     @AppStorage("accentOpacity") private var accentOpacity: Double = 1.0
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 32) {
             // Theme Selection
             themeSection
-            
+
             Divider()
-            
+
             // Advanced Options
             HStack {
                 Spacer()
@@ -28,23 +28,23 @@ struct AppearanceSettings: View {
                 .buttonStyle(.bordered)
             }
             .padding(.top, 8)
-            
+
         }
     }
-    
+
     // MARK: - Theme Section
-    
+
     private var themeSection: some View {
         VStack(spacing: 28) {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Theme")
                     .font(.title3)
                     .fontWeight(.semibold)
-                
+
                 Text("Choose your preferred color theme")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-                
+
                 LazyVGrid(columns: [
                     GridItem(.adaptive(minimum: 100), spacing: 16)
                 ], spacing: 16) {
@@ -57,9 +57,7 @@ struct AppearanceSettings: View {
                     }
                 }
             }
-        
-            
-            
+
             // Accent opacity
             VStack(spacing: 8) {
                 HStack {
@@ -70,16 +68,15 @@ struct AppearanceSettings: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
-                
+
                 Slider(value: $accentOpacity, in: 0.5...1.0, step: 0.1)
                     .accentColor(theme.currentTheme.primaryColor)
             }
         }
     }
-    
-    
+
     // MARK: - Advanced Section
-    
+
     private var advancedSection: some View {
         VStack(alignment: .leading, spacing: 20) {
             // Reset button
@@ -102,10 +99,9 @@ struct AppearanceSettings: View {
             .buttonStyle(.plain)
         }
     }
-    
+
     // MARK: - Helpers
 
-    
     private func resetToDefaults() {
         accentOpacity = 1.0
         theme.setTheme(.blue)
@@ -118,9 +114,9 @@ private struct ThemeCard: View {
     @ObservedObject var theme: AppTheme
     let themeOption: Theme
     let opacity: Double
-    
+
     @State private var isHovered = false
-    
+
     var body: some View {
         Button {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
@@ -149,7 +145,7 @@ private struct ThemeCard: View {
                             color: isHovered ? themeOption.primaryColor.opacity(0.3) : Color.clear,
                             radius: 8
                         )
-                    
+
                     if theme.currentTheme == themeOption {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.system(size: 28))
@@ -157,7 +153,7 @@ private struct ThemeCard: View {
                             .shadow(radius: 2)
                     }
                 }
-                
+
                 Text(themeOption.name)
                     .font(.subheadline)
                     .fontWeight(theme.currentTheme == themeOption ? .semibold : .regular)
@@ -182,4 +178,3 @@ private struct ThemeCard: View {
     }
     .frame(width: 600, height: 800)
 }
-

@@ -14,7 +14,7 @@ func emptyStateView(icon: String, message: String) -> some View {
         Image(systemName: icon)
             .font(.system(size: 56, weight: .light))
             .foregroundColor(.secondary.opacity(0.35))
-        
+
         Text(message)
             .font(.system(size: 15, weight: .medium))
             .foregroundColor(.secondary.opacity(0.8))
@@ -22,23 +22,22 @@ func emptyStateView(icon: String, message: String) -> some View {
     .frame(maxWidth: .infinity, maxHeight: .infinity)
 }
 
-
 // MARK: - Album Card
 
 struct AlbumCard: View, Equatable {
     let album: Album
     let onTap: () -> Void
-    
+
     @ObservedObject var theme = AppTheme.shared
     @State private var isHovered = false
-    
+
     // Implement Equatable to prevent unnecessary re-renders
     static func == (lhs: AlbumCard, rhs: AlbumCard) -> Bool {
         lhs.album.id == rhs.album.id &&
         lhs.album.title == rhs.album.title &&
         lhs.album.displayArtist == rhs.album.displayArtist
     }
-    
+
     var body: some View {
         Button(action: onTap) {
             VStack(alignment: .leading, spacing: 10) {
@@ -53,7 +52,7 @@ struct AlbumCard: View, Equatable {
                             .frame(width: 160, height: 160)
                             .shadow(color: .black.opacity(0.1), radius: 6, y: 3)
                     }
-                    
+
                     if isHovered {
                         Button(action: playAlbum) {
                             Circle()
@@ -73,7 +72,7 @@ struct AlbumCard: View, Equatable {
                 .frame(width: 160, height: 160)
                 .scaleEffect(isHovered ? 1.02 : 1.0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
-                
+
                 // Info
                 VStack(alignment: .leading, spacing: 5) {
                     Text(album.title)
@@ -81,12 +80,12 @@ struct AlbumCard: View, Equatable {
                         .foregroundColor(.primary)
                         .lineLimit(1)
                         .help(album.title)
-                    
+
                     Text(album.displayArtist)
                         .font(.system(size: 10, weight: .medium))
                         .foregroundColor(.secondary)
                         .lineLimit(1)
-                     
+
                     let albumYear = (album.year != nil && !album.year!.isEmpty) ? "\(album.year!) • " : ""
                     Text("\(albumYear)\(album.trackCount.description) \(album.trackCount == 1 ? "song" : "songs")")
                         .font(.system(size: 10))
@@ -108,7 +107,7 @@ struct AlbumCard: View, Equatable {
             AlbumContextMenu(album: album, onViewDetails: onTap)
         }
     }
-    
+
     private func playAlbum() {
         Task {
             guard let albumId = album.id else { return }
@@ -116,16 +115,16 @@ struct AlbumCard: View, Equatable {
             do {
                 var tracks = try await databaseManager.getTracksForAlbum(albumId: albumId)
                 guard !tracks.isEmpty else { return }
-                
+
                 // Apply saved sorting preference
                 let sortField = UserDefaults.standard.string(forKey: "albumDetailSortField") ?? "trackNumber"
                 let sortAscending = UserDefaults.standard.bool(forKey: "albumDetailSortAscending")
-                
+
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
                     let comparators = field.getComparators(ascending: sortAscending)
                     tracks = tracks.sorted(using: comparators)
                 }
-                
+
                 await MainActor.run {
                     PlaybackController.shared.playTracks(tracks)
                 }
@@ -141,17 +140,17 @@ struct AlbumCard: View, Equatable {
 struct ArtistCard: View, Equatable {
     let artist: Artist
     let onTap: () -> Void
-    
+
     @ObservedObject var theme = AppTheme.shared
     @State private var isHovered = false
-    
+
     // Implement Equatable to prevent unnecessary re-renders
     static func == (lhs: ArtistCard, rhs: ArtistCard) -> Bool {
         lhs.artist.id == rhs.artist.id &&
         lhs.artist.name == rhs.artist.name &&
         lhs.artist.trackCount == rhs.artist.trackCount
     }
-    
+
     var body: some View {
         Button(action: onTap) {
             VStack(alignment: .center, spacing: 10) {
@@ -171,7 +170,7 @@ struct ArtistCard: View, Equatable {
                             )
                             .shadow(color: .black.opacity(0.1), radius: 6, y: 3)
                     }
-                    
+
                     if isHovered {
                         Button(action: playArtist) {
                             Circle()
@@ -191,14 +190,14 @@ struct ArtistCard: View, Equatable {
                 .frame(width: 160, height: 160)
                 .scaleEffect(isHovered ? 1.02 : 1.0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
-                
+
                 // Info
                 VStack(spacing: 5) {
                     Text(artist.name)
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(.primary)
                         .lineLimit(1)
-                    
+
                     Text("\(artist.trackCount.description) \(artist.trackCount == 1 ? "song" : "songs")")
                         .font(.system(size: 10))
                         .foregroundColor(.secondary.opacity(0.85))
@@ -218,7 +217,7 @@ struct ArtistCard: View, Equatable {
             ArtistContextMenu(artist: artist, onViewDetails: onTap)
         }
     }
-    
+
     private func playArtist() {
         Task {
             guard let artistId = artist.id else { return }
@@ -226,16 +225,16 @@ struct ArtistCard: View, Equatable {
             do {
                 var tracks = try await databaseManager.getTracksForArtist(artistId: artistId)
                 guard !tracks.isEmpty else { return }
-                
+
                 // Apply saved sorting preference
                 let sortField = UserDefaults.standard.string(forKey: "artistDetailSortField") ?? "title"
                 let sortAscending = UserDefaults.standard.bool(forKey: "artistDetailSortAscending")
-                
+
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
                     let comparators = field.getComparators(ascending: sortAscending)
                     tracks = tracks.sorted(using: comparators)
                 }
-                
+
                 await MainActor.run {
                     PlaybackController.shared.playTracks(tracks)
                 }
@@ -251,16 +250,16 @@ struct ArtistCard: View, Equatable {
 struct GenreCard: View, Equatable {
     let genre: Genre
     let onTap: () -> Void
-    
+
     @ObservedObject var theme = AppTheme.shared
     @State private var isHovered = false
-    
+
     // Implement Equatable to prevent unnecessary re-renders
     static func == (lhs: GenreCard, rhs: GenreCard) -> Bool {
         lhs.genre.id == rhs.genre.id &&
         lhs.genre.name == rhs.genre.name
     }
-    
+
     var body: some View {
         Button(action: onTap) {
             ZStack(alignment: .bottomLeading) {
@@ -268,7 +267,7 @@ struct GenreCard: View, Equatable {
                 RoundedRectangle(cornerRadius: 14)
                     .fill(genreGradient)
                     .frame(height: 130)
-                
+
                 // Genre info
                 VStack(alignment: .leading, spacing: 7) {
                     Text(genre.name)
@@ -277,7 +276,7 @@ struct GenreCard: View, Equatable {
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
                         .shadow(color: .black.opacity(0.2), radius: 2, y: 1)
-                    
+
                     Text("\(genre.trackCount) \(genre.trackCount == 1 ? "track" : "tracks")")
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundColor(.white.opacity(0.9))
@@ -296,9 +295,9 @@ struct GenreCard: View, Equatable {
             isHovered = hovering
         }
     }
-    
+
     // MARK: - Genre Visual Styling
-    
+
     private var genreGradient: LinearGradient {
         let colors = genreColorScheme
         return LinearGradient(
@@ -307,10 +306,10 @@ struct GenreCard: View, Equatable {
             endPoint: .bottomTrailing
         )
     }
-    
+
     private var genreColorScheme: [Color] {
         let genreName = genre.name.lowercased()
-        
+
         // Map genres to color schemes
         switch genreName {
         case let name where name.contains("rock"):
@@ -353,10 +352,10 @@ struct GenreCard: View, Equatable {
             ]
         }
     }
-    
+
     private var genreIcon: String {
         let genreName = genre.name.lowercased()
-        
+
         // Map genres to appropriate SF Symbols
         switch genreName {
         case let name where name.contains("rock"):
@@ -400,25 +399,25 @@ struct GenreCard: View, Equatable {
 struct TrackGridCard: View, Equatable {
     let track: Track
     let onPlay: () -> Void
-    
+
     @ObservedObject var theme = AppTheme.shared
     @ObservedObject var playback = PlaybackController.shared
     @State private var isHovered = false
-    
+
     // Implement Equatable to prevent unnecessary re-renders
     static func == (lhs: TrackGridCard, rhs: TrackGridCard) -> Bool {
         lhs.track.trackId == rhs.track.trackId &&
         lhs.track.title == rhs.track.title &&
         lhs.track.artist == rhs.track.artist
     }
-    
+
     var body: some View {
         VStack(spacing: 8) {
             // Artwork
             ZStack {
                 TrackArtworkView(track: track, size: 140, cornerRadius: 10)
                     .shadow(color: .black.opacity(isHovered ? 0.25 : 0.15), radius: isHovered ? 12 : 8, y: isHovered ? 6 : 4)
-                
+
                 // Play button overlay
                 if isHovered {
                     Button(action: onPlay) {
@@ -439,14 +438,14 @@ struct TrackGridCard: View, Equatable {
             .frame(width: 140, height: 140)
             .scaleEffect(isHovered ? 1.02 : 1.0)
             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
-            
+
             // Track info
             VStack(alignment: .leading, spacing: 4) {
                 Text(track.title)
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(.primary)
                     .lineLimit(1)
-                
+
                 Text(track.artist)
                     .font(.system(size: 11))
                     .foregroundColor(.secondary.opacity(0.85))
@@ -472,16 +471,15 @@ struct TrackGridCard: View, Equatable {
     }
 }
 
-
 // MARK: - Context Menus
 
 struct AlbumContextMenu: View {
     let album: Album
     let onViewDetails: () -> Void
-    
+
     @EnvironmentObject var databaseManager: DatabaseManager
     @ObservedObject var playback = PlaybackController.shared
-    
+
     var body: some View {
         Group {
             Button {
@@ -489,21 +487,21 @@ struct AlbumContextMenu: View {
             } label: {
                 Label("Play", systemImage: "play.fill")
             }
-            
+
             Button {
                 shuffleAlbum()
             } label: {
                 Label("Shuffle", systemImage: "shuffle")
             }
-            
+
             Button {
                 addToQueue()
             } label: {
                 Label("Add to Queue", systemImage: "plus")
             }
-            
+
             Divider()
-            
+
             Button {
                 onViewDetails()
             } label: {
@@ -511,23 +509,23 @@ struct AlbumContextMenu: View {
             }
         }
     }
-    
+
     private func addToQueue() {
         Task {
             guard let albumId = album.id else { return }
             do {
                 var tracks = try await databaseManager.getTracksForAlbum(albumId: albumId)
                 guard !tracks.isEmpty else { return }
-                
+
                 // Apply saved sorting preference
                 let sortField = UserDefaults.standard.string(forKey: "albumDetailSortField") ?? "trackNumber"
                 let sortAscending = UserDefaults.standard.bool(forKey: "albumDetailSortAscending")
-                
+
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
                     let comparators = field.getComparators(ascending: sortAscending)
                     tracks = tracks.sorted(using: comparators)
                 }
-                
+
                 await MainActor.run {
                     playback.addToQueue(tracks)
                 }
@@ -536,23 +534,23 @@ struct AlbumContextMenu: View {
             }
         }
     }
-    
+
     private func playAlbum() {
         Task {
             guard let albumId = album.id else { return }
             do {
                 var tracks = try await databaseManager.getTracksForAlbum(albumId: albumId)
                 guard !tracks.isEmpty else { return }
-                
+
                 // Apply saved sorting preference
                 let sortField = UserDefaults.standard.string(forKey: "albumDetailSortField") ?? "trackNumber"
                 let sortAscending = UserDefaults.standard.bool(forKey: "albumDetailSortAscending")
-                
+
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
                     let comparators = field.getComparators(ascending: sortAscending)
                     tracks = tracks.sorted(using: comparators)
                 }
-                
+
                 await MainActor.run {
                     playback.playTracks(tracks)
                 }
@@ -561,23 +559,23 @@ struct AlbumContextMenu: View {
             }
         }
     }
-    
+
     private func shuffleAlbum() {
         Task {
             guard let albumId = album.id else { return }
             do {
                 var tracks = try await databaseManager.getTracksForAlbum(albumId: albumId)
                 guard !tracks.isEmpty else { return }
-                
+
                 // Apply saved sorting preference before shuffling
                 let sortField = UserDefaults.standard.string(forKey: "albumDetailSortField") ?? "trackNumber"
                 let sortAscending = UserDefaults.standard.bool(forKey: "albumDetailSortAscending")
-                
+
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
                     let comparators = field.getComparators(ascending: sortAscending)
                     tracks = tracks.sorted(using: comparators)
                 }
-                
+
                 await MainActor.run {
                     playback.playTracksShuffled(tracks)
                 }
@@ -591,10 +589,10 @@ struct AlbumContextMenu: View {
 struct ArtistContextMenu: View {
     let artist: Artist
     let onViewDetails: () -> Void
-    
+
     @EnvironmentObject var databaseManager: DatabaseManager
     @ObservedObject var playback = PlaybackController.shared
-    
+
     var body: some View {
         Group {
             Button {
@@ -602,21 +600,21 @@ struct ArtistContextMenu: View {
             } label: {
                 Label("Play", systemImage: "play.fill")
             }
-            
+
             Button {
                 shuffleArtist()
             } label: {
                 Label("Shuffle", systemImage: "shuffle")
             }
-            
+
             Button {
                 addToQueue()
             } label: {
                 Label("Add to Queue", systemImage: "plus")
             }
-            
+
             Divider()
-            
+
             Button {
                 onViewDetails()
             } label: {
@@ -624,23 +622,23 @@ struct ArtistContextMenu: View {
             }
         }
     }
-    
+
     private func addToQueue() {
         Task {
             guard let artistId = artist.id else { return }
             do {
                 var tracks = try await databaseManager.getTracksForArtist(artistId: artistId)
                 guard !tracks.isEmpty else { return }
-                
+
                 // Apply saved sorting preference
                 let sortField = UserDefaults.standard.string(forKey: "artistDetailSortField") ?? "title"
                 let sortAscending = UserDefaults.standard.bool(forKey: "artistDetailSortAscending")
-                
+
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
                     let comparators = field.getComparators(ascending: sortAscending)
                     tracks = tracks.sorted(using: comparators)
                 }
-                
+
                 await MainActor.run {
                     playback.addToQueue(tracks)
                 }
@@ -649,23 +647,23 @@ struct ArtistContextMenu: View {
             }
         }
     }
-    
+
     private func playArtist() {
         Task {
             guard let artistId = artist.id else { return }
             do {
                 var tracks = try await databaseManager.getTracksForArtist(artistId: artistId)
                 guard !tracks.isEmpty else { return }
-                
+
                 // Apply saved sorting preference
                 let sortField = UserDefaults.standard.string(forKey: "artistDetailSortField") ?? "title"
                 let sortAscending = UserDefaults.standard.bool(forKey: "artistDetailSortAscending")
-                
+
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
                     let comparators = field.getComparators(ascending: sortAscending)
                     tracks = tracks.sorted(using: comparators)
                 }
-                
+
                 await MainActor.run {
                     playback.playTracks(tracks)
                 }
@@ -674,23 +672,23 @@ struct ArtistContextMenu: View {
             }
         }
     }
-    
+
     private func shuffleArtist() {
         Task {
             guard let artistId = artist.id else { return }
             do {
                 var tracks = try await databaseManager.getTracksForArtist(artistId: artistId)
                 guard !tracks.isEmpty else { return }
-                
+
                 // Apply saved sorting preference before shuffling
                 let sortField = UserDefaults.standard.string(forKey: "artistDetailSortField") ?? "title"
                 let sortAscending = UserDefaults.standard.bool(forKey: "artistDetailSortAscending")
-                
+
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
                     let comparators = field.getComparators(ascending: sortAscending)
                     tracks = tracks.sorted(using: comparators)
                 }
-                
+
                 await MainActor.run {
                     playback.playTracksShuffled(tracks)
                 }
@@ -700,4 +698,3 @@ struct ArtistContextMenu: View {
         }
     }
 }
-

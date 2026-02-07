@@ -11,9 +11,9 @@ struct MainContentRouter: View {
     @Binding var selectedEntity: EntityType?
     @Binding var searchText: String
     @Binding var isSearchActive: Bool
-    
+
     @ObservedObject var theme = AppTheme.shared
-    
+
     var body: some View {
         ZStack {
             // Layer 1 — Home
@@ -41,9 +41,9 @@ struct MainContentRouter: View {
                    )
                    .zIndex(1)
                }
-               
+
            }
-            
+
             // Layer 3 — Search
             if isSearchActive && !searchText.isEmpty {
                 SearchResultsView(
@@ -74,23 +74,23 @@ struct MainContentRouter: View {
 private struct EntityDetailWithNavigation: View {
     let entity: EntityType
     let onBack: () -> Void
-    
+
     @ObservedObject var theme = AppTheme.shared
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Back button
             backButton
-            
+
             Divider()
-            
+
             // Entity detail
             EntityDetailView(entity: entity)
         }
         .background(.ultraThinMaterial)
-            
+
     }
-    
+
     private var backButton: some View {
         HStack {
             Button {
@@ -114,7 +114,7 @@ private struct EntityDetailWithNavigation: View {
                 )
             }
             .buttonStyle(.plain)
-            
+
             Spacer()
         }
         .padding(.horizontal, 20)
@@ -129,7 +129,7 @@ private struct EntityDetailWithNavigation: View {
         @State private var selectedEntity: EntityType?
         @State private var searchText = ""
         @State private var isSearchActive = false
-        
+
         var body: some View {
             MainContentRouter(
                 selectedEntity: $selectedEntity,
@@ -140,7 +140,6 @@ private struct EntityDetailWithNavigation: View {
             .frame(width: 800, height: 600)
         }
     }
-    
+
     return PreviewWrapper()
 }
-

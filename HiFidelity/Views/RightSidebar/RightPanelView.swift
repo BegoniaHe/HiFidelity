@@ -19,7 +19,7 @@ struct RightPanelView: View {
     @Binding var selectedTab: RightPanelTab
     @ObservedObject var playback = PlaybackController.shared
     @ObservedObject var theme = AppTheme.shared
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Tab content
@@ -36,8 +36,5 @@ struct RightPanelView: View {
         }
         .background(Color(nsColor: .windowBackgroundColor))
     }
-    
-    
+
 }
-
-

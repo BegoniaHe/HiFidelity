@@ -13,10 +13,10 @@ struct ViewModeButton: View {
     let icon: String
     let isSelected: Bool
     let action: () -> Void
-    
+
     @ObservedObject var theme = AppTheme.shared
     @State private var isHovered = false
-    
+
     var body: some View {
         Button(action: action) {
             Image(systemName: icon)
@@ -51,12 +51,11 @@ enum ViewMode {
     case list
 }
 
-
 // MARK: - Custom Button Styles
 
 struct PlainHoverButtonStyle: ButtonStyle {
     @State private var isHovered = false
-    
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .scaleEffect(configuration.isPressed ? 0.94 : (isHovered ? 1.02 : 1.0))

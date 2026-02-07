@@ -12,7 +12,7 @@ struct AudioDeviceSelector: View {
     @ObservedObject var dacManager = DACManager.shared
     @ObservedObject var theme = AppTheme.shared
     @State private var showDeviceMenu = false
-    
+
     var body: some View {
         Button(action: {
             showDeviceMenu.toggle()
@@ -30,9 +30,9 @@ struct AudioDeviceSelector: View {
         }
         .help("Select Audio Output Device")
     }
-    
+
     // MARK: - Device Menu Content
-    
+
     private var deviceMenuContent: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Header
@@ -44,9 +44,9 @@ struct AudioDeviceSelector: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
-            
+
             Divider()
-            
+
             // Device list
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
@@ -63,9 +63,9 @@ struct AudioDeviceSelector: View {
                 }
             }
             .frame(maxHeight: 300)
-            
+
             Divider()
-            
+
             // Footer info
             if let currentDevice = dacManager.currentDevice {
                 HStack(spacing: 4) {
@@ -73,7 +73,7 @@ struct AudioDeviceSelector: View {
                         .font(.system(size: 11))
                     Text("\(Int(currentDevice.sampleRate)) Hz • \(channelDescription(currentDevice.channels))")
                         .font(.system(size: 11))
-                    
+
                     if AudioSettings.shared.synchronizeSampleRate {
                         Text("• Sync Mode")
                             .font(.system(size: 11))
@@ -88,9 +88,9 @@ struct AudioDeviceSelector: View {
         .frame(width: 300)
         .background(Color(nsColor: .windowBackgroundColor))
     }
-    
+
     // MARK: - Device Row
-    
+
     private func deviceRow(_ device: AudioOutputDevice) -> some View {
         Button(action: {
             selectDevice(device)
@@ -101,27 +101,27 @@ struct AudioDeviceSelector: View {
                     .font(.system(size: 14))
                     .foregroundColor(isCurrentDevice(device) ? theme.currentTheme.primaryColor : .secondary.opacity(0.3))
                     .frame(width: 20)
-                
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text(device.name)
                         .font(.system(size: 13))
                         .foregroundColor(.primary)
-                    
+
                     HStack(spacing: 6) {
                         Text("\(Int(device.sampleRate)) Hz")
                             .font(.system(size: 11))
                             .foregroundColor(.secondary)
-                        
+
                         Text("•")
                             .font(.system(size: 11))
                             .foregroundColor(.secondary.opacity(0.5))
-                        
+
                         Text(channelDescription(device.channels))
                             .font(.system(size: 11))
                             .foregroundColor(.secondary)
                     }
                 }
-                
+
                 Spacer()
             }
             .padding(.horizontal, 16)
@@ -130,8 +130,8 @@ struct AudioDeviceSelector: View {
         }
         .buttonStyle(PlainButtonStyle())
         .background(
-            isCurrentDevice(device) ? 
-                Color.accentColor.opacity(0.1) : 
+            isCurrentDevice(device) ?
+                Color.accentColor.opacity(0.1) :
                 Color.clear
         )
         .onHover { hovering in
@@ -142,24 +142,23 @@ struct AudioDeviceSelector: View {
             }
         }
     }
-    
+
     // MARK: - Actions
-    
+
     private func selectDevice(_ device: AudioOutputDevice) {
         guard !isCurrentDevice(device) else { return }
-        
+
         if dacManager.switchToDevice(device) {
             Logger.info("Switched to device: \(device.name)")
             showDeviceMenu = false
-            
-            
+
         }
     }
-    
+
     private func isCurrentDevice(_ device: AudioOutputDevice) -> Bool {
         device.id == dacManager.currentDeviceID
     }
-    
+
     private func channelDescription(_ channels: Int) -> String {
         switch channels {
         case 1: return "Mono"
@@ -172,8 +171,6 @@ struct AudioDeviceSelector: View {
     }
 }
 
-
-
 // MARK: - Preview
 
 #Preview {
@@ -181,4 +178,3 @@ struct AudioDeviceSelector: View {
         .padding()
         .frame(width: 400, height: 200)
 }
-

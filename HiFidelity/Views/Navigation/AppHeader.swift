@@ -14,22 +14,22 @@ struct AppHeader: View {
     @Binding var showLeftSidebar: Bool
     @Binding var showRightPanel: Bool
     @Binding var showSettings: Bool
-    
+
     @ObservedObject var theme = AppTheme.shared
-    
+
     var body: some View {
         HStack(spacing: 0) {
             // Left: Logo and sidebar toggle
             leadingSection
-            
+
             Spacer()
-            
+
             // Center: Navigation and search
             centerSection
-            
+
             Spacer()
             Spacer()
-            
+
             // Right: Controls
             trailingSection
         }
@@ -38,9 +38,9 @@ struct AppHeader: View {
         .frame(height: 68)
         .background(headerBackground)
     }
-    
+
     // MARK: - Leading Section
-    
+
     private var leadingSection: some View {
         HStack(spacing: 2) {
             // App logo
@@ -50,7 +50,7 @@ struct AppHeader: View {
                 .aspectRatio(contentMode: .fit)
                 .foregroundColor(theme.currentTheme.primaryColor)
                 .frame(width: 140, height: 64)
-            
+
             // Left sidebar toggle
             ToggleButton(
                 icon: "sidebar.left",
@@ -62,9 +62,9 @@ struct AppHeader: View {
             }
         }
     }
-    
+
     // MARK: - Center Section
-    
+
     private var centerSection: some View {
         HStack(spacing: 12) {
             // Home button
@@ -74,7 +74,7 @@ struct AppHeader: View {
                     selectedTab = .home
                     searchText = ""
                     isSearchActive = false
-                    
+
                     // Post notification to clear entity selection
                     NotificationCenter.default.post(name: .goToHome, object: nil)
                 }
@@ -91,7 +91,7 @@ struct AppHeader: View {
             }
             .buttonStyle(PlainScaleButtonStyle())
             .help("Go to Home")
-            
+
             // Search bar
             SearchBar(
                 text: $searchText,
@@ -99,9 +99,9 @@ struct AppHeader: View {
             )
         }
     }
-    
+
     // MARK: - Trailing Section
-    
+
     private var trailingSection: some View {
         HStack(spacing: 2) {
             // Right sidebar toggle
@@ -116,21 +116,21 @@ struct AppHeader: View {
 
             // GitHub link
             GitHubButton()
-            
+
             // Refresh library button
             RefreshButton()
                 .help("Refresh Library")
-            
+
             // Notifications
             NotificationTray()
-            
+
             // Settings
             SettingsButton(action: { showSettings = true })
         }
     }
-    
+
     // MARK: - Background
-    
+
     private var headerBackground: some View {
         Color(nsColor: .windowBackgroundColor)
             .overlay(
@@ -155,7 +155,7 @@ private struct RefreshButton: View {
     @State private var isRefreshing = false
     @State private var isHovered = false
     @ObservedObject var theme = AppTheme.shared
-    
+
     var body: some View {
         Button {
             withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
@@ -189,7 +189,7 @@ private struct RefreshButton: View {
             isHovered = hovering
         }
     }
-    
+
     private func performRefresh() {
         Task {
             // Notify views to reload
@@ -197,7 +197,7 @@ private struct RefreshButton: View {
                 NotificationCenter.default.post(name: .refreshLibraryData, object: nil)
                 NotificationManager.shared.addMessage(.info, "Library refreshed")
             }
-            
+
             // Stop animation after reload
             try? await Task.sleep(for: .seconds(1))
             await MainActor.run {
@@ -214,10 +214,10 @@ private struct ToggleButton: View {
     let icon: String
     let isActive: Bool
     let action: () -> Void
-    
+
     @ObservedObject var theme = AppTheme.shared
     @State private var isHovered = false
-    
+
     var body: some View {
         Button(action: action) {
             Image(systemName: icon)
@@ -244,7 +244,7 @@ private struct ToggleButton: View {
 private struct GitHubButton: View {
     @State private var isHovered = false
     @ObservedObject var theme = AppTheme.shared
-    
+
     var body: some View {
         Button {
             if let url = URL(string: About.appWebsite) {
@@ -278,7 +278,7 @@ private struct GitHubButton: View {
 private struct SettingsButton: View {
     let action: () -> Void
     @State private var isHovered = false
-    
+
     var body: some View {
         Button(action: action) {
             Image(systemName: "gearshape.fill")
@@ -306,14 +306,14 @@ private struct SearchBar: View {
     @Binding var text: String
     @Binding var isActive: Bool
     @FocusState private var isFocused: Bool
-    
+
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(isFocused ? .primary : .secondary)
                 .font(.system(size: 16, weight: .medium))
                 .symbolRenderingMode(.hierarchical)
-            
+
             TextField("What do you want to play?", text: $text)
                 .textFieldStyle(.plain)
                 .font(.system(size: 15))
@@ -323,7 +323,7 @@ private struct SearchBar: View {
                         isActive = true
                     }
                 }
-            
+
             if !text.isEmpty {
                 Button {
                     text = ""
@@ -375,7 +375,7 @@ private struct SearchBar: View {
         @State private var showLeftSidebar = true
         @State private var showRightPanel = true
         @State private var showSettings = false
-        
+
         var body: some View {
             AppHeader(
                 selectedTab: $selectedTab,
@@ -388,7 +388,6 @@ private struct SearchBar: View {
             .frame(width: 1200, height: 60)
         }
     }
-    
+
     return PreviewWrapper()
 }
-

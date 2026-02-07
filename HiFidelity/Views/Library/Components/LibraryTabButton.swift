@@ -13,10 +13,10 @@ struct LibraryTabButton: View {
     let icon: String
     let isSelected: Bool
     let action: () -> Void
-    
+
     @ObservedObject var theme = AppTheme.shared
     @State private var isHovered = false
-    
+
     var body: some View {
         Button(action: action) {
             HStack(spacing: 7) {
@@ -24,7 +24,7 @@ struct LibraryTabButton: View {
                     .font(.system(size: 14, weight: isSelected ? .semibold : .medium))
                     .fixedSize()
                     .frame(width: 16, height: 16)
-                
+
                 Text(title)
                     .font(.system(size: 14, weight: isSelected ? .semibold : .medium))
                     .fixedSize()
@@ -49,4 +49,3 @@ struct LibraryTabButton: View {
         }
     }
 }
-

@@ -10,9 +10,9 @@ import SwiftUI
 /// Theme manager for the application
 class AppTheme: ObservableObject {
     static let shared = AppTheme()
-    
+
     @Published var currentTheme: Theme = .blue
-    
+
     private init() {
         // Load saved theme from UserDefaults
         if let savedTheme = UserDefaults.standard.string(forKey: "selectedTheme"),
@@ -20,11 +20,11 @@ class AppTheme: ObservableObject {
             currentTheme = theme
         }
     }
-    
+
     func setTheme(_ theme: Theme) {
         currentTheme = theme
         UserDefaults.standard.set(theme.rawValue, forKey: "selectedTheme")
-        
+
         // Update the accent color globally
         if let window = NSApplication.shared.windows.first {
             window.appearance = theme.appearance
@@ -45,13 +45,13 @@ enum Theme: String, CaseIterable, Identifiable {
     case teal = "teal"
     case cyan = "cyan"
     case indigo = "indigo"
-    
+
     var id: String { rawValue }
-    
+
     var name: String {
         rawValue.capitalized
     }
-    
+
     var primaryColor: Color {
         switch self {
         case .blue: return .blue
@@ -67,11 +67,11 @@ enum Theme: String, CaseIterable, Identifiable {
         case .indigo: return .indigo
         }
     }
-    
+
     var gradientColors: [Color] {
         [primaryColor, primaryColor.opacity(0.7)]
     }
-    
+
     var appearance: NSAppearance? {
         return nil // Let system handle dark/light mode
     }
@@ -88,7 +88,7 @@ extension View {
 struct ThemedBackground: ViewModifier {
     @ObservedObject var theme: AppTheme
     var opacity: Double = 0.1
-    
+
     func body(content: Content) -> some View {
         content
             .background(
@@ -102,4 +102,3 @@ extension View {
         modifier(ThemedBackground(theme: theme, opacity: opacity))
     }
 }
-

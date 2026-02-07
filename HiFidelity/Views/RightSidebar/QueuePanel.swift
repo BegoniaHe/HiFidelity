@@ -11,18 +11,18 @@ import SwiftUI
 struct QueuePanel: View {
     @ObservedObject var playback = PlaybackController.shared
     @ObservedObject var theme = AppTheme.shared
-    
-    @State private var hoveredIndex: Int? = nil
+
+    @State private var hoveredIndex: Int?
     @State private var draggedIndex: Int?
     @State private var scrollProxy: ScrollViewProxy?
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Header with now playing
             header
-            
+
             Divider()
-            
+
             // Queue list
             if playback.queue.isEmpty && playback.currentTrack == nil {
                 emptyState
@@ -34,9 +34,9 @@ struct QueuePanel: View {
         .padding(.bottom, 90)
         .background(Color(nsColor: .windowBackgroundColor))
     }
-    
+
     // MARK: - Header
-    
+
     private var header: some View {
         VStack(spacing: 0) {
             HStack {
@@ -44,9 +44,9 @@ struct QueuePanel: View {
                     .font(.system(size: 16, weight: .bold))
                     .frame(height: 28)
                     .foregroundColor(.primary)
-                
+
                 Spacer()
-                
+
                 // Go to current track button (only show if there's a current track and queue)
                 if playback.currentQueueIndex >= 0 && playback.currentQueueIndex < playback.queue.count {
                     Button {
@@ -59,10 +59,10 @@ struct QueuePanel: View {
                     .buttonStyle(.plain)
                     .help("Go to Current Track")
                 }
-                
+
                 // Autoplay toggle
                 AutoplayToggle()
-                
+
                 // Clear queue button
                 if !playback.queue.isEmpty {
                     Button {
@@ -80,17 +80,17 @@ struct QueuePanel: View {
         }
         .background(Color(nsColor: .windowBackgroundColor))
     }
-    
+
     private func currentTrackCard(track: Track) -> some View {
         HStack(spacing: 12) {
             ZStack {
                 // Artwork
                 TrackArtworkView(track: track, size: 56, cornerRadius: 6)
-                
+
                 // Play/Pause overlay for current track
                 Color.black.opacity(0.5)
                     .cornerRadius(4)
-                
+
                 Button(action: {
                     if playback.isPlaying {
                         playback.pause()
@@ -104,24 +104,23 @@ struct QueuePanel: View {
                 }
                 .buttonStyle(.plain)
                 .contentShape(Rectangle())
-                
+
             }
             .frame(width: 48, height: 48)
-            
-            
+
             // Info
             VStack(alignment: .leading, spacing: 4) {
                 Text(track.title)
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(theme.currentTheme.primaryColor)
                     .lineLimit(1)
-                
+
                 Text(track.artist)
                     .font(.system(size: 13))
                     .foregroundColor(.secondary)
                     .lineLimit(1)
             }
-            
+
             Spacer()
         }
         .padding(.horizontal, 20)
@@ -133,26 +132,26 @@ struct QueuePanel: View {
                     TrackContextMenuBuilder.navigateToAlbum(track)
                 }
             }
-            
+
             if !track.artist.isEmpty && track.artist != "Unknown Artist" {
                 Button("Go to Artist '\(track.artist)'") {
                     TrackContextMenuBuilder.navigateToArtist(track)
                 }
             }
-            
+
             if (!track.album.isEmpty && track.album != "Unknown Album") || (!track.artist.isEmpty && track.artist != "Unknown Artist") {
                 Divider()
             }
-            
+
             Button("Get Info") {
                 TrackContextMenuBuilder.showTrackInfo(track)
             }
         }
 
     }
-    
+
     // MARK: - Queue List
-    
+
     private var queueList: some View {
         ScrollViewReader { proxy in
             ScrollView {
@@ -182,7 +181,7 @@ struct QueuePanel: View {
             }
         }
     }
-    
+
     private func queueItem(track: Track, index: Int) -> some View {
         HStack(spacing: 14) {
             // Drag handle
@@ -190,29 +189,29 @@ struct QueuePanel: View {
                 .font(.system(size: 14))
                 .foregroundColor(.secondary.opacity(0.5))
                 .frame(width: 18)
-            
+
             // Album artwork thumbnail (lazy-loaded)
             TrackArtworkView(track: track, size: 48, cornerRadius: 6)
             .overlay(
                 RoundedRectangle(cornerRadius: 6)
                     .strokeBorder(Color.primary.opacity(0.1), lineWidth: 0.5)
             )
-            
+
             // Track info
             VStack(alignment: .leading, spacing: 4) {
                 Text(track.title)
                     .font(.system(size: 14, weight: index == playback.currentQueueIndex ? .semibold : .regular))
                     .foregroundColor(index == playback.currentQueueIndex ? theme.currentTheme.primaryColor : .primary)
                     .lineLimit(1)
-                
+
                 Text(track.artist)
                     .font(.system(size: 13))
                     .foregroundColor(.secondary)
                     .lineLimit(1)
             }
-            
+
             Spacer()
-            
+
             // Actions (show on hover)
             if hoveredIndex == index {
                 HStack(spacing: 8) {
@@ -250,25 +249,25 @@ struct QueuePanel: View {
             Button("Play Now") {
                 playback.play(track: track)
             }
-            
+
             if (!track.album.isEmpty && track.album != "Unknown Album") || (!track.artist.isEmpty && track.artist != "Unknown Artist") {
                 Divider()
             }
-            
+
             if !track.album.isEmpty && track.album != "Unknown Album" {
                 Button("Go to Album '\(track.album)'") {
                     TrackContextMenuBuilder.navigateToAlbum(track)
                 }
             }
-            
+
             if !track.artist.isEmpty && track.artist != "Unknown Artist" {
                 Button("Go to Artist '\(track.artist)'") {
                     TrackContextMenuBuilder.navigateToArtist(track)
                 }
             }
-            
+
             Divider()
-            
+
             Button("Remove from Queue", role: .destructive) {
                 playback.removeFromQueue(at: index)
             }
@@ -297,13 +296,13 @@ struct QueuePanel: View {
             playbackController: playback
         ))
     }
-    
+
     // MARK: - Queue Remove Button
-    
+
     private struct QueueRemoveButton: View {
         let action: () -> Void
         @State private var isHovered = false
-        
+
         var body: some View {
             Button(action: action) {
                 Image(systemName: "minus.circle.fill")
@@ -321,34 +320,34 @@ struct QueuePanel: View {
             }
         }
     }
-    
+
     // MARK: - Helper Functions
-    
+
     private func scrollToCurrentTrack() {
         guard let proxy = scrollProxy,
               playback.currentQueueIndex >= 0,
               playback.currentQueueIndex < playback.queue.count else {
             return
         }
-        
+
         withAnimation(.easeInOut(duration: 0.3)) {
             proxy.scrollTo(playback.currentQueueIndex, anchor: .center)
         }
     }
-    
+
     // MARK: - Empty State
-    
+
     private var emptyState: some View {
         VStack(spacing: 20) {
             Image(systemName: "music.note.list")
                 .font(.system(size: 56))
                 .foregroundColor(.secondary.opacity(0.2))
-            
+
             VStack(spacing: 8) {
                 Text("No Upcoming Songs")
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundColor(.primary)
-                
+
                 Text("Queue is empty. Play something to get started.")
                     .font(.system(size: 14))
                     .foregroundColor(.secondary)
@@ -367,27 +366,27 @@ struct QueueDropDelegate: DropDelegate {
     let targetIndex: Int
     @Binding var draggedIndex: Int?
     let playbackController: PlaybackController
-    
+
     func performDrop(info: DropInfo) -> Bool {
         draggedIndex = nil
         return true
     }
-    
+
     func dropEntered(info: DropInfo) {
         guard let fromIndex = draggedIndex else { return }
-        
+
         let toIndex = targetIndex
-        
+
         // Don't swap with itself
         if fromIndex == toIndex { return }
-        
+
         // Perform the move
         withAnimation(.easeInOut(duration: 0.2)) {
             playbackController.moveQueueItem(from: fromIndex, to: toIndex)
             draggedIndex = toIndex
         }
     }
-    
+
     func dropUpdated(info: DropInfo) -> DropProposal? {
         return DropProposal(operation: .move)
     }
@@ -400,7 +399,7 @@ private struct AutoplayToggle: View {
     @ObservedObject var playback = PlaybackController.shared
     @ObservedObject var theme = AppTheme.shared
     @State private var showTooltip = false
-    
+
     var body: some View {
         Button {
             playback.isAutoplayEnabled.toggle()
@@ -409,7 +408,7 @@ private struct AutoplayToggle: View {
                 Text("Autoplay")
                     .font(.system(size: 13, weight: .medium))
                     .foregroundColor(playback.isAutoplayEnabled ? theme.currentTheme.primaryColor : .secondary)
-                    
+
                 Image(systemName: playback.isAutoplayEnabled ? "infinity.circle.fill" : "infinity.circle")
                     .font(.system(size: 16, weight: .medium))
                     .foregroundColor(playback.isAutoplayEnabled ? theme.currentTheme.primaryColor : .secondary)
@@ -437,4 +436,3 @@ private struct AutoplayToggle: View {
     QueuePanel()
         .frame(height: 600)
 }
-

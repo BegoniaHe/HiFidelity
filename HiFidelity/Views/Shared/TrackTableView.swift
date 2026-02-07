@@ -15,10 +15,10 @@ struct TrackTableView: View {
     @Binding var sortOrder: [KeyPathComparator<Track>]
     let onPlayTrack: (Track) -> Void
     let isCurrentTrack: (Track) -> Bool
-    
+
     // Optional playlist context
     var playlistContext: NSTrackTableView.PlaylistContext?
-    
+
     var body: some View {
         NSTrackTableView(
             tracks: tracks,
@@ -30,7 +30,6 @@ struct TrackTableView: View {
         )
     }
 }
-
 
 // MARK: - Preview
 
@@ -45,4 +44,3 @@ struct TrackTableView: View {
     .environmentObject(DatabaseManager.shared)
     .frame(width: 800, height: 600)
 }
-

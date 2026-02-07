@@ -10,28 +10,28 @@ import SwiftUI
 struct SearchResultsView: View {
     let searchQuery: String
     @Binding var selectedEntity: EntityType?
-    
+
     @EnvironmentObject var databaseManager: DatabaseManager
     @ObservedObject var theme = AppTheme.shared
     @ObservedObject var playback = PlaybackController.shared
-    
+
     @State private var results = DatabaseManager.SearchResults()
     @State private var isLoading = false
     @State private var selectedCategory: SearchCategory = .all
     @State private var searchMode: DatabaseManager.SearchMode = .and
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Search header with mode toggle
             searchHeader
-            
+
             Divider()
-            
+
             // Category filters
             categoryFilters
-            
+
             Divider()
-            
+
             // Results content
             if isLoading {
                 loadingView
@@ -50,31 +50,31 @@ struct SearchResultsView: View {
             // for consistency if searchMode changes from elsewhere
         }
     }
-    
+
     // MARK: - Search Header
-    
+
     private var searchHeader: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 8) {
                     Text("Search Results")
                         .font(.system(size: 24, weight: .bold))
-                    
+
                     Image(systemName: "info.circle")
                         .font(.system(size: 14))
                         .foregroundColor(.secondary)
-                        .help("Search tips:\n• Results ranked by relevance (title > artist > album)\n• Use quotes for exact phrases: \"dark side\"\n• Prefix matching: \"beat\" matches \"beatles\"\n• Acronyms: \"BYOB\" matches \"B.Y.O.B\"\n• Combine terms: \"BYOB system\" for better results\n• Match All: all words must match\n• Match Any: broader results")
+                        .help(searchTips)
                 }
-                
+
                 if !results.isEmpty {
                     Text("\(results.totalCount) results for \"\(searchQuery)\"")
                         .font(.system(size: 14))
                         .foregroundColor(.secondary)
                 }
             }
-            
+
             Spacer()
-            
+
             // Search mode toggle
             Picker("", selection: $searchMode) {
                 Text("Match All").tag(DatabaseManager.SearchMode.and)
@@ -82,8 +82,8 @@ struct SearchResultsView: View {
             }
             .pickerStyle(.segmented)
             .frame(width: 200)
-            .help(searchMode == .and ? 
-                  "Match ALL words (exact search)" : 
+            .help(searchMode == .and ?
+                  "Match ALL words (exact search)" :
                   "Match ANY word (broader results)")
             .onChange(of: searchMode) { _, _ in
                 Task {
@@ -94,9 +94,20 @@ struct SearchResultsView: View {
         .padding(.horizontal, 20)
         .padding(.vertical, 16)
     }
-    
+
+    private var searchTips: String {
+        "Search tips:\n" +
+        "• Results ranked by relevance (title > artist > album)\n" +
+        "• Use quotes for exact phrases: \"dark side\"\n" +
+        "• Prefix matching: \"beat\" matches \"beatles\"\n" +
+        "• Acronyms: \"BYOB\" matches \"B.Y.O.B\"\n" +
+        "• Combine terms: \"BYOB system\" for better results\n" +
+        "• Match All: all words must match\n" +
+        "• Match Any: broader results"
+    }
+
     // MARK: - Category Filters
-    
+
     private var categoryFilters: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
@@ -116,9 +127,9 @@ struct SearchResultsView: View {
             .padding(.vertical, 12)
         }
     }
-    
+
     // MARK: - Results Content
-    
+
     private var resultsContent: some View {
         ScrollView {
             LazyVStack(spacing: 24, pinnedViews: []) {
@@ -133,7 +144,7 @@ struct SearchResultsView: View {
                         }
                     }
                 }
-                
+
                 if selectedCategory == .all || selectedCategory == .albums {
                     if !results.albums.isEmpty {
                         resultSection(
@@ -145,7 +156,7 @@ struct SearchResultsView: View {
                         }
                     }
                 }
-                
+
                 if selectedCategory == .all || selectedCategory == .artists {
                     if !results.artists.isEmpty {
                         resultSection(
@@ -157,7 +168,7 @@ struct SearchResultsView: View {
                         }
                     }
                 }
-                
+
                 if selectedCategory == .all || selectedCategory == .genres {
                     if !results.genres.isEmpty {
                         resultSection(
@@ -169,7 +180,7 @@ struct SearchResultsView: View {
                         }
                     }
                 }
-                
+
                 if selectedCategory == .all || selectedCategory == .playlists {
                     if !results.playlists.isEmpty {
                         resultSection(
@@ -186,9 +197,9 @@ struct SearchResultsView: View {
         }
         .id(selectedCategory)
     }
-    
+
     // MARK: - Result Sections
-    
+
     @ViewBuilder
     private func resultSection<Content: View>(
         title: String,
@@ -201,28 +212,28 @@ struct SearchResultsView: View {
                 Image(systemName: icon)
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(theme.currentTheme.primaryColor)
-                
+
                 Text(title)
                     .font(.system(size: 18, weight: .semibold))
-                
+
                 Text("(\(count))")
                     .font(.system(size: 14))
                     .foregroundColor(.secondary)
             }
-            
+
             content()
         }
     }
-    
+
     private var tracksSection: some View {
         let tracksToShow = selectedCategory == .all ? Array(results.tracks.prefix(10)) : results.tracks
-        
+
         return VStack(spacing: 0) {
             ForEach(tracksToShow) { track in
                 TrackSearchRow(track: track) {
                     playback.playTracks([track], startingAt: 0)
                 }
-                
+
                 if track.id != tracksToShow.last?.id {
                     Divider()
                         .padding(.leading, 60)
@@ -234,10 +245,10 @@ struct SearchResultsView: View {
                 .fill(Color(nsColor: .controlBackgroundColor))
         )
     }
-    
+
     private var albumsSection: some View {
         let albumsToShow = selectedCategory == .all ? Array(results.albums.prefix(8)) : results.albums
-        
+
         return LazyVGrid(columns: [
             GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)
         ], spacing: 16) {
@@ -248,10 +259,10 @@ struct SearchResultsView: View {
             }
         }
     }
-    
+
     private var artistsSection: some View {
         let artistsToShow = selectedCategory == .all ? Array(results.artists.prefix(8)) : results.artists
-        
+
         return LazyVGrid(columns: [
             GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)
         ], spacing: 16) {
@@ -262,10 +273,10 @@ struct SearchResultsView: View {
             }
         }
     }
-    
+
     private var genresSection: some View {
         let genresToShow = selectedCategory == .all ? Array(results.genres.prefix(8)) : results.genres
-        
+
         return LazyVGrid(columns: [
             GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)
         ], spacing: 16) {
@@ -276,10 +287,10 @@ struct SearchResultsView: View {
             }
         }
     }
-    
+
     private var playlistsSection: some View {
         let playlistsToShow = selectedCategory == .all ? Array(results.playlists.prefix(8)) : results.playlists
-        
+
         return LazyVGrid(columns: [
             GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)
         ], spacing: 16) {
@@ -296,42 +307,42 @@ struct SearchResultsView: View {
             }
         }
     }
-    
+
     // MARK: - Loading View
-    
+
     private var loadingView: some View {
         VStack(spacing: 16) {
             ProgressView()
                 .scaleEffect(1.5)
                 .tint(theme.currentTheme.primaryColor)
-            
+
             Text("Searching...")
                 .font(.system(size: 14))
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
+
     // MARK: - Empty State
-    
+
     private var emptyStateView: some View {
         VStack(spacing: 16) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 48))
                 .foregroundColor(.secondary.opacity(0.3))
-            
+
             Text("No results found")
                 .font(.system(size: 18, weight: .semibold))
-            
+
             Text("Try a different search term")
                 .font(.system(size: 14))
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
+
     // MARK: - Helper Methods
-    
+
     private func categoryCount(_ category: SearchCategory) -> Int {
         switch category {
         case .all:
@@ -348,27 +359,27 @@ struct SearchResultsView: View {
             return results.playlists.count
         }
     }
-    
+
     private func performSearch() async {
         guard !searchQuery.isEmpty else {
             results = DatabaseManager.SearchResults()
             return
         }
-        
+
         isLoading = true
         defer { isLoading = false }
-        
+
         do {
             // Use selected search mode
             results = try await databaseManager.search(query: searchQuery, mode: searchMode)
             Logger.info("Search completed (\(searchMode == .and ? "AND" : "OR") mode): \(results.totalCount) total results")
         } catch {
             Logger.error("Search failed: \(error)")
-            
+
             results = DatabaseManager.SearchResults()
         }
     }
-    
+
 }
 
 // MARK: - Track Search Row
@@ -376,36 +387,36 @@ struct SearchResultsView: View {
 struct TrackSearchRow: View {
     let track: Track
     let onPlay: () -> Void
-    
+
     @ObservedObject var theme = AppTheme.shared
     @ObservedObject var playback = PlaybackController.shared
     @State private var isHovered = false
-    
+
     var body: some View {
         HStack(spacing: 12) {
             // Artwork
             TrackArtworkView(track: track, size: 48, cornerRadius: 6)
-            
+
             // Track info
             VStack(alignment: .leading, spacing: 4) {
                 Text(track.title)
                     .font(.system(size: 14, weight: .medium))
                     .lineLimit(1)
-                
+
                 Text("\(track.artist) • \(track.album)")
                     .font(.system(size: 12))
                     .foregroundColor(.secondary)
                     .lineLimit(1)
             }
-            
+
             Spacer()
-            
+
             // Duration
             Text(formatDuration(track.duration))
                 .font(.system(size: 12))
                 .foregroundColor(.secondary)
                 .monospacedDigit()
-            
+
             // Play button
             if isHovered {
                 Button {
@@ -445,10 +456,10 @@ struct TrackSearchRow: View {
 struct PlaylistSearchCard: View {
     let playlist: Playlist
     let onSelect: () -> Void
-    
+
     @ObservedObject var theme = AppTheme.shared
     @State private var isHovered = false
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Artwork placeholder
@@ -464,18 +475,18 @@ struct PlaylistSearchCard: View {
                             endPoint: .bottomTrailing
                         )
                     )
-                
+
                 Image(systemName: "music.note.list")
                     .font(.system(size: 40))
                     .foregroundColor(theme.currentTheme.primaryColor)
             }
             .aspectRatio(1, contentMode: .fit)
-            
+
             VStack(alignment: .leading, spacing: 2) {
                 Text(playlist.name)
                     .font(.system(size: 14, weight: .semibold))
                     .lineLimit(1)
-                
+
                 Text("\(playlist.trackCount) tracks")
                     .font(.system(size: 12))
                     .foregroundColor(.secondary)
@@ -504,15 +515,15 @@ struct CategoryButton: View {
     let count: Int
     let isSelected: Bool
     let action: () -> Void
-    
+
     @ObservedObject var theme = AppTheme.shared
-    
+
     var body: some View {
         Button(action: action) {
             HStack(spacing: 6) {
                 Text(category.title)
                     .font(.system(size: 13, weight: .medium))
-                
+
                 if count > 0 {
                     Text("\(count)")
                         .font(.system(size: 11, weight: .semibold))
@@ -540,9 +551,9 @@ enum SearchCategory: String, CaseIterable, Identifiable {
     case artists = "Artists"
     case genres = "Genres"
     case playlists = "Playlists"
-    
+
     var id: String { rawValue }
-    
+
     var title: String { rawValue }
 }
 
@@ -553,4 +564,3 @@ private func formatDuration(_ duration: Double) -> String {
     let seconds = Int(duration) % 60
     return String(format: "%d:%02d", minutes, seconds)
 }
-

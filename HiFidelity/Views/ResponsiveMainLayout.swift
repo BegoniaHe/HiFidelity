@@ -15,7 +15,7 @@ struct ResponsiveMainLayout: View {
     @Binding var searchText: String
     @Binding var isSearchActive: Bool
     @Binding var rightPanelTab: RightPanelTab
-    
+
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -32,23 +32,23 @@ struct ResponsiveMainLayout: View {
                             insertion: .move(edge: .leading).combined(with: .opacity),
                             removal: .move(edge: .leading).combined(with: .opacity)
                         ))
-                        
+
                         Divider()
                             .transition(.opacity)
                     }
-                    
+
                     // Center: Main Content
                     MainContentRouter(
                         selectedEntity: $selectedEntity,
                         searchText: $searchText,
                         isSearchActive: $isSearchActive
                     )
-                    
+
                     // Right: Tabbed Panel (toggleable)
                     if showRightPanel {
                         Divider()
                             .transition(.opacity)
-                        
+
                         RightPanelView(selectedTab: $rightPanelTab)
                             .frame(width: calculateRightPanelWidth(for: geometry.size))
                             .transition(.asymmetric(
@@ -59,7 +59,7 @@ struct ResponsiveMainLayout: View {
                 }
                 .animation(.spring(response: 0.4, dampingFraction: 0.8), value: showLeftSidebar)
                 .animation(.spring(response: 0.4, dampingFraction: 0.8), value: showRightPanel)
-                
+
                 // Bottom: Playback Bar (overlaid)
                 VStack {
                     Spacer()
@@ -80,13 +80,13 @@ struct ResponsiveMainLayout: View {
             )
         }
     }
-    
+
     // MARK: - Responsive Width Calculations
-    
+
     /// Calculate sidebar width based on window size (280-380px)
     private func calculateSidebarWidth(for size: CGSize) -> CGFloat {
         let windowWidth = size.width
-        
+
         if windowWidth < 1200 {
             return 280
         } else if windowWidth < 1600 {
@@ -97,11 +97,11 @@ struct ResponsiveMainLayout: View {
             return 350 + (ratio * 30)
         }
     }
-    
+
     /// Calculate right panel width based on window size (320-420px)
     private func calculateRightPanelWidth(for size: CGSize) -> CGFloat {
         let windowWidth = size.width
-        
+
         if windowWidth < 1200 {
             return 320
         } else if windowWidth < 1600 {
@@ -125,7 +125,7 @@ struct ResponsiveMainLayout: View {
         @State private var searchText = ""
         @State private var isSearchActive = false
         @State private var rightPanelTab: RightPanelTab = .queue
-        
+
         var body: some View {
             ResponsiveMainLayout(
                 showLeftSidebar: $showLeftSidebar,
@@ -140,7 +140,6 @@ struct ResponsiveMainLayout: View {
             .frame(width: 1200, height: 800)
         }
     }
-    
+
     return PreviewWrapper()
 }
-

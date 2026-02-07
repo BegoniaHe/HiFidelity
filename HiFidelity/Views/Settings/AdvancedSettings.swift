@@ -13,32 +13,32 @@ struct AdvancedSettings: View {
     @State private var showResetConfirm = false
     @State private var isRebuildingFTS = false
     @State private var isOptimizing = false
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 32) {
             // Performance
             performanceSection
-            
+
             Divider()
-            
+
             // Database
             databaseSection
-            
+
             Divider()
-            
+
             // Danger Zone
             dangerZone
-            
+
             Spacer()
         }
     }
-    
+
     private var performanceSection: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text("Performance")
                 .font(.title3)
                 .fontWeight(.semibold)
-            
+
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text("Artwork Cache Size")
@@ -47,25 +47,25 @@ struct AdvancedSettings: View {
                         .foregroundColor(.secondary)
                 }
                 .font(.subheadline)
-                
+
                 Slider(value: $cacheSize, in: 100...1000, step: 100)
                     .onChange(of: cacheSize) { _, newValue in
                         applyCacheSize(Int(newValue))
                     }
-                
+
                 Text("Memory limit for caching album artwork. Larger cache = smoother scrolling.")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
         }
     }
-    
+
     private var databaseSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Database")
                 .font(.title3)
                 .fontWeight(.semibold)
-            
+
             // Database size and optimize
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
@@ -77,9 +77,9 @@ struct AdvancedSettings: View {
                             .foregroundColor(.secondary)
                     }
                 }
-                
+
                 Spacer()
-                
+
                 Button {
                     isOptimizing = true
                     Task {
@@ -101,7 +101,7 @@ struct AdvancedSettings: View {
                 }
                 .disabled(isOptimizing)
             }
-            
+
             // FTS rebuild
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
@@ -111,9 +111,9 @@ struct AdvancedSettings: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
-                
+
                 Spacer()
-                
+
                 Button {
                     isRebuildingFTS = true
                     Task {
@@ -138,14 +138,14 @@ struct AdvancedSettings: View {
             }
         }
     }
-    
+
     private var dangerZone: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Danger Zone")
                 .font(.title3)
                 .fontWeight(.semibold)
                 .foregroundColor(.red)
-            
+
             Button {
                 showResetConfirm = true
             } label: {
@@ -173,20 +173,20 @@ struct AdvancedSettings: View {
             } message: {
                 Text("This will delete all your music library data. This action cannot be undone.")
             }
-            
+
             Text("⚠️ This will permanently delete all your library data including folders, tracks, and playlists.")
                 .font(.caption)
                 .foregroundColor(.secondary)
         }
     }
-    
+
     // MARK: - Helper Methods
-    
+
     private func applyCacheSize(_ sizeMB: Int) {
         ArtworkCache.shared.updateCacheSize(sizeMB: sizeMB)
     }
 
-} 
+}
 
 #Preview {
     AdvancedSettings()

@@ -11,10 +11,10 @@ import SwiftUI
 struct AlbumsTabView: View {
     @Binding var selectedEntity: EntityType?
     let isVisible: Bool
-    
+
     @EnvironmentObject var databaseManager: DatabaseManager
     @ObservedObject var theme = AppTheme.shared
-    
+
     @State private var albums: [Album] = []
     @State private var filteredAlbums: [Album] = []
     @State private var isLoading = false
@@ -22,15 +22,13 @@ struct AlbumsTabView: View {
     @AppStorage("albumsSortOptionId") private var sortOptionId: String = "name"
     @AppStorage("albumsSortAscending") private var sortAscending: Bool = true
     @State private var selectedSort = SortOption(id: "name", title: "Name", type: .alphabetical, ascending: true)
-    @State private var selectedFilter: FilterOption? = nil
-    
+    @State private var selectedFilter: FilterOption?
+
     init(selectedEntity: Binding<EntityType?>, isVisible: Bool = true) {
         self._selectedEntity = selectedEntity
         self.isVisible = isVisible
     }
-    
 
-    
     private let sortOptions = [
         SortOption(id: "name", title: "Name", type: .alphabetical, ascending: true),
         SortOption(id: "artist", title: "Album Artist", type: .alphabetical, ascending: true),
@@ -38,21 +36,21 @@ struct AlbumsTabView: View {
         SortOption(id: "recent", title: "Recently Added", type: .dateAdded, ascending: false),
         SortOption(id: "tracks", title: "Track Count", type: .trackCount, ascending: false)
     ]
-    
+
     private let filterOptions = [
         FilterOption(id: "2020s", title: "2020s", predicate: "year >= 2020"),
         FilterOption(id: "2010s", title: "2010s", predicate: "year >= 2010 AND year < 2020"),
         FilterOption(id: "2000s", title: "2000s", predicate: "year >= 2000 AND year < 2010"),
         FilterOption(id: "90s", title: "90s & Earlier", predicate: "year < 2000")
     ]
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Toolbar
             toolbar
-            
+
             Divider()
-            
+
             // Content
             if isLoading {
                 loadingView
@@ -101,7 +99,7 @@ struct AlbumsTabView: View {
                     ascending: sortAscending
                 )
             }
-            
+
             if isVisible && !hasLoadedOnce {
                 Task {
                     await loadAlbums()
@@ -123,40 +121,39 @@ struct AlbumsTabView: View {
             applyFiltersAndSort()
         }
     }
-    
+
     // MARK: - Loading View
-    
+
     private var loadingView: some View {
         VStack {
             Spacer()
-            
+
             VStack(spacing: 16) {
                 ProgressView()
                     .scaleEffect(1.2)
                     .tint(theme.currentTheme.primaryColor)
-                
+
                 Text("Loading albums...")
                     .font(.system(size: 14))
                     .foregroundColor(.secondary)
             }
-            
+
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
-    
+
     // MARK: - Toolbar
-    
+
     private var toolbar: some View {
         HStack(spacing: 16) {
             // Count label
             Text("\(filteredAlbums.count) albums")
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.secondary)
-            
+
             Spacer()
-            
+
             // Sort and Filter dropdown
             AlbumOptionsDropdown(
                 selectedSort: $selectedSort,
@@ -171,15 +168,15 @@ struct AlbumsTabView: View {
         .frame(height: 46)
         .background(Color(nsColor: .windowBackgroundColor))
     }
-    
+
     private func loadAlbums() async {
         isLoading = true
         defer { isLoading = false }
-        
+
         do {
             albums = try await databaseManager.getAllAlbums()
             applyFiltersAndSort()
-            
+
             // Preload artwork for initially visible albums
             Task {
                 let visibleCount = min(20, filteredAlbums.count)
@@ -190,10 +187,10 @@ struct AlbumsTabView: View {
             Logger.error("Failed to load albums: \(error)")
         }
     }
-    
+
     private func applyFiltersAndSort() {
         var result = albums
-        
+
         // Apply decade filter
         if let filter = selectedFilter {
             switch filter.id {
@@ -229,7 +226,7 @@ struct AlbumsTabView: View {
                 break
             }
         }
-        
+
         // Apply sort
         switch selectedSort.type {
         case .alphabetical:
@@ -255,21 +252,21 @@ struct AlbumsTabView: View {
         default:
             break
         }
-        
+
         if !selectedSort.ascending {
             result.reverse()
         }
-        
+
         filteredAlbums = result
     }
-    
+
     // MARK: - Prefetching
-    
+
     private func prefetchArtwork(startingAt index: Int) {
         // Prefetch next 15 albums' artwork
         let endIndex = min(index + 15, filteredAlbums.count)
         guard endIndex > index else { return }
-        
+
         let albumIds = filteredAlbums[index..<endIndex].compactMap { $0.id }
         ArtworkCache.shared.preloadAlbumArtwork(for: albumIds, size: 160)
     }
@@ -282,9 +279,9 @@ private struct AlbumOptionsDropdown: View {
     @Binding var selectedFilter: FilterOption?
     let sortOptions: [SortOption]
     let filterOptions: [FilterOption]
-    
+
     @ObservedObject private var theme = AppTheme.shared
-    
+
     var body: some View {
         Menu {
             Section("Sort by") {
@@ -301,9 +298,9 @@ private struct AlbumOptionsDropdown: View {
                     }
                 }
             }
-            
+
             Divider()
-            
+
             Section("Sort order") {
                 Button {
                     selectedSort = SortOption(
@@ -320,7 +317,7 @@ private struct AlbumOptionsDropdown: View {
                         }
                     }
                 }
-                
+
                 Button {
                     selectedSort = SortOption(
                         id: selectedSort.id,
@@ -337,9 +334,9 @@ private struct AlbumOptionsDropdown: View {
                     }
                 }
             }
-            
+
             Divider()
-            
+
             Section("Filter") {
                 ForEach(filterOptions) { filter in
                     Button {
@@ -353,7 +350,7 @@ private struct AlbumOptionsDropdown: View {
                         }
                     }
                 }
-                
+
                 if selectedFilter != nil {
                     Button("Clear Filter") {
                         selectedFilter = nil
@@ -381,4 +378,3 @@ private struct AlbumOptionsDropdown: View {
         .buttonStyle(.plain)
     }
 }
-

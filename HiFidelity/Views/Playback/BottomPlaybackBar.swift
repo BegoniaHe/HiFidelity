@@ -12,25 +12,25 @@ struct BottomPlaybackBar: View {
     @Binding var rightPanelTab: RightPanelTab
     @Binding var showRightPanel: Bool
     @Binding var showLeftSidebar: Bool
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Progress bar
             ProgressBarControl()
                 .zIndex(1)
-            
+
             // Main control bar
             ZStack {
                 // Centered playback controls
                 PlaybackControlsCenter()
-                
+
                 // Left and right sections
                 HStack(spacing: 8) {
                     // Left: Track Info
                     TrackInfoDisplay()
-                    
+
                     Spacer()
-                    
+
                     // Right: Volume and extras
                     RightControlsSection(
                         rightPanelTab: $rightPanelTab,
@@ -49,9 +49,9 @@ struct BottomPlaybackBar: View {
         }
         .frame(maxWidth: .infinity, minHeight: 90)
     }
-    
+
     // MARK: - Background
-    
+
     private var controlBarBackground: some View {
         Color(nsColor: .windowBackgroundColor)
             .overlay(
@@ -70,7 +70,7 @@ struct BottomPlaybackBar: View {
         @State private var rightPanelTab: RightPanelTab = .queue
         @State private var showRightPanel = true
         @State private var showLeftSidebar = true
-        
+
         var body: some View {
     VStack {
         Spacer()
@@ -83,7 +83,6 @@ struct BottomPlaybackBar: View {
             .frame(width: 900, height: 300)
         }
     }
-    
+
     return PreviewWrapper()
 }
-

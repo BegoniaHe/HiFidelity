@@ -10,9 +10,9 @@ import SwiftUI
 struct RightControlsSection: View {
     @Binding var rightPanelTab: RightPanelTab
     @Binding var showRightPanel: Bool
-    
+
     @ObservedObject var theme = AppTheme.shared
-    
+
     var body: some View {
         HStack(spacing: 8) {
             // Queue button
@@ -24,7 +24,7 @@ struct RightControlsSection: View {
             ) {
                 togglePanel(to: .queue)
             }
-            
+
             // Lyrics button
             PanelToggleButton(
                 icon: "quote.bubble",
@@ -34,7 +34,7 @@ struct RightControlsSection: View {
             ) {
                 togglePanel(to: .lyrics)
             }
-            
+
             Divider()
                 .frame(height: 24)
 
@@ -47,16 +47,16 @@ struct RightControlsSection: View {
 
                 // Audio device selector
                 AudioDeviceSelector()
-                
+
                 // Volume control
                 VolumeControlSection()
             }
         }
         .frame(width: 420, alignment: .trailing)
     }
-    
+
     // MARK: - Actions
-    
+
     private func togglePanel(to tab: RightPanelTab) {
         withAnimation(.easeInOut(duration: 0.2)) {
             if !showRightPanel || rightPanelTab != tab {
@@ -78,9 +78,9 @@ private struct PanelToggleButton: View {
     let currentTab: RightPanelTab
     let isShowing: Bool
     let action: () -> Void
-    
+
     @ObservedObject var theme = AppTheme.shared
-    
+
     var body: some View {
         Button(action: action) {
             Image(systemName: icon)
@@ -91,12 +91,11 @@ private struct PanelToggleButton: View {
         }
         .buttonStyle(PlainHoverButtonStyle())
     }
-    
+
     private var isActive: Bool {
         isShowing && currentTab == panelTab
     }
 }
-
 
 // MARK: - Equalizer Button
 
@@ -104,7 +103,7 @@ private struct PanelToggleButton: View {
 struct EqualizerButton: View {
     @ObservedObject var theme = AppTheme.shared
     @Environment(\.openWindow) private var openWindow
-    
+
     var body: some View {
         Button(action: {
             openWindow(id: "audio-effects")
@@ -126,7 +125,7 @@ struct EqualizerButton: View {
 struct SampleRateSyncButton: View {
     @ObservedObject var settings = AudioSettings.shared
     @ObservedObject var theme = AppTheme.shared
-    
+
     var body: some View {
         Button(action: {
             settings.synchronizeSampleRate.toggle()
@@ -148,7 +147,7 @@ struct SampleRateSyncButton: View {
     struct PreviewWrapper: View {
         @State private var rightPanelTab: RightPanelTab = .queue
         @State private var showRightPanel = true
-        
+
         var body: some View {
             RightControlsSection(
                 rightPanelTab: $rightPanelTab,
@@ -158,6 +157,6 @@ struct SampleRateSyncButton: View {
             .padding()
         }
     }
-    
+
     return PreviewWrapper()
 }
