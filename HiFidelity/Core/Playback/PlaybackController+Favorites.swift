@@ -9,15 +9,15 @@ import Foundation
 
 extension PlaybackController {
     // MARK: - Favorites
-    
+
     func toggleFavorite() {
         guard var track = currentTrack else { return }
-        
+
         guard track.trackId != nil else {
             Logger.error("Cannot update favorite - track has no database ID")
             return
         }
-        
+
         // Toggle the favorite status
         track.isFavorite.toggle()
         currentTrack = track
@@ -31,21 +31,21 @@ extension PlaybackController {
             }
         }
     }
-    
+
     // MARK: - Play Count
-    
+
     func updatePlayCount(for track: Track) {
         Task {
             guard var track = currentTrack else { return }
-                    
+
             guard track.trackId != nil else {
                 Logger.error("Cannot update play count - track has no database ID")
                 return
             }
-            
-            track.playCount = track.playCount + 1
+
+            track.playCount += 1
             track.lastPlayedDate = Date()
-            
+
             do {
                 try await DatabaseManager.shared.updateTrackPlayInfo(track)
                 Logger.debug("Updated play count for: \(track.title)")
@@ -55,4 +55,3 @@ extension PlaybackController {
         }
     }
 }
-
