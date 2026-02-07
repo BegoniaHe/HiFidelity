@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Observation
 
 /// Tab button for library navigation - LINE Design System Segmented Control Style
 struct LibraryTabButton: View {
@@ -14,7 +15,7 @@ struct LibraryTabButton: View {
     let isSelected: Bool
     let action: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
     @State private var isHovered = false
 
     var body: some View {

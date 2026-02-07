@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AppKit
+import Observation
 
 // MARK: - Track Context Menu
 
@@ -16,8 +17,8 @@ struct TrackContextMenu: View {
     // Optional playlist context - if provided, shows "Remove from Playlist" option
     var playlistContext: PlaylistContext?
 
-    @ObservedObject private var cache = DatabaseCache.shared
-    @ObservedObject private var replayGainSettings = ReplayGainSettings.shared
+    @Bindable private var cache = DatabaseCache.shared
+    @Bindable private var replayGainSettings = ReplayGainSettings.shared
 
     // Filter to only show user playlists (exclude smart playlists)
     private var userPlaylists: [Playlist] {

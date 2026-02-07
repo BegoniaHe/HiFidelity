@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import Observation
 
 struct AudioSettingsView: View {
-    @ObservedObject var settings = AudioSettings.shared
-    @ObservedObject var effectsManager = AudioEffectsManager.shared
-    @ObservedObject var replayGainSettings = ReplayGainSettings.shared
-    @ObservedObject var r128Scanner = R128LoudnessScanner.shared
+    @Bindable var settings = AudioSettings.shared
+    @Bindable var effectsManager = AudioEffectsManager.shared
+    @Bindable var replayGainSettings = ReplayGainSettings.shared
+    @Bindable var r128Scanner = R128LoudnessScanner.shared
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {

@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
+import Observation
 
 /// Main settings view with tabbed interface
 struct SettingsView: View {
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
     @Environment(\.dismiss) var dismiss
 
     @State private var selectedTab: SettingsTab = .appearance
@@ -152,7 +153,7 @@ enum SettingsTab: String, CaseIterable, Identifiable {
 // MARK: - Sidebar Button
 
 private struct SettingsSidebarButton: View {
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
     let tab: SettingsTab
     let isSelected: Bool
     let action: () -> Void
@@ -201,5 +202,5 @@ private struct SettingsSidebarButton: View {
 
 #Preview {
     SettingsView()
-        .environmentObject(DatabaseManager.shared)
+        .environment(DatabaseManager.shared)
 }

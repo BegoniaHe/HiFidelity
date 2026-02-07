@@ -6,14 +6,15 @@
 //
 
 import SwiftUI
+import Observation
 
 struct SearchResultsView: View {
     let searchQuery: String
     @Binding var selectedEntity: EntityType?
 
-    @EnvironmentObject var databaseManager: DatabaseManager
-    @ObservedObject var theme = AppTheme.shared
-    @ObservedObject var playback = PlaybackController.shared
+    @Environment(DatabaseManager.self) var databaseManager
+    @Bindable var theme = AppTheme.shared
+    @Bindable var playback = PlaybackController.shared
 
     @State private var results = DatabaseManager.SearchResults()
     @State private var isLoading = false
@@ -388,8 +389,8 @@ struct TrackSearchRow: View {
     let track: Track
     let onPlay: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
-    @ObservedObject var playback = PlaybackController.shared
+    @Bindable var theme = AppTheme.shared
+    @Bindable var playback = PlaybackController.shared
     @State private var isHovered = false
 
     var body: some View {
@@ -457,7 +458,7 @@ struct PlaylistSearchCard: View {
     let playlist: Playlist
     let onSelect: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
     @State private var isHovered = false
 
     var body: some View {
@@ -516,7 +517,7 @@ struct CategoryButton: View {
     let isSelected: Bool
     let action: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
 
     var body: some View {
         Button(action: action) {

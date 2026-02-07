@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
+import Observation
 import UniformTypeIdentifiers
 
 /// Complete karaoke-style lyrics panel with LRC support
 struct LyricsPanel: View {
-    @ObservedObject var playback = PlaybackController.shared
-    @ObservedObject var theme = AppTheme.shared
-    @ObservedObject var database = DatabaseManager.shared
+    @Bindable var playback = PlaybackController.shared
+    @Bindable var theme = AppTheme.shared
+    @Bindable var database = DatabaseManager.shared
 
     @State var lyrics: Lyrics?
     @State var currentLineIndex: Int?

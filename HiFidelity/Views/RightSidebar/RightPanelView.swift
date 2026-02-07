@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Observation
 
 /// Enum representing the tabs in the right panel
 enum RightPanelTab {
@@ -17,8 +18,8 @@ enum RightPanelTab {
 /// Main container for the right panel with tabs
 struct RightPanelView: View {
     @Binding var selectedTab: RightPanelTab
-    @ObservedObject var playback = PlaybackController.shared
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var playback = PlaybackController.shared
+    @Bindable var theme = AppTheme.shared
 
     var body: some View {
         VStack(spacing: 0) {

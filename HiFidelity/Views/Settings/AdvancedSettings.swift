@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AdvancedSettings: View {
-    @EnvironmentObject var databaseManager: DatabaseManager
+    @Environment(DatabaseManager.self) var databaseManager
     @AppStorage("artworkCacheSize") private var cacheSize: Double = 500
     @State private var showResetConfirm = false
     @State private var isRebuildingFTS = false
@@ -190,6 +190,6 @@ struct AdvancedSettings: View {
 
 #Preview {
     AdvancedSettings()
-        .environmentObject(DatabaseManager.shared)
+        .environment(DatabaseManager.shared)
         .frame(width: 600, height: 600)
 }

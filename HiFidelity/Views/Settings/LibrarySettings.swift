@@ -5,12 +5,13 @@
 //  Created by Varun Rathod on 31/10/25.
 //
 
+import Observation
 import SwiftUI
 
 struct LibrarySettings: View {
-    @EnvironmentObject var databaseManager: DatabaseManager
-    @ObservedObject var theme = AppTheme.shared
-    @StateObject private var folderWatcher = FolderWatcherService.shared
+    @Environment(DatabaseManager.self) private var databaseManager
+    @Bindable var theme = AppTheme.shared
+    @Bindable var folderWatcher = FolderWatcherService.shared
 
     @State private var folders: [Folder] = []
     @State private var showRemoveConfirmation = false
@@ -79,7 +80,8 @@ struct LibrarySettings: View {
                 }
             }
         }
-        .alert("Remove Folder?", isPresented: $showRemoveConfirmation, presenting: folderToRemove) { folder in
+        .alert("Remove Folder?", isPresented: $showRemoveConfirmation, presenting: folderToRemove) {
+            folder in
             Button("Cancel", role: .cancel) {}
             Button("Remove", role: .destructive) {
                 Task {
@@ -97,7 +99,9 @@ struct LibrarySettings: View {
                 }
             }
         } message: {
-            Text("This will remove all \(folders.count) folders from your library. This cannot be undone.")
+            Text(
+                "This will remove all \(folders.count) folders from your library. This cannot be undone."
+            )
         }
         .task {
             await loadFolders()
@@ -159,7 +163,10 @@ struct LibrarySettings: View {
                     // Progress
                     RoundedRectangle(cornerRadius: 2)
                         .fill(theme.currentTheme.primaryColor)
-                        .frame(width: max(0, geometry.size.width * databaseManager.importProgress), height: 4)
+                        .frame(
+                            width: max(0, geometry.size.width * databaseManager.importProgress),
+                            height: 4
+                        )
                         .animation(.easeInOut, value: databaseManager.importProgress)
                 }
             }
@@ -177,7 +184,9 @@ struct LibrarySettings: View {
             // Icon
             Image(systemName: folderWatcher.isWatching ? "eye.fill" : "eye.slash.fill")
                 .font(.system(size: 16))
-                .foregroundColor(folderWatcher.isWatching ? theme.currentTheme.primaryColor : .secondary)
+                .foregroundColor(
+                    folderWatcher.isWatching ? theme.currentTheme.primaryColor : .secondary
+                )
                 .frame(width: 24)
 
             // Info
@@ -186,11 +195,13 @@ struct LibrarySettings: View {
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(.primary)
 
-                Text(folderWatcher.isWatching
-                    ? "Watching \(folderWatcher.watchedFoldersCount) folder\(folderWatcher.watchedFoldersCount == 1 ? "" : "s") for changes"
-                    : "Enable to automatically update your library when files change")
-                    .font(.system(size: 11))
-                    .foregroundColor(.secondary)
+                Text(
+                    folderWatcher.isWatching
+                        ? "Watching \(folderWatcher.watchedFoldersCount) folder\(folderWatcher.watchedFoldersCount == 1 ? "" : "s") for changes"
+                        : "Enable to automatically update your library when files change"
+                )
+                .font(.system(size: 11))
+                .foregroundColor(.secondary)
             }
 
             Spacer()
@@ -232,7 +243,9 @@ struct LibrarySettings: View {
                 .padding(.vertical, 8)
                 .background(
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(databaseManager.isImporting ? Color.gray : theme.currentTheme.primaryColor)
+                        .fill(
+                            databaseManager.isImporting
+                                ? Color.gray : theme.currentTheme.primaryColor)
                 )
             }
             .buttonStyle(.plain)
@@ -259,12 +272,17 @@ struct LibrarySettings: View {
                     Text("Scan All")
                         .font(.system(size: 13, weight: .medium))
                 }
-                .foregroundColor(databaseManager.isImporting ? .gray : theme.currentTheme.primaryColor)
+                .foregroundColor(
+                    databaseManager.isImporting ? .gray : theme.currentTheme.primaryColor
+                )
                 .padding(.horizontal, 14)
                 .padding(.vertical, 7)
                 .background(
                     RoundedRectangle(cornerRadius: 16)
-                        .fill(databaseManager.isImporting ? Color.gray.opacity(0.15) : theme.currentTheme.primaryColor.opacity(0.15))
+                        .fill(
+                            databaseManager.isImporting
+                                ? Color.gray.opacity(0.15)
+                                : theme.currentTheme.primaryColor.opacity(0.15))
                 )
             }
             .buttonStyle(.plain)
@@ -286,7 +304,9 @@ struct LibrarySettings: View {
                 .padding(.vertical, 7)
                 .background(
                     RoundedRectangle(cornerRadius: 16)
-                        .fill(databaseManager.isImporting ? Color.gray.opacity(0.15) : Color.red.opacity(0.15))
+                        .fill(
+                            databaseManager.isImporting
+                                ? Color.gray.opacity(0.15) : Color.red.opacity(0.15))
                 )
             }
             .buttonStyle(.plain)
@@ -330,7 +350,9 @@ struct LibrarySettings: View {
                 .padding(.vertical, 8)
                 .background(
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(databaseManager.isImporting ? Color.gray : theme.currentTheme.primaryColor)
+                        .fill(
+                            databaseManager.isImporting
+                                ? Color.gray : theme.currentTheme.primaryColor)
                 )
             }
             .buttonStyle(.plain)
@@ -379,7 +401,8 @@ struct LibrarySettings: View {
     private func scanFolder(_ folder: Folder) async {
         // Prevent scanning when import is already in progress
         guard !databaseManager.isImporting else {
-            NotificationManager.shared.addMessage(.warning, "Please wait for the current import to finish")
+            NotificationManager.shared.addMessage(
+                .warning, "Please wait for the current import to finish")
             return
         }
 
@@ -394,7 +417,8 @@ struct LibrarySettings: View {
     private func scanAllFolders() async {
         // Prevent scanning when import is already in progress
         guard !databaseManager.isImporting else {
-            NotificationManager.shared.addMessage(.warning, "Please wait for the current import to finish")
+            NotificationManager.shared.addMessage(
+                .warning, "Please wait for the current import to finish")
             return
         }
 
@@ -412,7 +436,8 @@ struct LibrarySettings: View {
     private func removeFolder(_ folder: Folder) async {
         // Prevent removing folders when import is in progress
         guard !databaseManager.isImporting else {
-            NotificationManager.shared.addMessage(.warning, "Please wait for the current import to finish")
+            NotificationManager.shared.addMessage(
+                .warning, "Please wait for the current import to finish")
             return
         }
 
@@ -427,7 +452,8 @@ struct LibrarySettings: View {
     private func removeAllFolders() async {
         // Prevent removing folders when import is in progress
         guard !databaseManager.isImporting else {
-            NotificationManager.shared.addMessage(.warning, "Please wait for the current import to finish")
+            NotificationManager.shared.addMessage(
+                .warning, "Please wait for the current import to finish")
             return
         }
 
@@ -451,7 +477,7 @@ struct FolderRow: View {
     let onScan: () -> Void
     let onRemove: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
     @State private var isHovered = false
 
     private func relocateFolder() {
@@ -470,7 +496,7 @@ struct FolderRow: View {
                             oldFolderURL: folder.url,
                             newFolderURL: newURL
                         )
-                        Logger.info("✓ Successfully relocated folder: \(folder.name)")
+                        Logger.info("Successfully relocated folder: \(folder.name)")
                     } catch {
                         Logger.error("Failed to relocate folder: \(error)")
                     }
@@ -516,7 +542,9 @@ struct FolderRow: View {
                             .frame(width: 24, height: 24)
                             .background(
                                 Circle()
-                                    .fill(isImporting ? Color.gray.opacity(0.15) : Color.orange.opacity(0.15))
+                                    .fill(
+                                        isImporting
+                                            ? Color.gray.opacity(0.15) : Color.orange.opacity(0.15))
                             )
                     }
                     .buttonStyle(.plain)
@@ -534,7 +562,10 @@ struct FolderRow: View {
                             .frame(width: 24, height: 24)
                             .background(
                                 Circle()
-                                    .fill(isImporting ? Color.gray.opacity(0.15) : theme.currentTheme.primaryColor.opacity(0.15))
+                                    .fill(
+                                        isImporting
+                                            ? Color.gray.opacity(0.15)
+                                            : theme.currentTheme.primaryColor.opacity(0.15))
                             )
                     }
                     .buttonStyle(.plain)
@@ -552,7 +583,9 @@ struct FolderRow: View {
                             .frame(width: 24, height: 24)
                             .background(
                                 Circle()
-                                    .fill(isImporting ? Color.gray.opacity(0.15) : Color.red.opacity(0.15))
+                                    .fill(
+                                        isImporting
+                                            ? Color.gray.opacity(0.15) : Color.red.opacity(0.15))
                             )
                     }
                     .buttonStyle(.plain)
@@ -582,6 +615,6 @@ struct FolderRow: View {
 
 #Preview {
     LibrarySettings()
-        .environmentObject(DatabaseManager.shared)
+        .environment(DatabaseManager.shared)
         .frame(width: 700, height: 600)
 }

@@ -5,11 +5,12 @@
 //  Created by Varun Rathod
 
 import SwiftUI
+import Observation
 
 /// Interactive progress bar with scrubbing support
 struct ProgressBarControl: View {
-    @ObservedObject var playback = PlaybackController.shared
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var playback = PlaybackController.shared
+    @Bindable var theme = AppTheme.shared
 
     @State private var isHovering = false
     @State private var isDragging = false

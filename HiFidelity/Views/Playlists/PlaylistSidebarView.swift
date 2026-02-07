@@ -7,15 +7,16 @@
 
 import SwiftUI
 import AppKit
+import Observation
 
 /// Playlist sidebar showing pinned and user playlists
 struct PlaylistSidebarView: View {
-    @EnvironmentObject var databaseManager: DatabaseManager
-    @ObservedObject var theme = AppTheme.shared
+    @Environment(DatabaseManager.self) private var databaseManager
+    @Bindable var theme = AppTheme.shared
     @Binding var selectedTab: NavigationTab
     @Binding var selectedEntity: EntityType?
 
-    @StateObject private var viewModel = PlaylistSidebarViewModel()
+    @State private var viewModel = PlaylistSidebarViewModel()
     @State private var searchText = ""
     @State private var showCreatePlaylist = false
     @AppStorage("playlistSortOption") private var sortOptionId: String = "name"
@@ -196,7 +197,7 @@ extension PlaylistSidebarView {
         @Binding var sortOption: PlaylistSortOption
         @Binding var sortAscending: Bool
         @State private var isHovered = false
-        @ObservedObject var theme = AppTheme.shared
+        @Bindable var theme = AppTheme.shared
 
         var body: some View {
             Menu {
@@ -243,7 +244,7 @@ extension PlaylistSidebarView {
     private struct CreatePlaylistButton: View {
         let action: () -> Void
         @State private var isHovered = false
-        @ObservedObject var theme = AppTheme.shared
+        @Bindable var theme = AppTheme.shared
 
         var body: some View {
             Button(action: action) {
@@ -269,7 +270,7 @@ extension PlaylistSidebarView {
     private struct SelectionModeButton: View {
         let action: () -> Void
         @State private var isHovered = false
-        @ObservedObject var theme = AppTheme.shared
+        @Bindable var theme = AppTheme.shared
 
         var body: some View {
             Button(action: action) {
@@ -614,7 +615,7 @@ extension PlaylistSidebarView {
                 selectedTab: $selectedTab,
                 selectedEntity: $selectedEntity
             )
-            .environmentObject(DatabaseManager.shared)
+            .environment(DatabaseManager.shared)
             .frame(width: 280, height: 800)
         }
     }

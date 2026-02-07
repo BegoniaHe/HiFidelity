@@ -5,12 +5,13 @@
 //  Created by Varun Rathod
 
 import SwiftUI
+import Observation
 
 /// Display current playing track information with artwork and favorite button
 struct TrackInfoDisplay: View {
     // Don't observe the entire PlaybackController to avoid re-renders on currentTime updates
-    private let playback = PlaybackController.shared
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable private var playback = PlaybackController.shared
+    @Bindable var theme = AppTheme.shared
 
     // Only observe the specific properties we need for this view
     @State private var currentTrack: Track?
@@ -57,11 +58,11 @@ struct TrackInfoDisplay: View {
             }
         }
         .frame(minWidth: 200, maxWidth: 280, alignment: .leading)
-        .onReceive(playback.$currentTrack) { track in
+        .onChange(of: playback.currentTrack) { _, track in
             currentTrack = track
             updateCachedAudioQuality()
         }
-        .onReceive(playback.$currentStreamInfo) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: .streamInfoDidUpdate)) { _ in
             // Also update when streamInfo changes directly
             updateCachedAudioQuality()
         }
@@ -139,8 +140,8 @@ struct TrackInfoDisplay: View {
     }
 
     private struct FavoriteButton: View {
-        @ObservedObject private var playback = PlaybackController.shared
-        @ObservedObject var theme = AppTheme.shared
+        @Bindable private var playback = PlaybackController.shared
+        @Bindable var theme = AppTheme.shared
         @State private var isHovered = false
 
         var body: some View {

@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
+import Observation
 import AppKit
 
 /// Modern playlist creation view
 struct CreatePlaylistView: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var databaseManager: DatabaseManager
-    @ObservedObject var theme = AppTheme.shared
+    @Environment(DatabaseManager.self) var databaseManager
+    @Bindable var theme = AppTheme.shared
 
     @State private var playlistName = ""
     @State private var description = ""
@@ -557,5 +558,5 @@ extension CreatePlaylistView {
 
 #Preview {
     CreatePlaylistView()
-        .environmentObject(DatabaseManager.shared)
+        .environment(DatabaseManager.shared)
 }

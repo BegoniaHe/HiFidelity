@@ -5,6 +5,7 @@
 //  Created by Varun Rathod
 
 import SwiftUI
+import Observation
 
 /// Top application header with logo, search, and navigation controls
 struct AppHeader: View {
@@ -15,7 +16,7 @@ struct AppHeader: View {
     @Binding var showRightPanel: Bool
     @Binding var showSettings: Bool
 
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
 
     var body: some View {
         HStack(spacing: 0) {
@@ -154,7 +155,7 @@ struct AppHeader: View {
 private struct RefreshButton: View {
     @State private var isRefreshing = false
     @State private var isHovered = false
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
 
     var body: some View {
         Button {
@@ -215,7 +216,7 @@ private struct ToggleButton: View {
     let isActive: Bool
     let action: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
     @State private var isHovered = false
 
     var body: some View {
@@ -243,7 +244,7 @@ private struct ToggleButton: View {
 /// Enhanced GitHub button with hover effects
 private struct GitHubButton: View {
     @State private var isHovered = false
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
 
     var body: some View {
         Button {

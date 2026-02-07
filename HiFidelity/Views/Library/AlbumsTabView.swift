@@ -6,14 +6,15 @@
 //
 
 import SwiftUI
+import Observation
 
 /// Albums tab view displaying all albums in a grid layout
 struct AlbumsTabView: View {
     @Binding var selectedEntity: EntityType?
     let isVisible: Bool
 
-    @EnvironmentObject var databaseManager: DatabaseManager
-    @ObservedObject var theme = AppTheme.shared
+    @Environment(DatabaseManager.self) var databaseManager
+    @Bindable var theme = AppTheme.shared
 
     @State private var albums: [Album] = []
     @State private var filteredAlbums: [Album] = []
@@ -280,7 +281,7 @@ private struct AlbumOptionsDropdown: View {
     let sortOptions: [SortOption]
     let filterOptions: [FilterOption]
 
-    @ObservedObject private var theme = AppTheme.shared
+    @Bindable private var theme = AppTheme.shared
 
     var body: some View {
         Menu {

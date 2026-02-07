@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import Observation
 
 /// Modern three-panel layout: Sidebar | Main Content | Optional Panels + Bottom Playback Bar
 struct ModernPlayerLayout: View {
-    @EnvironmentObject var databaseManager: DatabaseManager
-    @EnvironmentObject var appCoordinator: AppCoordinator
-    @StateObject private var trackInfoManager = TrackInfoManager()
+    @Environment(DatabaseManager.self) var databaseManager
+    @Environment(AppCoordinator.self) var appCoordinator
+    @State private var trackInfoManager = TrackInfoManager()
 
     @State private var selectedTab: NavigationTab = .home
     @State private var selectedEntity: EntityType?
@@ -83,14 +84,17 @@ struct ModernPlayerLayout: View {
                 )
             }
         }
-        .sheet(isPresented: $appCoordinator.showCreatePlaylist) {
+        .sheet(isPresented: Binding(
+            get: { appCoordinator.showCreatePlaylist },
+            set: { appCoordinator.showCreatePlaylist = $0 }
+        )) {
             if let track = appCoordinator.trackForNewPlaylist {
                 CreatePlaylistWithTrackView(track: track)
             } else {
                 CreatePlaylistView()
             }
         }
-        .environmentObject(trackInfoManager)
+        .environment(trackInfoManager)
         .onChange(of: trackInfoManager.isVisible) { _, isVisible in
             withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                 if isVisible {
@@ -147,6 +151,6 @@ enum NavigationTab: String, CaseIterable, Identifiable {
 
 #Preview {
     ModernPlayerLayout()
-        .environmentObject(DatabaseManager.shared)
+        .environment(DatabaseManager.shared)
         .frame(width: 1200, height: 800)
 }

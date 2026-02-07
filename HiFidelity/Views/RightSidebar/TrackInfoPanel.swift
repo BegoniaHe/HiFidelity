@@ -7,12 +7,14 @@
 
 import SwiftUI
 import GRDB
+import Observation
 
 /// Manages track info panel state
 @MainActor
-class TrackInfoManager: ObservableObject {
-    @Published var selectedTrack: Track?
-    @Published var isVisible: Bool = false
+@Observable
+class TrackInfoManager {
+    var selectedTrack: Track?
+    var isVisible: Bool = false
 
     func show(track: Track) {
         selectedTrack = track
@@ -31,8 +33,8 @@ class TrackInfoManager: ObservableObject {
 
 /// Panel showing detailed information about a selected track
 struct TrackInfoPanel: View {
-    @EnvironmentObject var trackInfoManager: TrackInfoManager
-    @ObservedObject var theme = AppTheme.shared
+    @Environment(TrackInfoManager.self) var trackInfoManager
+    @Bindable var theme = AppTheme.shared
 
     @State private var fullTrack: Track?
     @State private var isLoading = false

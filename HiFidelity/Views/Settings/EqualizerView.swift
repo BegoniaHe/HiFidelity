@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import Observation
 
 // MARK: - Professional Equalizer View
 
 struct EqualizerView: View {
-    @ObservedObject var effectsManager = AudioEffectsManager.shared
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var effectsManager = AudioEffectsManager.shared
+    @Bindable var theme = AppTheme.shared
     @State private var showSavePresetDialog = false
     @State private var newPresetName = ""
     @State private var showAlert = false
@@ -566,7 +567,7 @@ enum EQPreset: String, CaseIterable, Identifiable {
 // MARK: - Equalizer Commands
 
 struct EqualizerToggleButton: View {
-    @ObservedObject var effectsManager = AudioEffectsManager.shared
+    @Bindable var effectsManager = AudioEffectsManager.shared
 
     var body: some View {
         Button(action: toggleEqualizer) {

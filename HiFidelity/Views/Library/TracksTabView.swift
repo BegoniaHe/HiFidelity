@@ -6,14 +6,15 @@
 //
 
 import SwiftUI
+import Observation
 
 /// Tracks tab view displaying all library tracks with list/grid view and sorting
 struct TracksTabView: View {
     let isVisible: Bool
 
-    @EnvironmentObject var databaseManager: DatabaseManager
-    @ObservedObject var theme = AppTheme.shared
-    @ObservedObject var playback = PlaybackController.shared
+    @Environment(DatabaseManager.self) private var databaseManager
+    @Bindable var theme = AppTheme.shared
+    @Bindable var playback = PlaybackController.shared
 
     @State private var tracks: [Track] = []
     @State private var filteredTracks: [Track] = []
@@ -470,7 +471,7 @@ struct TrackTableOptionsDropdown: View {
     @Binding var sortOrder: [KeyPathComparator<Track>]
     @Binding var selectedFilter: TrackFilter?
 
-    @ObservedObject private var theme = AppTheme.shared
+    @Bindable private var theme = AppTheme.shared
 
     private var availableFields: [TrackSortField] {
         TrackSortField.regularFields
@@ -608,5 +609,5 @@ struct TrackTableOptionsDropdown: View {
 
 #Preview {
     TracksTabView()
-        .environmentObject(DatabaseManager.shared)
+        .environment(DatabaseManager.shared)
 }

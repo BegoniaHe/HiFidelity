@@ -5,11 +5,12 @@
 //  Created by Varun Rathod
 
 import SwiftUI
+import Observation
 
 /// Volume control with mute button and slider
 struct VolumeControlSection: View {
-    @ObservedObject var playback = PlaybackController.shared
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var playback = PlaybackController.shared
+    @Bindable var theme = AppTheme.shared
 
     var body: some View {
         HStack(spacing: 10) {

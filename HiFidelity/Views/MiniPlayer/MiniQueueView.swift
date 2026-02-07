@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import Observation
 
 /// Compact queue view for mini player window
 struct MiniQueueView: View {
-    @ObservedObject var playback = PlaybackController.shared
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var playback = PlaybackController.shared
+    @Bindable var theme = AppTheme.shared
 
     @State private var hoveredIndex: Int?
     let onClose: () -> Void

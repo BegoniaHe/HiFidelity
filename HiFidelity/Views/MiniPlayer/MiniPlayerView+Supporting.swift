@@ -5,6 +5,7 @@
 //
 
 import SwiftUI
+import Observation
 import AppKit
 
 // MARK: - Mini Player Panel Type
@@ -37,8 +38,8 @@ struct VisualEffectView: NSViewRepresentable {
 // MARK: - Volume Popover View
 
 struct VolumePopoverView: View {
-    @ObservedObject var playback = PlaybackController.shared
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var playback = PlaybackController.shared
+    @Bindable var theme = AppTheme.shared
 
     var body: some View {
         VStack(spacing: 8) {

@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
+import Observation
 import AppKit
 
 /// Compact mini player window view with expandable queue and lyrics
 struct MiniPlayerView: View {
-    @ObservedObject var playback = PlaybackController.shared
-    @ObservedObject var theme = AppTheme.shared
-    @ObservedObject var database = DatabaseManager.shared
+    @Bindable var playback = PlaybackController.shared
+    @Bindable var theme = AppTheme.shared
+    @Bindable var database = DatabaseManager.shared
 
     @State private var expandedPanel: MiniPlayerPanel?
     @State private var isHoveringArtwork = false

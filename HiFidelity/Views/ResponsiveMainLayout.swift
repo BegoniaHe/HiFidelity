@@ -136,7 +136,7 @@ struct ResponsiveMainLayout: View {
                 isSearchActive: $isSearchActive,
                 rightPanelTab: $rightPanelTab
             )
-            .environmentObject(DatabaseManager.shared)
+            .environment(DatabaseManager.shared)
             .frame(width: 1200, height: 800)
         }
     }

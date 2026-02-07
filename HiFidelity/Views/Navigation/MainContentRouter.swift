@@ -5,6 +5,7 @@
 //  Created by Varun Rathod
 
 import SwiftUI
+import Observation
 
 /// Centralized content router that handles navigation between different views
 struct MainContentRouter: View {
@@ -12,7 +13,7 @@ struct MainContentRouter: View {
     @Binding var searchText: String
     @Binding var isSearchActive: Bool
 
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
 
     var body: some View {
         ZStack {
@@ -75,7 +76,7 @@ private struct EntityDetailWithNavigation: View {
     let entity: EntityType
     let onBack: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
+        @Bindable var theme = AppTheme.shared
 
     var body: some View {
         VStack(spacing: 0) {
@@ -136,7 +137,7 @@ private struct EntityDetailWithNavigation: View {
                 searchText: $searchText,
                 isSearchActive: $isSearchActive
             )
-            .environmentObject(DatabaseManager.shared)
+            .environment(DatabaseManager.shared)
             .frame(width: 800, height: 600)
         }
     }

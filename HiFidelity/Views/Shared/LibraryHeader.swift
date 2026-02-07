@@ -5,6 +5,7 @@
 //  Created by Varun Rathod
 
 import SwiftUI
+import Observation
 
 /// Unified header for library views with consistent height and styling
 struct LibraryHeader: View {
@@ -16,7 +17,7 @@ struct LibraryHeader: View {
     @Binding var selectedSort: SortOption
     @Binding var selectedFilter: FilterOption?
 
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
 
     var body: some View {
         HStack(spacing: 16) {

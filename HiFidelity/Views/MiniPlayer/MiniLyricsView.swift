@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
+import Observation
 import UniformTypeIdentifiers
 
 /// Compact lyrics view for mini player window
 struct MiniLyricsView: View {
-    @ObservedObject var playback = PlaybackController.shared
-    @ObservedObject var theme = AppTheme.shared
-    @ObservedObject var database = DatabaseManager.shared
+    @Bindable var playback = PlaybackController.shared
+    @Bindable var theme = AppTheme.shared
+    @Bindable var database = DatabaseManager.shared
 
     @State private var lyrics: Lyrics?
     @State private var currentLineIndex: Int?

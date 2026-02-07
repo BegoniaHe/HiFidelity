@@ -5,11 +5,12 @@
 //  Created by Varun Rathod
 
 import SwiftUI
+import Observation
 
 /// Central playback controls with play/pause, previous/next, shuffle, and repeat
 struct PlaybackControlsCenter: View {
-    @ObservedObject var playback = PlaybackController.shared
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var playback = PlaybackController.shared
+    @Bindable var theme = AppTheme.shared
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
@@ -108,7 +109,7 @@ private struct ControlButton: View {
     let isDisabled: Bool
     let action: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
+        @Bindable var theme = AppTheme.shared
 
     var body: some View {
         Button(action: action) {
@@ -136,8 +137,8 @@ private struct PlayPauseButton: View {
     let isDisabled: Bool
     let action: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
-    @ObservedObject var playback = PlaybackController.shared
+        @Bindable var theme = AppTheme.shared
+        @Bindable var playback = PlaybackController.shared
     @State private var modifierFlags: NSEvent.ModifierFlags = []
 
     var body: some View {

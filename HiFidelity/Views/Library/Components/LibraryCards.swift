@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Observation
 
 // MARK: - Shared Empty State View
 
@@ -24,19 +25,12 @@ func emptyStateView(icon: String, message: String) -> some View {
 
 // MARK: - Album Card
 
-struct AlbumCard: View, Equatable {
+struct AlbumCard: View {
     let album: Album
     let onTap: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
     @State private var isHovered = false
-
-    // Implement Equatable to prevent unnecessary re-renders
-    static func == (lhs: AlbumCard, rhs: AlbumCard) -> Bool {
-        lhs.album.id == rhs.album.id &&
-        lhs.album.title == rhs.album.title &&
-        lhs.album.displayArtist == rhs.album.displayArtist
-    }
 
     var body: some View {
         Button(action: onTap) {
@@ -137,19 +131,12 @@ struct AlbumCard: View, Equatable {
 
 // MARK: - Artist Card
 
-struct ArtistCard: View, Equatable {
+struct ArtistCard: View {
     let artist: Artist
     let onTap: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
     @State private var isHovered = false
-
-    // Implement Equatable to prevent unnecessary re-renders
-    static func == (lhs: ArtistCard, rhs: ArtistCard) -> Bool {
-        lhs.artist.id == rhs.artist.id &&
-        lhs.artist.name == rhs.artist.name &&
-        lhs.artist.trackCount == rhs.artist.trackCount
-    }
 
     var body: some View {
         Button(action: onTap) {
@@ -247,18 +234,12 @@ struct ArtistCard: View, Equatable {
 
 // MARK: - Genre Card
 
-struct GenreCard: View, Equatable {
+struct GenreCard: View {
     let genre: Genre
     let onTap: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
     @State private var isHovered = false
-
-    // Implement Equatable to prevent unnecessary re-renders
-    static func == (lhs: GenreCard, rhs: GenreCard) -> Bool {
-        lhs.genre.id == rhs.genre.id &&
-        lhs.genre.name == rhs.genre.name
-    }
 
     var body: some View {
         Button(action: onTap) {
@@ -396,20 +377,13 @@ struct GenreCard: View, Equatable {
 
 // MARK: - Track Grid Card
 
-struct TrackGridCard: View, Equatable {
+struct TrackGridCard: View {
     let track: Track
     let onPlay: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
-    @ObservedObject var playback = PlaybackController.shared
+    @Bindable var theme = AppTheme.shared
+    @Bindable var playback = PlaybackController.shared
     @State private var isHovered = false
-
-    // Implement Equatable to prevent unnecessary re-renders
-    static func == (lhs: TrackGridCard, rhs: TrackGridCard) -> Bool {
-        lhs.track.trackId == rhs.track.trackId &&
-        lhs.track.title == rhs.track.title &&
-        lhs.track.artist == rhs.track.artist
-    }
 
     var body: some View {
         VStack(spacing: 8) {
@@ -477,8 +451,8 @@ struct AlbumContextMenu: View {
     let album: Album
     let onViewDetails: () -> Void
 
-    @EnvironmentObject var databaseManager: DatabaseManager
-    @ObservedObject var playback = PlaybackController.shared
+    @Environment(DatabaseManager.self) var databaseManager
+    @Bindable var playback = PlaybackController.shared
 
     var body: some View {
         Group {
@@ -590,8 +564,8 @@ struct ArtistContextMenu: View {
     let artist: Artist
     let onViewDetails: () -> Void
 
-    @EnvironmentObject var databaseManager: DatabaseManager
-    @ObservedObject var playback = PlaybackController.shared
+    @Environment(DatabaseManager.self) var databaseManager
+    @Bindable var playback = PlaybackController.shared
 
     var body: some View {
         Group {

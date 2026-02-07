@@ -5,8 +5,9 @@
 //  AppKit-based track table view with unlimited columns
 //
 
-import SwiftUI
 import AppKit
+import Observation
+import SwiftUI
 
 /// NSTableView-based track table with unlimited columns
 struct NSTrackTableView: NSViewRepresentable {
@@ -24,9 +25,9 @@ struct NSTrackTableView: NSViewRepresentable {
     let isCurrentTrack: (Track) -> Bool
     var playlistContext: PlaylistContext?
 
-    @EnvironmentObject private var trackInfoManager: TrackInfoManager
-    @EnvironmentObject private var appCoordinator: AppCoordinator
-    @ObservedObject var playback = PlaybackController.shared
+    @Environment(TrackInfoManager.self) private var trackInfoManager
+    @Environment(AppCoordinator.self) private var appCoordinator
+    @Bindable var playback = PlaybackController.shared
 
 }
 
@@ -84,8 +85,9 @@ extension NSTrackTableView {
         guard let tableView = scrollView.documentView as? NSTableView else { return }
 
         // Check if tracks actually changed before reloading
-        let tracksChanged = context.coordinator.tracks.count != tracks.count ||
-                           !context.coordinator.tracks.elementsEqual(tracks, by: { $0.id == $1.id })
+        let tracksChanged =
+            context.coordinator.tracks.count != tracks.count
+            || !context.coordinator.tracks.elementsEqual(tracks, by: { $0.id == $1.id })
 
         // Update coordinator data
         context.coordinator.tracks = tracks
@@ -105,8 +107,8 @@ extension NSTrackTableView {
 
         // Update selection
         if let selectedId = selection,
-           let index = tracks.firstIndex(where: { $0.id == selectedId }),
-           !tableView.selectedRowIndexes.contains(index) {
+            let index = tracks.firstIndex(where: { $0.id == selectedId }),
+            !tableView.selectedRowIndexes.contains(index) {
             tableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
         } else if selection == nil && !tableView.selectedRowIndexes.isEmpty {
             tableView.deselectAll(nil)
@@ -129,6 +131,7 @@ extension NSTrackTableView {
 // MARK: - Coordinator
 
 extension NSTrackTableView {
+    @MainActor
     class Coordinator: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSMenuDelegate {
         var tracks: [Track]
         var selection: Binding<Track.ID?>
@@ -190,7 +193,8 @@ extension NSTrackTableView.Coordinator {
         return tracks.count
     }
 
-    func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
+    func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int)
+        -> Any? {
         guard row < tracks.count else { return nil }
         return tracks[row]
     }
@@ -199,10 +203,12 @@ extension NSTrackTableView.Coordinator {
 extension NSTrackTableView.Coordinator {
     // MARK: - NSTableViewDelegate
 
-    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int)
+        -> NSView? {
         guard row < tracks.count,
-              let columnId = tableColumn?.identifier,
-              let columnType = ColumnType(rawValue: columnId.rawValue) else {
+            let columnId = tableColumn?.identifier,
+            let columnType = ColumnType(rawValue: columnId.rawValue)
+        else {
             return nil
         }
 
@@ -213,18 +219,20 @@ extension NSTrackTableView.Coordinator {
         let isCurrent = isCurrentTrack(track)
 
         // Reuse or create cell view
-        let cellView = tableView.makeView(withIdentifier: reuseIdentifier, owner: self) as? NSTableCellView
-                     ?? NSTableCellView()
+        let cellView =
+            tableView.makeView(withIdentifier: reuseIdentifier, owner: self) as? NSTableCellView
+            ?? NSTableCellView()
         cellView.identifier = reuseIdentifier
 
         // Clear previous content
         cellView.subviews.forEach { $0.removeFromSuperview() }
 
-        return createCellContent(for: track, column: columnType, isCurrent: isCurrent, cellView: cellView)
+        return createCellContent(
+            for: track, column: columnType, isCurrent: isCurrent, cellView: cellView)
     }
 
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        return 48 // Match SwiftUI table row height
+        return 48  // Match SwiftUI table row height
     }
 
     func tableViewSelectionDidChange(_ notification: Notification) {
@@ -238,10 +246,13 @@ extension NSTrackTableView.Coordinator {
         }
     }
 
-    func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
+    func tableView(
+        _ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]
+    ) {
         // Handle sort descriptor changes
         guard let descriptor = tableView.sortDescriptors.first,
-              let key = descriptor.key else { return }
+            let key = descriptor.key
+        else { return }
 
         updateSortOrder(from: key, ascending: descriptor.ascending)
     }
@@ -286,7 +297,9 @@ extension NSTrackTableView.Coordinator {
 extension NSTrackTableView.Coordinator {
     // MARK: - Cell Creation
 
-    private func createCellContent(for track: Track, column: ColumnType, isCurrent: Bool, cellView: NSTableCellView) -> NSView? {
+    private func createCellContent(
+        for track: Track, column: ColumnType, isCurrent: Bool, cellView: NSTableCellView
+    ) -> NSView? {
         switch column {
         case .title:
             return createTitleCell(track: track, isCurrent: isCurrent, cellView: cellView)
@@ -331,7 +344,7 @@ extension NSTrackTableView.Coordinator {
 
         // Try to get cached artwork synchronously first
         if let trackId = track.trackId,
-           let cachedArtwork = ArtworkCache.shared.getCachedArtwork(for: trackId, size: 40) {
+            let cachedArtwork = ArtworkCache.shared.getCachedArtwork(for: trackId, size: 40) {
             artworkView.image = cachedArtwork
         } else if let trackId = track.trackId {
             // Load artwork asynchronously with weak capture
@@ -344,7 +357,8 @@ extension NSTrackTableView.Coordinator {
 
         // Title label
         let titleLabel = NSTextField(labelWithString: track.title)
-        titleLabel.font = isCurrent ? .systemFont(ofSize: 13, weight: .semibold) : .systemFont(ofSize: 13)
+        titleLabel.font =
+            isCurrent ? .systemFont(ofSize: 13, weight: .semibold) : .systemFont(ofSize: 13)
         titleLabel.lineBreakMode = .byTruncatingTail
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
@@ -359,7 +373,8 @@ extension NSTrackTableView.Coordinator {
 
             titleLabel.leadingAnchor.constraint(equalTo: artworkView.trailingAnchor, constant: 10),
             titleLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8)
+            titleLabel.trailingAnchor.constraint(
+                equalTo: containerView.trailingAnchor, constant: -8)
         ])
 
         cellView.addSubview(containerView)
@@ -430,7 +445,10 @@ extension NSTrackTableView.Coordinator {
     }
 
     private func createDateCell(date: Date?, cellView: NSTableCellView) -> NSView {
-        let text = date.map { DateFormatter.localizedString(from: $0, dateStyle: .short, timeStyle: .none) } ?? "—"
+        let text =
+            date.map {
+                DateFormatter.localizedString(from: $0, dateStyle: .short, timeStyle: .none)
+            } ?? "—"
         return createTextCell(text: text, cellView: cellView)
     }
 }
@@ -474,17 +492,20 @@ extension NSTrackTableView.Coordinator {
         let track = tracks[row]
 
         // Playback actions
-        let playItem = NSMenuItem(title: "Play", action: #selector(playTrack(_:)), keyEquivalent: "")
+        let playItem = NSMenuItem(
+            title: "Play", action: #selector(playTrack(_:)), keyEquivalent: "")
         playItem.target = self
         playItem.representedObject = track
         menu.addItem(playItem)
 
-        let playNextItem = NSMenuItem(title: "Play Next", action: #selector(playNext(_:)), keyEquivalent: "")
+        let playNextItem = NSMenuItem(
+            title: "Play Next", action: #selector(playNext(_:)), keyEquivalent: "")
         playNextItem.target = self
         playNextItem.representedObject = track
         menu.addItem(playNextItem)
 
-        let queueItem = NSMenuItem(title: "Add to Queue", action: #selector(addToQueue(_:)), keyEquivalent: "")
+        let queueItem = NSMenuItem(
+            title: "Add to Queue", action: #selector(addToQueue(_:)), keyEquivalent: "")
         queueItem.target = self
         queueItem.representedObject = track
         menu.addItem(queueItem)
@@ -495,7 +516,9 @@ extension NSTrackTableView.Coordinator {
         let addToPlaylistItem = NSMenuItem(title: "Add to Playlist", action: nil, keyEquivalent: "")
         let playlistSubmenu = NSMenu()
 
-        let newPlaylistItem = NSMenuItem(title: "New Playlist...", action: #selector(createPlaylistWithTrack(_:)), keyEquivalent: "")
+        let newPlaylistItem = NSMenuItem(
+            title: "New Playlist...", action: #selector(createPlaylistWithTrack(_:)),
+            keyEquivalent: "")
         newPlaylistItem.target = self
         newPlaylistItem.representedObject = track
         playlistSubmenu.addItem(newPlaylistItem)
@@ -505,7 +528,8 @@ extension NSTrackTableView.Coordinator {
         if !userPlaylists.isEmpty {
             playlistSubmenu.addItem(NSMenuItem.separator())
             for playlist in userPlaylists {
-                let playlistItem = NSMenuItem(title: playlist.name, action: #selector(addToPlaylist(_:)), keyEquivalent: "")
+                let playlistItem = NSMenuItem(
+                    title: playlist.name, action: #selector(addToPlaylist(_:)), keyEquivalent: "")
                 playlistItem.target = self
                 playlistItem.representedObject = (track, playlist)
                 playlistSubmenu.addItem(playlistItem)
@@ -517,7 +541,9 @@ extension NSTrackTableView.Coordinator {
 
         // Remove from playlist (if in playlist context)
         if let context = playlistContext, !context.playlist.isSmart {
-            let removeItem = NSMenuItem(title: "Remove from Playlist", action: #selector(removeFromPlaylist(_:)), keyEquivalent: "")
+            let removeItem = NSMenuItem(
+                title: "Remove from Playlist", action: #selector(removeFromPlaylist(_:)),
+                keyEquivalent: "")
             removeItem.target = self
             removeItem.representedObject = (track, context)
             menu.addItem(removeItem)
@@ -526,12 +552,14 @@ extension NSTrackTableView.Coordinator {
         menu.addItem(NSMenuItem.separator())
 
         // File system actions
-        let finderItem = NSMenuItem(title: "Show in Finder", action: #selector(showInFinder(_:)), keyEquivalent: "")
+        let finderItem = NSMenuItem(
+            title: "Show in Finder", action: #selector(showInFinder(_:)), keyEquivalent: "")
         finderItem.target = self
         finderItem.representedObject = track
         menu.addItem(finderItem)
 
-        let infoItem = NSMenuItem(title: "Get Info", action: #selector(showTrackInfo(_:)), keyEquivalent: "")
+        let infoItem = NSMenuItem(
+            title: "Get Info", action: #selector(showTrackInfo(_:)), keyEquivalent: "")
         infoItem.target = self
         infoItem.representedObject = track
         menu.addItem(infoItem)
@@ -542,7 +570,9 @@ extension NSTrackTableView.Coordinator {
         var hasNavigationItems = false
 
         if !track.album.isEmpty && track.album != "Unknown Album" {
-            let goToAlbumItem = NSMenuItem(title: "Go to Album '\(track.album)'", action: #selector(goToAlbum(_:)), keyEquivalent: "")
+            let goToAlbumItem = NSMenuItem(
+                title: "Go to Album '\(track.album)'", action: #selector(goToAlbum(_:)),
+                keyEquivalent: "")
             goToAlbumItem.target = self
             goToAlbumItem.representedObject = track
             menu.addItem(goToAlbumItem)
@@ -550,7 +580,9 @@ extension NSTrackTableView.Coordinator {
         }
 
         if !track.artist.isEmpty && track.artist != "Unknown Artist" {
-            let goToArtistItem = NSMenuItem(title: "Go to Artist '\(track.artist)'", action: #selector(goToArtist(_:)), keyEquivalent: "")
+            let goToArtistItem = NSMenuItem(
+                title: "Go to Artist '\(track.artist)'", action: #selector(goToArtist(_:)),
+                keyEquivalent: "")
             goToArtistItem.target = self
             goToArtistItem.representedObject = track
             menu.addItem(goToArtistItem)
@@ -563,20 +595,26 @@ extension NSTrackTableView.Coordinator {
 
         // R128 Scanning submenu (only if enabled)
         if ReplayGainSettings.shared.isEnabled {
-            let scanR128Item = NSMenuItem(title: "Scan R128 Loudness", action: nil, keyEquivalent: "")
+            let scanR128Item = NSMenuItem(
+                title: "Scan R128 Loudness", action: nil, keyEquivalent: "")
             let scanSubmenu = NSMenu()
 
-            let scanTrackItem = NSMenuItem(title: "This Track", action: #selector(scanTrackR128(_:)), keyEquivalent: "")
+            let scanTrackItem = NSMenuItem(
+                title: "This Track", action: #selector(scanTrackR128(_:)), keyEquivalent: "")
             scanTrackItem.target = self
             scanTrackItem.representedObject = track
             scanSubmenu.addItem(scanTrackItem)
 
-            let scanAlbumItem = NSMenuItem(title: "Album '\(track.album)'", action: #selector(scanAlbumR128(_:)), keyEquivalent: "")
+            let scanAlbumItem = NSMenuItem(
+                title: "Album '\(track.album)'", action: #selector(scanAlbumR128(_:)),
+                keyEquivalent: "")
             scanAlbumItem.target = self
             scanAlbumItem.representedObject = track
             scanSubmenu.addItem(scanAlbumItem)
 
-            let scanArtistItem = NSMenuItem(title: "Artist '\(track.artist)'", action: #selector(scanArtistR128(_:)), keyEquivalent: "")
+            let scanArtistItem = NSMenuItem(
+                title: "Artist '\(track.artist)'", action: #selector(scanArtistR128(_:)),
+                keyEquivalent: "")
             scanArtistItem.target = self
             scanArtistItem.representedObject = track
             scanSubmenu.addItem(scanArtistItem)
@@ -589,7 +627,8 @@ extension NSTrackTableView.Coordinator {
 
         // Favorite toggle
         let favoriteTitle = track.isFavorite ? "Remove from Favorites" : "Add to Favorites"
-        let favoriteItem = NSMenuItem(title: favoriteTitle, action: #selector(toggleFavorite(_:)), keyEquivalent: "")
+        let favoriteItem = NSMenuItem(
+            title: favoriteTitle, action: #selector(toggleFavorite(_:)), keyEquivalent: "")
         favoriteItem.target = self
         favoriteItem.representedObject = track
         menu.addItem(favoriteItem)
@@ -647,8 +686,12 @@ extension NSTrackTableView.Coordinator {
     }
 
     @objc func removeFromPlaylist(_ sender: NSMenuItem) {
-        guard let (track, context) = sender.representedObject as? (Track, NSTrackTableView.PlaylistContext) else { return }
-        TrackContextMenuBuilder.removeFromPlaylist(track, playlistItem: context.playlist, onRemove: context.onRemove)
+        guard
+            let (track, context) = sender.representedObject
+                as? (Track, NSTrackTableView.PlaylistContext)
+        else { return }
+        TrackContextMenuBuilder.removeFromPlaylist(
+            track, playlistItem: context.playlist, onRemove: context.onRemove)
     }
 
     @objc func showInFinder(_ sender: NSMenuItem) {
@@ -701,7 +744,8 @@ extension NSTrackTableView.Coordinator {
 
     @objc func toggleColumn(_ sender: NSMenuItem) {
         guard let tableView = tableView,
-              let columnId = sender.representedObject as? String else { return }
+            let columnId = sender.representedObject as? String
+        else { return }
 
         let identifier = NSUserInterfaceItemIdentifier(columnId)
         if let column = tableView.tableColumn(withIdentifier: identifier) {
@@ -739,7 +783,9 @@ extension NSTrackTableView.Coordinator {
         default: return
         }
 
-        sortOrder.wrappedValue = [comparator]
+        Task { @MainActor in
+            sortOrder.wrappedValue = [comparator]
+        }
     }
 
     func syncSortDescriptors(to tableView: NSTableView) {
@@ -782,16 +828,18 @@ extension NSTrackTableView.Coordinator {
     func restoreColumnState(_ tableView: NSTableView) {
         // Restore from UserDefaults
         if let data = UserDefaults.standard.data(forKey: "nsTableColumnState"),
-           let state = try? JSONDecoder().decode(ColumnState.self, from: data) {
+            let state = try? JSONDecoder().decode(ColumnState.self, from: data) {
 
             for (identifier, width) in state.columnWidths {
-                if let column = tableView.tableColumn(withIdentifier: NSUserInterfaceItemIdentifier(identifier)) {
+                if let column = tableView.tableColumn(
+                    withIdentifier: NSUserInterfaceItemIdentifier(identifier)) {
                     column.width = width
                 }
             }
 
             for (identifier, hidden) in state.columnVisibility {
-                if let column = tableView.tableColumn(withIdentifier: NSUserInterfaceItemIdentifier(identifier)) {
+                if let column = tableView.tableColumn(
+                    withIdentifier: NSUserInterfaceItemIdentifier(identifier)) {
                     column.isHidden = hidden
                 }
             }
@@ -926,37 +974,37 @@ struct ColumnState: Codable {
 // MARK: - Track Extension for Sorting
 
 extension Track {
-   // These provide non-optional values for Table sorting
+    // These provide non-optional values for Table sorting
 
-   var sortableTrackNumber: Int {
-       trackNumber ?? Int.max
-   }
+    var sortableTrackNumber: Int {
+        trackNumber ?? Int.max
+    }
 
-   var sortableDiscNumber: Int {
-       discNumber ?? Int.max
-   }
+    var sortableDiscNumber: Int {
+        discNumber ?? Int.max
+    }
 
-   var sortableBitrate: Int {
-       bitrate ?? 0
-   }
+    var sortableBitrate: Int {
+        bitrate ?? 0
+    }
 
-   var sortableSampleRate: Int {
-       sampleRate ?? 0
-   }
+    var sortableSampleRate: Int {
+        sampleRate ?? 0
+    }
 
-   var sortablePlayCount: Int {
-       playCount
-   }
+    var sortablePlayCount: Int {
+        playCount
+    }
 
-   var sortableDateAdded: Date {
-       dateAdded ?? Date.distantPast
-   }
+    var sortableDateAdded: Date {
+        dateAdded ?? Date.distantPast
+    }
 
-   var sortableAlbumArtist: String {
-       albumArtist ?? ""
-   }
+    var sortableAlbumArtist: String {
+        albumArtist ?? ""
+    }
 
-   var sortableCodec: String {
-       codec ?? ""
-   }
+    var sortableCodec: String {
+        codec ?? ""
+    }
 }

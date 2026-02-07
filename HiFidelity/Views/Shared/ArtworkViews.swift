@@ -12,7 +12,7 @@ import AppKit
 
 /// High-performance SwiftUI view for displaying track artwork
 /// Features: async loading, caching, task cancellation, equatable optimization
-struct TrackArtworkView: View, Equatable {
+struct TrackArtworkView: View {
     let track: Track
     let size: CGFloat
     let cornerRadius: CGFloat
@@ -24,12 +24,6 @@ struct TrackArtworkView: View, Equatable {
         self.track = track
         self.size = size
         self.cornerRadius = cornerRadius
-    }
-
-    static func == (lhs: TrackArtworkView, rhs: TrackArtworkView) -> Bool {
-        lhs.track.trackId == rhs.track.trackId &&
-        lhs.size == rhs.size &&
-        lhs.cornerRadius == rhs.cornerRadius
     }
 
     var body: some View {
@@ -104,7 +98,7 @@ struct TrackArtworkView: View, Equatable {
 
 /// High-performance SwiftUI view for displaying album artwork
 /// Features: async loading, caching, task cancellation, gradient placeholder
-struct AlbumArtworkView: View, Equatable {
+struct AlbumArtworkView: View {
     let albumId: Int64
     let size: CGFloat
     let cornerRadius: CGFloat
@@ -116,12 +110,6 @@ struct AlbumArtworkView: View, Equatable {
         self.albumId = albumId
         self.size = size
         self.cornerRadius = cornerRadius
-    }
-
-    static func == (lhs: AlbumArtworkView, rhs: AlbumArtworkView) -> Bool {
-        lhs.albumId == rhs.albumId &&
-        lhs.size == rhs.size &&
-        lhs.cornerRadius == rhs.cornerRadius
     }
 
     var body: some View {
@@ -196,7 +184,7 @@ struct AlbumArtworkView: View, Equatable {
 
 /// High-performance SwiftUI view for displaying artist artwork (circular)
 /// Features: async loading, caching, task cancellation, circular clipping
-struct ArtistArtworkView: View, Equatable {
+struct ArtistArtworkView: View {
     let artistId: Int64
     let size: CGFloat
 
@@ -206,11 +194,6 @@ struct ArtistArtworkView: View, Equatable {
     init(artistId: Int64, size: CGFloat = 160) {
         self.artistId = artistId
         self.size = size
-    }
-
-    static func == (lhs: ArtistArtworkView, rhs: ArtistArtworkView) -> Bool {
-        lhs.artistId == rhs.artistId &&
-        lhs.size == rhs.size
     }
 
     var body: some View {

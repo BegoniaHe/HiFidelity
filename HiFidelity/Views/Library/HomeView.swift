@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
+import Observation
 
 /// Main content view with tabs for Tracks, Albums, Artists, and Genres
 struct HomeView: View {
     @Binding var selectedEntity: EntityType?
 
-    @EnvironmentObject var databaseManager: DatabaseManager
-    @ObservedObject var theme = AppTheme.shared
+    @Environment(DatabaseManager.self) private var databaseManager
+    @Bindable var theme = AppTheme.shared
 
     @AppStorage("selectedLibraryTab") private var selectedLibraryTab: LibraryTab = .tracks
 
@@ -116,6 +117,6 @@ enum LibraryTab: String, CaseIterable, Identifiable {
 
 #Preview {
     HomeView()
-        .environmentObject(DatabaseManager.shared)
+        .environment(DatabaseManager.shared)
         .frame(width: 600, height: 800)
 }

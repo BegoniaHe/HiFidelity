@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import Observation
 
 /// Theme manager for the application
-class AppTheme: ObservableObject {
+@MainActor
+@Observable
+class AppTheme {
     static let shared = AppTheme()
 
-    @Published var currentTheme: Theme = .blue
+    var currentTheme: Theme = .blue
 
     private init() {
         // Load saved theme from UserDefaults
@@ -86,7 +89,7 @@ extension View {
 
 /// Custom modifier for themed backgrounds
 struct ThemedBackground: ViewModifier {
-    @ObservedObject var theme: AppTheme
+    @Bindable var theme: AppTheme
     var opacity: Double = 0.1
 
     func body(content: Content) -> some View {

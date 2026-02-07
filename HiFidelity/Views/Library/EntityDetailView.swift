@@ -6,14 +6,15 @@
 //
 
 import SwiftUI
+import Observation
 
 /// Generic entity detail view showing tracks
 struct EntityDetailView: View {
     let entity: EntityType
 
-    @EnvironmentObject var databaseManager: DatabaseManager
-    @ObservedObject var theme = AppTheme.shared
-    @ObservedObject var playback = PlaybackController.shared
+    @Environment(DatabaseManager.self) var databaseManager
+    @Bindable var theme = AppTheme.shared
+    @Bindable var playback = PlaybackController.shared
 
     @State private var tracks: [Track] = []
     @State private var filteredTracks: [Track] = []
@@ -455,7 +456,7 @@ struct EntityHeader: View {
     let onPlay: () -> Void
     let onShuffle: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
     @State private var isPlayHovered = false
     @State private var isShuffleHovered = false
 

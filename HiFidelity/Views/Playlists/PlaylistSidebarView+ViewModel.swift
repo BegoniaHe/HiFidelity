@@ -5,14 +5,16 @@
 //
 
 import Foundation
+import Observation
 
 @MainActor
-final class PlaylistSidebarViewModel: ObservableObject {
-    @Published var allPlaylists: [PlaylistItem] = []
-    @Published var smartPlaylists: [PlaylistItem] = []
-    @Published var pinnedPlaylists: [PlaylistItem] = []
-    @Published var userPlaylists: [PlaylistItem] = []
-    @Published var isLoading = false
+@Observable
+final class PlaylistSidebarViewModel {
+    var allPlaylists: [PlaylistItem] = []
+    var smartPlaylists: [PlaylistItem] = []
+    var pinnedPlaylists: [PlaylistItem] = []
+    var userPlaylists: [PlaylistItem] = []
+    var isLoading = false
 
     private let database = DatabaseManager.shared
 

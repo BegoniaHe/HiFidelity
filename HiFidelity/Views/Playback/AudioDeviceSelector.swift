@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import Observation
 
 /// Audio device selector button with popover menu
 struct AudioDeviceSelector: View {
-    @ObservedObject var dacManager = DACManager.shared
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var dacManager = DACManager.shared
+    @Bindable var theme = AppTheme.shared
     @State private var showDeviceMenu = false
 
     var body: some View {

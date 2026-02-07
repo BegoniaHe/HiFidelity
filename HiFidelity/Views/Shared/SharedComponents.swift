@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Observation
 
 // MARK: - View Mode Button
 
@@ -14,7 +15,7 @@ struct ViewModeButton: View {
     let isSelected: Bool
     let action: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
     @State private var isHovered = false
 
     var body: some View {

@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import Observation
 
 /// Queue panel showing upcoming tracks
 struct QueuePanel: View {
-    @ObservedObject var playback = PlaybackController.shared
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var playback = PlaybackController.shared
+    @Bindable var theme = AppTheme.shared
 
     @State private var hoveredIndex: Int?
     @State private var draggedIndex: Int?
@@ -396,8 +397,8 @@ struct QueueDropDelegate: DropDelegate {
 
 /// Toggle button for autoplay feature
 private struct AutoplayToggle: View {
-    @ObservedObject var playback = PlaybackController.shared
-    @ObservedObject var theme = AppTheme.shared
+        @Bindable var playback = PlaybackController.shared
+        @Bindable var theme = AppTheme.shared
     @State private var showTooltip = false
 
     var body: some View {

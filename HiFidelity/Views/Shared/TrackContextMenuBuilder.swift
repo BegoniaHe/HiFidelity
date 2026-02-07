@@ -10,6 +10,7 @@ import AppKit
 
 /// Centralized track context menu logic
 /// Used by both SwiftUI context menus and NSMenu implementations
+@MainActor
 class TrackContextMenuBuilder {
 
     // MARK: - Playback Actions

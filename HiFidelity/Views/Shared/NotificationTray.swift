@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Observation
 
 // MARK: - Notification Types
 
@@ -48,11 +49,13 @@ struct NotificationMessage: Identifiable {
 
 // MARK: - Notification Manager
 
-class NotificationManager: ObservableObject {
+@MainActor
+@Observable
+class NotificationManager {
     static let shared = NotificationManager()
 
-    @Published var unreadCount = 0
-    @Published var messages: [NotificationMessage] = []
+    var unreadCount = 0
+    var messages: [NotificationMessage] = []
 
     private let messagesKey = "NotificationTrayMessages"
     private let unreadCountKey = "NotificationTrayUnreadCount"
@@ -65,36 +68,28 @@ class NotificationManager: ObservableObject {
     // MARK: - Message Management
 
     func addMessage(_ type: NotificationType, _ title: String) {
-        DispatchQueue.main.async {
-            let message = NotificationMessage(type: type, title: title)
-            self.messages.append(message)
-            self.unreadCount += 1
-            self.saveMessages()
-            self.saveUnreadCount()
-        }
+        let message = NotificationMessage(type: type, title: title)
+        messages.append(message)
+        unreadCount += 1
+        saveMessages()
+        saveUnreadCount()
     }
 
     func clearMessages() {
-        DispatchQueue.main.async {
-            self.messages.removeAll()
-            self.unreadCount = 0
-            self.saveMessages()
-            self.saveUnreadCount()
-        }
+        messages.removeAll()
+        unreadCount = 0
+        saveMessages()
+        saveUnreadCount()
     }
 
     func removeMessage(_ message: NotificationMessage) {
-        DispatchQueue.main.async {
-            self.messages.removeAll { $0.id == message.id }
-            self.saveMessages()
-        }
+        messages.removeAll { $0.id == message.id }
+        saveMessages()
     }
 
     func markAllAsRead() {
-        DispatchQueue.main.async {
-            self.unreadCount = 0
-            self.saveUnreadCount()
-        }
+        unreadCount = 0
+        saveUnreadCount()
     }
 
     // MARK: - Persistence
@@ -152,7 +147,7 @@ extension NotificationMessage: Codable {
 // MARK: - Notification Tray View
 
 struct NotificationTray: View {
-    @StateObject private var manager = NotificationManager.shared
+    @Bindable var manager = NotificationManager.shared
     @State private var showingPopover = false
 
     var body: some View {
@@ -214,7 +209,7 @@ struct NotificationTray: View {
 // MARK: - Notification Popover
 
 struct NotificationPopover: View {
-    @StateObject private var manager = NotificationManager.shared
+    @Bindable var manager = NotificationManager.shared
     @Binding var isPresented: Bool
 
     var body: some View {

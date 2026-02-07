@@ -6,14 +6,15 @@
 //
 
 import SwiftUI
+import Observation
 
 /// Genres tab view displaying all genres in a grid layout
 struct GenresTabView: View {
     @Binding var selectedEntity: EntityType?
     let isVisible: Bool
 
-    @EnvironmentObject var databaseManager: DatabaseManager
-    @ObservedObject var theme = AppTheme.shared
+    @Environment(DatabaseManager.self) var databaseManager
+    @Bindable var theme = AppTheme.shared
 
     @State private var genres: [Genre] = []
     @State private var filteredGenres: [Genre] = []
@@ -213,7 +214,7 @@ private struct GenreOptionsDropdown: View {
     let sortOptions: [SortOption]
     let filterOptions: [FilterOption]
 
-    @ObservedObject private var theme = AppTheme.shared
+    @Bindable private var theme = AppTheme.shared
 
     var body: some View {
         Menu {

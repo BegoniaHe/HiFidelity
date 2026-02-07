@@ -5,13 +5,14 @@
 //  Created by Varun Rathod
 
 import SwiftUI
+import Observation
 
 /// Right side controls including queue, lyrics buttons, and volume
 struct RightControlsSection: View {
     @Binding var rightPanelTab: RightPanelTab
     @Binding var showRightPanel: Bool
 
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
 
     var body: some View {
         HStack(spacing: 8) {
@@ -79,7 +80,7 @@ private struct PanelToggleButton: View {
     let isShowing: Bool
     let action: () -> Void
 
-    @ObservedObject var theme = AppTheme.shared
+        @Bindable var theme = AppTheme.shared
 
     var body: some View {
         Button(action: action) {
@@ -101,7 +102,7 @@ private struct PanelToggleButton: View {
 
 /// Button to open the audio effects window
 struct EqualizerButton: View {
-    @ObservedObject var theme = AppTheme.shared
+        @Bindable var theme = AppTheme.shared
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
@@ -123,8 +124,8 @@ struct EqualizerButton: View {
 
 /// Button to toggle sample rate synchronization (hog mode)
 struct SampleRateSyncButton: View {
-    @ObservedObject var settings = AudioSettings.shared
-    @ObservedObject var theme = AppTheme.shared
+    @Bindable var settings = AudioSettings.shared
+    @Bindable var theme = AppTheme.shared
 
     var body: some View {
         Button(action: {

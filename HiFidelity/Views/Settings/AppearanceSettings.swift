@@ -9,7 +9,7 @@ import SwiftUI
 
 /// Advanced appearance settings including theme customization
 struct AppearanceSettings: View {
-    @ObservedObject var theme: AppTheme
+    @Bindable var theme: AppTheme
     @AppStorage("accentOpacity") private var accentOpacity: Double = 1.0
 
     var body: some View {
@@ -111,7 +111,7 @@ struct AppearanceSettings: View {
 // MARK: - Theme Card
 
 private struct ThemeCard: View {
-    @ObservedObject var theme: AppTheme
+    @Bindable var theme: AppTheme
     let themeOption: Theme
     let opacity: Double
 

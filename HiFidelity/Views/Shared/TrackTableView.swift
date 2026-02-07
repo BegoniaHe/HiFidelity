@@ -41,6 +41,6 @@ struct TrackTableView: View {
         onPlayTrack: { _ in },
         isCurrentTrack: { _ in false }
     )
-    .environmentObject(DatabaseManager.shared)
+    .environment(DatabaseManager.shared)
     .frame(width: 800, height: 600)
 }
