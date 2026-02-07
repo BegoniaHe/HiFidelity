@@ -10,15 +10,15 @@ import GRDB
 /// Engine for generating track recommendations based on listening history and track similarity
 final class RecommendationEngine {
     static let shared = RecommendationEngine()
-    
+
     private let database: DatabaseManager
-    
+
     private init(database: DatabaseManager = .shared) {
         self.database = database
     }
-    
+
     // MARK: - Recommendation Strategies
-    
+
     /// Get recommended tracks based on a seed track
     /// - Parameters:
     ///   - seedTrack: The track to base recommendations on
@@ -32,12 +32,12 @@ final class RecommendationEngine {
     ) async throws -> [Track] {
         var recommendations: [Track] = []
         var excludedIds = excludeTrackIds
-        
+
         // Add seed track to excluded list
         if let seedId = seedTrack.trackId {
             excludedIds.insert(seedId)
         }
-        
+
         // Strategy 1: Same artist (40% weight)
         let artistTracks = try await getTracksBySameArtist(
             seedTrack,
@@ -46,7 +46,7 @@ final class RecommendationEngine {
         )
         recommendations.append(contentsOf: artistTracks)
         excludedIds.formUnion(artistTracks.compactMap { $0.trackId })
-        
+
         // Strategy 2: Same genre (30% weight)
         if recommendations.count < count {
             let genreTracks = try await getTracksBySameGenre(
@@ -57,7 +57,7 @@ final class RecommendationEngine {
             recommendations.append(contentsOf: genreTracks)
             excludedIds.formUnion(genreTracks.compactMap { $0.trackId })
         }
-        
+
         // Strategy 3: Same album (20% weight)
         if recommendations.count < count {
             let albumTracks = try await getTracksBySameAlbum(
@@ -68,7 +68,7 @@ final class RecommendationEngine {
             recommendations.append(contentsOf: albumTracks)
             excludedIds.formUnion(albumTracks.compactMap { $0.trackId })
         }
-        
+
         // Strategy 4: Popular tracks if still need more
         if recommendations.count < count {
             let popularTracks = try await getPopularTracks(
@@ -77,7 +77,7 @@ final class RecommendationEngine {
             )
             recommendations.append(contentsOf: popularTracks)
         }
-        
+
         // Fallback: If still don't have enough (cold start: no history, no matches)
         // Just return random tracks from library
         if recommendations.count < count {
@@ -88,11 +88,11 @@ final class RecommendationEngine {
             )
             recommendations.append(contentsOf: randomTracks)
         }
-        
+
         // Shuffle to mix strategies and return requested count
         return Array(recommendations.shuffled().prefix(count))
     }
-    
+
     /// Get recommendations for autoplay queue
     /// - Parameters:
     ///   - recentTracks: Recently played tracks to base recommendations on
@@ -107,7 +107,7 @@ final class RecommendationEngine {
             Logger.info("No recent tracks, using popular/random tracks for autoplay")
             return try await getPopularTracks(count: count, excludeIds: [])
         }
-        
+
         // Get recommendations based on last track
         let excludedIds = Set(recentTracks.compactMap { $0.trackId })
         return try await getRecommendations(
@@ -116,9 +116,9 @@ final class RecommendationEngine {
             excludeTrackIds: excludedIds
         )
     }
-    
+
     // MARK: - Strategy Implementations
-    
+
     /// Get tracks by the same artist
     private func getTracksBySameArtist(
         _ seedTrack: Track,
@@ -126,7 +126,7 @@ final class RecommendationEngine {
         excludeIds: Set<Int64>
     ) async throws -> [Track] {
         guard !seedTrack.artist.isEmpty else { return [] }
-        
+
         return try await database.dbQueue.read { db in
             try Track
                 .filter(Track.Columns.artist == seedTrack.artist)
@@ -136,7 +136,7 @@ final class RecommendationEngine {
                 .fetchAll(db)
         }
     }
-    
+
     /// Get tracks from the same genre
     private func getTracksBySameGenre(
         _ seedTrack: Track,
@@ -144,7 +144,7 @@ final class RecommendationEngine {
         excludeIds: Set<Int64>
     ) async throws -> [Track] {
         guard !seedTrack.genre.isEmpty else { return [] }
-        
+
         return try await database.dbQueue.read { db in
             try Track
                 .filter(Track.Columns.genre == seedTrack.genre)
@@ -154,7 +154,7 @@ final class RecommendationEngine {
                 .fetchAll(db)
         }
     }
-    
+
     /// Get other tracks from the same album
     private func getTracksBySameAlbum(
         _ seedTrack: Track,
@@ -162,7 +162,7 @@ final class RecommendationEngine {
         excludeIds: Set<Int64>
     ) async throws -> [Track] {
         guard !seedTrack.album.isEmpty else { return [] }
-        
+
         return try await database.dbQueue.read { db in
             try Track
                 .filter(Track.Columns.album == seedTrack.album)
@@ -172,7 +172,7 @@ final class RecommendationEngine {
                 .fetchAll(db)
         }
     }
-    
+
     /// Get popular tracks (most played)
     /// Falls back to random tracks if no tracks have been played yet (cold start)
     private func getPopularTracks(
@@ -186,7 +186,7 @@ final class RecommendationEngine {
                 .order(Track.Columns.playCount.desc)
                 .limit(count)
                 .fetchAll(db)
-            
+
             // Fallback to random if no tracks have play counts (cold start)
             if popularTracks.isEmpty {
                 Logger.info("No popular tracks found, using random tracks")
@@ -196,11 +196,11 @@ final class RecommendationEngine {
                     .limit(count)
                     .fetchAll(db)
             }
-            
+
             return popularTracks
         }
     }
-    
+
     /// Get random tracks from library
     /// Used for cold start when no listening history exists
     private func getRandomTracks(
@@ -215,9 +215,9 @@ final class RecommendationEngine {
                 .fetchAll(db)
         }
     }
-    
+
     // MARK: - Smart Recommendations
-    
+
     /// Get recommendations for favorites playlist continuation
     func getFavoritesContinuation(count: Int = 10) async throws -> [Track] {
         return try await database.dbQueue.read { db in
@@ -228,7 +228,7 @@ final class RecommendationEngine {
                 .fetchAll(db)
         }
     }
-    
+
     /// Get recommendations for recently played continuation
     func getRecentlyPlayedContinuation(count: Int = 10) async throws -> [Track] {
         // Get recently played tracks
@@ -239,13 +239,13 @@ final class RecommendationEngine {
                 .limit(5)
                 .fetchAll(db)
         }
-        
+
         guard let seedTrack = recentTracks.first else {
             // No play history, return popular tracks (which falls back to random if needed)
             Logger.info("No play history, using popular/random tracks")
             return try await getPopularTracks(count: count, excludeIds: [])
         }
-        
+
         let excludedIds = Set(recentTracks.compactMap { $0.trackId })
         return try await getRecommendations(
             basedOn: seedTrack,
@@ -253,7 +253,7 @@ final class RecommendationEngine {
             excludeTrackIds: excludedIds
         )
     }
-    
+
     /// Get recommendations for a specific genre
     func getGenreMix(genre: String, count: Int = 20) async throws -> [Track] {
         return try await database.dbQueue.read { db in
@@ -277,5 +277,3 @@ extension RecommendationEngine {
         static let popular: Double = 0.10     // 10% - Popular tracks fallback
     }
 }
-
-

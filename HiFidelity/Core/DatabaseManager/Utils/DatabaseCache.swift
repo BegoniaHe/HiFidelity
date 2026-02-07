@@ -21,36 +21,36 @@ import GRDB
 final class DatabaseCache: ObservableObject, @unchecked Sendable {
     // MARK: - Singleton
     static let shared = DatabaseCache()
-    
+
     // MARK: - Published Properties
     @Published private(set) var folders: [Folder] = []
     @Published private(set) var allTracks: [Track] = []
     @Published private(set) var allPlaylists: [Playlist] = []
     @Published private(set) var isLoading = false
-    
+
     // MARK: - Thread Safety
     private let cacheQueue = DispatchQueue(label: "com.hifidelity.databasecache", attributes: .concurrent)
-    
+
     // MARK: - Cache State
     private var foldersCache: [Folder]?
     private var folderTracksCache: [Int64: [Track]] = [:] // folderId -> tracks
     private var allTracksCache: [Track]?
     private var trackCache: [Int64: Track] = [:] // trackId -> track (thread-safe via cacheQueue)
     private var playlistsCache: [Playlist]?
-    
+
     private var lastFolderRefresh: Date?
     private var lastTrackRefresh: Date?
     private var lastPlaylistRefresh: Date?
-    
+
     // Cache TTL (time-to-live) - refresh after this duration
     private let cacheTTL: TimeInterval = 300 // 5 minutes
-    
+
     private init() {
         setupNotificationObservers()
     }
-    
+
     // MARK: - Notification Observers
-    
+
     private func setupNotificationObservers() {
         // Invalidate all caches when library data changes
         NotificationCenter.default.addObserver(
@@ -59,7 +59,7 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
             name: .libraryDataDidChange,
             object: nil
         )
-        
+
         // Invalidate folders cache when folders change
         NotificationCenter.default.addObserver(
             self,
@@ -67,7 +67,7 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
             name: .foldersDataDidChange,
             object: nil
         )
-        
+
         // Invalidate only playlist cache when playlists change
         NotificationCenter.default.addObserver(
             self,
@@ -76,100 +76,100 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
             object: nil
         )
     }
-    
+
     @objc private func invalidateCache() {
         Logger.debug("Cache invalidated due to library data change")
         foldersCache = nil
         folderTracksCache.removeAll()
         allTracksCache = nil
-        
+
         // Thread-safe clear of trackCache
         cacheQueue.async(flags: .barrier) { [weak self] in
             self?.trackCache.removeAll()
         }
-        
+
         playlistsCache = nil
         lastFolderRefresh = nil
         lastTrackRefresh = nil
         lastPlaylistRefresh = nil
-        
+
         // Also clear artwork cache since tracks may have changed
         Task {
             ArtworkCache.shared.clearAll()
         }
     }
-    
+
     @objc private func invalidateFoldersCache() {
         Logger.debug("Folders cache invalidated due to folder change")
         foldersCache = nil
         lastFolderRefresh = nil
-        
+
         // Notify UI to refresh
         Task { @MainActor in
             self.objectWillChange.send()
         }
     }
-    
+
     @objc private func invalidatePlaylistsCache() {
         performPlaylistCacheInvalidation()
     }
-    
+
     private func performPlaylistCacheInvalidation() {
         Logger.debug("Playlist cache invalidated")
         playlistsCache = nil
         lastPlaylistRefresh = nil
-        
+
         // Notify UI to refresh
         Task { @MainActor in
             self.objectWillChange.send()
         }
     }
-    
+
     // MARK: - Folders
-    
+
     /// Get folders from cache or database
     func getFolders(forceRefresh: Bool = false) async throws -> [Folder] {
         // Check if we need to refresh
         let needsRefresh = forceRefresh ||
                           foldersCache == nil ||
                           shouldRefreshCache(lastRefresh: lastFolderRefresh)
-        
+
         if needsRefresh {
             Logger.debug("Refreshing folders cache from database")
             let folders = try await DatabaseManager.shared.dbQueue.read { db in
                 try Folder.order(Folder.Columns.name).fetchAll(db)
             }
-            
+
             foldersCache = folders
             lastFolderRefresh = Date()
-            
+
             // Update published property on main thread
             await MainActor.run {
                 self.folders = folders
             }
         }
-        
+
         return foldersCache ?? []
     }
-    
+
     // MARK: - Tracks
-    
+
     /// Get all tracks (lightweight, WITHOUT artwork data) from cache or database
     /// Use ArtworkCache to load artwork on-demand
     func getAllTracks(forceRefresh: Bool = false) async throws -> [Track] {
         let needsRefresh = forceRefresh ||
                           allTracksCache == nil ||
                           shouldRefreshCache(lastRefresh: lastTrackRefresh)
-        
+
         if needsRefresh {
             Logger.debug("Refreshing all tracks cache from database")
             let tracks = try await DatabaseManager.shared.dbQueue.read { db in
                 try Track.lightweightRequest().fetchAll(db)
             }
-            
+
             allTracksCache = tracks
             lastTrackRefresh = Date()
-            
+
             // Populate track cache for quick lookups (thread-safe)
             cacheQueue.async(flags: .barrier) { [weak self] in
                 for track in tracks {
@@ -178,15 +178,15 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
                     }
                 }
             }
-            
+
             await MainActor.run {
                 self.allTracks = tracks
             }
         }
-        
+
         return allTracksCache ?? []
     }
-    
+
     /// Get tracks for a specific folder (lightweight, WITHOUT artwork data)
     /// Use ArtworkCache to load artwork on-demand
     func getTracks(for folder: Folder, forceRefresh: Bool = false) async throws -> [Track] {
@@ -196,7 +196,7 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
                 Logger.debug("Using cached tracks for folder: \(folder.name)")
                 return cached
             }
-            
+
             // Load from database
             Logger.debug("Loading tracks for folder: \(folder.name)")
             let tracks = try await DatabaseManager.shared.dbQueue.read { db in
@@ -204,9 +204,9 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
                     .filter(Track.Columns.folderId == folderId)
                     .fetchAll(db)
             }
-            
+
             folderTracksCache[folderId] = tracks
-            
+
             // Populate track cache for quick lookups (thread-safe)
             cacheQueue.async(flags: .barrier) { [weak self] in
                 for track in tracks {
@@ -215,20 +215,20 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
                     }
                 }
             }
-            
+
             return tracks
-            
+
         } else {
             // Virtual folder - filter from all tracks
             let allTracks = try await getAllTracks(forceRefresh: forceRefresh)
             let folderPath = folder.url.path
-            
+
             return allTracks.filter { track in
                 track.url.deletingLastPathComponent().path == folderPath
             }
         }
     }
-    
+
     /// Get a single track by ID (lightweight, WITHOUT artwork data)
     /// Use ArtworkCache to load artwork on-demand
     func getTrack(by id: Int64, forceRefresh: Bool = false) async throws -> Track? {
@@ -240,7 +240,7 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
                 return cached
             }
         }
-        
+
         // Load from database
         Logger.debug("Loading track from database for ID: \(id)")
         let track = try await DatabaseManager.shared.dbQueue.read { db in
@@ -248,78 +248,78 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
                 .filter(Track.Columns.trackId == id)
                 .fetchOne(db)
         }
-        
+
         // Cache if found (thread-safe)
         if let track = track {
             cacheQueue.async(flags: .barrier) { [weak self] in
                 self?.trackCache[id] = track
             }
         }
-        
+
         return track
     }
-    
+
     func track(_ id: Int64) -> Track? {
         cacheQueue.sync {
             trackCache[id]
         }
     }
-    
+
     // MARK: - Playlists
-    
+
     /// Get all playlists from cache or database
     func getAllPlaylists(forceRefresh: Bool = false) async throws -> [Playlist] {
         let needsRefresh = forceRefresh ||
                           playlistsCache == nil ||
                           shouldRefreshCache(lastRefresh: lastPlaylistRefresh)
-        
+
         if needsRefresh {
             Logger.debug("Refreshing playlists cache from database")
             let playlists = try await DatabaseManager.shared.getAllPlaylists()
-            
+
             playlistsCache = playlists
             lastPlaylistRefresh = Date()
-            
+
             // Update published property on main thread
             await MainActor.run {
                 self.allPlaylists = playlists
             }
         }
-        
+
         return playlistsCache ?? []
     }
-    
+
     /// Get user playlists only (excluding smart playlists)
     func getUserPlaylists(forceRefresh: Bool = false) async throws -> [Playlist] {
         let allPlaylists = try await getAllPlaylists(forceRefresh: forceRefresh)
         return allPlaylists.filter { !$0.isSmart }
     }
-    
+
     /// Manually invalidate playlists cache
     /// Note: This is automatically called when .playlistsDidChange notification is posted
     func invalidatePlaylists() {
         performPlaylistCacheInvalidation()
     }
-    
+
     // MARK: - Cache Management
-    
+
     private func shouldRefreshCache(lastRefresh: Date?) -> Bool {
         guard let lastRefresh = lastRefresh else { return true }
         return Date().timeIntervalSince(lastRefresh) > cacheTTL
     }
-    
+
     /// Manually invalidate specific folder's tracks
     func invalidateFolderTracks(_ folderId: Int64) {
         folderTracksCache.removeValue(forKey: folderId)
         Logger.debug("Invalidated tracks cache for folder ID: \(folderId)")
     }
-    
+
     /// Manually invalidate a specific track
     func invalidateTrack(_ trackId: Int64) {
         trackCache.removeValue(forKey: trackId)
         Logger.debug("Invalidated track cache for track ID: \(trackId)")
     }
-    
+
     /// Manually refresh all caches
     func refreshAll() async throws {
         Logger.info("Refreshing all caches")
@@ -327,20 +327,20 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
         _ = try await getAllTracks(forceRefresh: true)
         _ = try await getAllPlaylists(forceRefresh: true)
     }
-    
+
     /// Clear all caches and free memory
     func clearAll() {
         invalidateCache()
         Logger.info("All caches cleared")
-        
+
         // Also clear artwork cache
         Task {
             ArtworkCache.shared.clearAll()
         }
     }
-    
+
     // MARK: - Statistics
-    
+
     func getCacheStats() -> CacheStats {
         CacheStats(
             foldersCount: foldersCache?.count ?? 0,
@@ -353,9 +353,9 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
             lastPlaylistRefresh: lastPlaylistRefresh
         )
     }
-    
+
     // MARK: - Library Statistics
-    
+
     /// Get total storage usage of all tracks in bytes
     /// Uses efficient database aggregation instead of loading all tracks
     func getTotalStorageUsage() async throws -> Int64 {
@@ -365,7 +365,7 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
                 .fetchOne(db) ?? 0
         }
     }
-    
+
     /// Get library statistics
     func getLibraryStats() async throws -> LibraryStats {
         try await DatabaseManager.shared.dbQueue.read { db in
@@ -377,7 +377,7 @@ final class DatabaseCache: ObservableObject, @unchecked Sendable {
                 .select(sum(Track.Columns.duration), as: Double.self)
                 .fetchOne(db) ?? 0
             let totalFolders = try Folder.fetchCount(db)
-            
+
             return LibraryStats(
                 totalTracks: totalTracks,
                 totalStorage: totalStorage,
@@ -399,7 +399,7 @@ struct CacheStats {
     let lastFolderRefresh: Date?
     let lastTrackRefresh: Date?
     let lastPlaylistRefresh: Date?
-    
+
     var description: String {
         """
         Cache Statistics:
@@ -422,26 +422,26 @@ struct LibraryStats {
     let totalStorage: Int64      // in bytes
     let totalDuration: Double    // in seconds
     let totalFolders: Int
-    
+
     var formattedStorage: String {
         ByteCountFormatter.string(fromByteCount: totalStorage, countStyle: .file)
     }
-    
+
     var formattedDuration: String {
         let hours = Int(totalDuration) / 3600
         let minutes = (Int(totalDuration) % 3600) / 60
-        
+
         if hours > 0 {
             return "\(hours)h \(minutes)m"
         } else {
             return "\(minutes) minutes"
         }
     }
-    
+
     var averageTrackSize: Int64 {
         totalTracks > 0 ? totalStorage / Int64(totalTracks) : 0
     }
-    
+
     var description: String {
         """
         Library Statistics:
@@ -453,4 +453,3 @@ struct LibraryStats {
         """
     }
 }
-

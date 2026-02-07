@@ -9,9 +9,9 @@ import Foundation
 import GRDB
 
 extension DatabaseManager {
-    
+
     // MARK: - Album Operations
-    
+
     /// Get or create an album entity and return its ID
     /// - Parameters:
     ///   - db: Database connection
@@ -44,10 +44,10 @@ extension DatabaseManager {
         releaseCountry: String? = nil
     ) throws -> Int64? {
         guard !title.isEmpty, title != "Unknown Album" else { return nil }
-        
+
         let effectiveAlbumArtist = albumArtist
         let normalizedName = title.normalized
-        
+
         // Try to find existing album using normalized name for better deduplication
         // e.g., "The Beatles" and "Beatles" will match
         if let existing = try Album
@@ -55,7 +55,7 @@ extension DatabaseManager {
             .fetchOne(db) {
             return existing.id
         }
-        
+
         // Create new album with normalized and sort names
         var album = Album(
             id: nil,
@@ -80,11 +80,11 @@ extension DatabaseManager {
             dateAdded: Date()
         )
         try album.insert(db)
-        
+
         Logger.info("Created new album: \(title) [sort: \(album.sortName), normalized: \(normalizedName)]")
         return album.id
     }
-    
+
     /// Update album statistics
     /// - Parameters:
     ///   - db: Database connection
@@ -93,23 +93,23 @@ extension DatabaseManager {
         let trackCount = try Track
             .filter(Track.Columns.albumId == albumId)
             .fetchCount(db)
-        
+
         let totalDuration = try Track
             .filter(Track.Columns.albumId == albumId)
             .select(sum(Track.Columns.duration))
             .fetchOne(db) ?? 0
-        
+
         try db.execute(sql: """
-            UPDATE albums 
+            UPDATE albums
             SET track_count = ?, total_duration = ?
             WHERE id = ?
             """,
             arguments: [trackCount, totalDuration, albumId]
         )
     }
-    
+
     // MARK: - Artist Operations
-    
+
     /// Get or create an artist entity and return its ID
     /// - Parameters:
     ///   - db: Database connection
@@ -126,9 +126,9 @@ extension DatabaseManager {
         country: String? = nil
     ) throws -> Int64? {
         guard !name.isEmpty, name != "Unknown Artist" else { return nil }
-        
+
         let normalizedName = name.normalized
-        
+
         // Try to find existing artist using normalized name for better deduplication
         // e.g., "The Beatles" and "Beatles" will match
         if let existing = try Artist
@@ -136,7 +136,7 @@ extension DatabaseManager {
             .fetchOne(db) {
             return existing.id
         }
-        
+
         // Create new artist with normalized and sort names
         var artist = Artist(
             id: nil,
@@ -151,11 +151,11 @@ extension DatabaseManager {
             dateAdded: Date()
         )
         try artist.insert(db)
-        
+
         Logger.info("Created new artist: \(name) [sort: \(artist.sortName), normalized: \(normalizedName)]")
         return artist.id
     }
-    
+
     /// Update artist statistics
     /// - Parameters:
     ///   - db: Database connection
@@ -164,24 +164,24 @@ extension DatabaseManager {
         let trackCount = try Track
             .filter(Track.Columns.artistId == artistId)
             .fetchCount(db)
-        
+
         let albumCount = try Track
             .filter(Track.Columns.artistId == artistId)
             .filter(Track.Columns.albumId != nil)
             .select(count(distinct: Track.Columns.albumId))
             .fetchOne(db) ?? 0
-        
+
         try db.execute(sql: """
-            UPDATE artists 
+            UPDATE artists
             SET track_count = ?, album_count = ?
             WHERE id = ?
             """,
             arguments: [trackCount, albumCount, artistId]
         )
     }
-    
+
     // MARK: - Genre Operations
-    
+
     /// Get or create a genre entity and return its ID
     /// - Parameters:
     ///   - db: Database connection
@@ -194,9 +194,9 @@ extension DatabaseManager {
         style: String? = nil
     ) throws -> Int64? {
         guard !name.isEmpty, name != "Unknown Genre" else { return nil }
-        
+
         let normalizedName = name.normalized
-        
+
         // Try to find existing genre using normalized name for better deduplication
         // e.g., "Rock & Roll" and "Rock  Roll" will match
         if let existing = try Genre
@@ -204,7 +204,7 @@ extension DatabaseManager {
             .fetchOne(db) {
             return existing.id
         }
-        
+
         // Create new genre with normalized and sort names
         var genre = Genre(
             id: nil,
@@ -216,11 +216,11 @@ extension DatabaseManager {
             dateAdded: Date()
         )
         try genre.insert(db)
-        
+
         Logger.info("Created new genre: \(name) [sort: \(genre.sortName), normalized: \(normalizedName)]")
         return genre.id
     }
-    
+
     /// Update genre statistics
     /// - Parameters:
     ///   - db: Database connection
@@ -229,18 +229,18 @@ extension DatabaseManager {
         let trackCount = try Track
             .filter(Track.Columns.genreId == genreId)
             .fetchCount(db)
-        
+
         try db.execute(sql: """
-            UPDATE genres 
+            UPDATE genres
             SET track_count = ?
             WHERE id = ?
             """,
             arguments: [trackCount, genreId]
         )
     }
-    
+
     // MARK: - Batch Update
-    
+
     /// Update statistics for multiple entities at once
     /// - Parameters:
     ///   - db: Database connection
@@ -256,18 +256,18 @@ extension DatabaseManager {
         if let albumId = albumId {
             try updateAlbumStatistics(in: db, albumId: albumId)
         }
-        
+
         if let artistId = artistId {
             try updateArtistStatistics(in: db, artistId: artistId)
         }
-        
+
         if let genreId = genreId {
             try updateGenreStatistics(in: db, genreId: genreId)
         }
     }
-    
+
     // MARK: - Query Operations
-    
+
     /// Get all albums, sorted by title
     func getAllAlbums() async throws -> [Album] {
         return try await dbQueue.read { db in
@@ -276,7 +276,7 @@ extension DatabaseManager {
                 .fetchAll(db)
         }
     }
-    
+
     /// Get all artists, sorted by name
     func getAllArtists() async throws -> [Artist] {
         return try await dbQueue.read { db in
@@ -285,7 +285,7 @@ extension DatabaseManager {
                 .fetchAll(db)
         }
     }
-    
+
     /// Get all genres, sorted by name
     func getAllGenres() async throws -> [Genre] {
         return try await dbQueue.read { db in
@@ -294,7 +294,7 @@ extension DatabaseManager {
                 .fetchAll(db)
         }
     }
-    
+
     /// Get tracks for a specific album
     /// - Parameter albumId: Album ID
     /// - Returns: Array of tracks in the album
@@ -306,7 +306,7 @@ extension DatabaseManager {
                 .fetchAll(db)
         }
     }
-    
+
     /// Get tracks for a specific artist
     /// - Parameter artistId: Artist ID
     /// - Returns: Array of tracks by the artist
@@ -318,7 +318,7 @@ extension DatabaseManager {
                 .fetchAll(db)
         }
     }
-    
+
     /// Get tracks for a specific genre
     /// - Parameter genreId: Genre ID
     /// - Returns: Array of tracks in the genre
@@ -330,15 +330,15 @@ extension DatabaseManager {
                 .fetchAll(db)
         }
     }
-    
+
     // MARK: - Search Operations (Using Normalized Names)
-    
+
     /// Search albums using normalized name for better matching
     /// - Parameter query: Search query
     /// - Returns: Array of matching albums
     func searchAlbums(query: String) async throws -> [Album] {
         let normalizedQuery = query.normalized
-        
+
         return try await dbQueue.read { db in
             try Album
                 .filter(Album.Columns.normalizedName.like("%\(normalizedQuery)%"))
@@ -346,13 +346,13 @@ extension DatabaseManager {
                 .fetchAll(db)
         }
     }
-    
+
     /// Search artists using normalized name for better matching
     /// - Parameter query: Search query
     /// - Returns: Array of matching artists
     func searchArtists(query: String) async throws -> [Artist] {
         let normalizedQuery = query.normalized
-        
+
         return try await dbQueue.read { db in
             try Artist
                 .filter(Artist.Columns.normalizedName.like("%\(normalizedQuery)%"))
@@ -360,13 +360,13 @@ extension DatabaseManager {
                 .fetchAll(db)
         }
     }
-    
+
     /// Search genres using normalized name for better matching
     /// - Parameter query: Search query
     /// - Returns: Array of matching genres
     func searchGenres(query: String) async throws -> [Genre] {
         let normalizedQuery = query.normalized
-        
+
         return try await dbQueue.read { db in
             try Genre
                 .filter(Genre.Columns.normalizedName.like("%\(normalizedQuery)%"))
@@ -374,9 +374,9 @@ extension DatabaseManager {
                 .fetchAll(db)
         }
     }
-    
+
     // MARK: - Entity Retrieval Helpers
-    
+
     /// Get album ID by title and artist
     /// - Parameters:
     ///   - title: Album title
@@ -384,27 +384,27 @@ extension DatabaseManager {
     /// - Returns: Album ID if found, nil otherwise
     func getAlbumId(title: String, artist: String) async throws -> Int64? {
         let normalizedTitle = title.normalized
-        
+
         return try await dbQueue.read { db in
             try Album
                 .filter(Album.Columns.normalizedName == normalizedTitle)
                 .fetchOne(db)?.id
         }
     }
-    
+
     /// Get artist ID by name
     /// - Parameter name: Artist name
     /// - Returns: Artist ID if found, nil otherwise
     func getArtistId(name: String) async throws -> Int64? {
         let normalizedName = name.normalized
-        
+
         return try await dbQueue.read { db in
             try Artist
                 .filter(Artist.Columns.normalizedName == normalizedName)
                 .fetchOne(db)?.id
         }
     }
-    
+
     /// Get album by ID
     /// - Parameter albumId: Album ID
     /// - Returns: Album object
@@ -416,7 +416,7 @@ extension DatabaseManager {
             return album
         }
     }
-    
+
     /// Get artist by ID
     /// - Parameter artistId: Artist ID
     /// - Returns: Artist object
@@ -429,9 +429,8 @@ extension DatabaseManager {
         }
     }
 
-    
     // MARK: - Playlist Operations
-    
+
     /// Get all playlists, sorted by name
     func getAllPlaylists() async throws -> [Playlist] {
         return try await dbQueue.read { db in
@@ -440,7 +439,7 @@ extension DatabaseManager {
                 .fetchAll(db)
         }
     }
-    
+
     /// Search playlists by name
     /// - Parameter query: Search query
     /// - Returns: Array of matching playlists
@@ -448,7 +447,7 @@ extension DatabaseManager {
         guard !query.isEmpty else {
             return try await getAllPlaylists()
         }
-        
+
         let pattern = "%\(query)%"
         return try await dbQueue.read { db in
             try Playlist
@@ -458,4 +457,3 @@ extension DatabaseManager {
         }
     }
 }
-

@@ -27,7 +27,7 @@ class DatabaseManager: ObservableObject {
     private let dbPath: String
 
     // MARK: - Initialization
-    
+
     // MARK: - Singleton
     static let shared: DatabaseManager = {
         do {
@@ -88,12 +88,12 @@ class DatabaseManager: ObservableObject {
     }
 
     // MARK: - Migration Status
-    
+
     /// Check if database needs migration
     func needsMigration() -> Bool {
         DatabaseMigrator.hasUnappliedMigrations(dbQueue)
     }
-    
+
     /// Get list of applied migrations
     func getAppliedMigrations() -> [String] {
         DatabaseMigrator.appliedMigrations(dbQueue)
@@ -106,13 +106,13 @@ class DatabaseManager: ObservableObject {
     func resetDatabase() throws {
         // Erase the database
         try dbQueue.erase()
-        
+
         // Re-run migrations on the fresh database
         try DatabaseMigrator.migrate(dbQueue)
-        
+
         Logger.info("Database reset completed")
     }
-    
+
     /// Get database file size in bytes
     func getDatabaseSize() -> Int64? {
         let fileManager = FileManager.default
@@ -124,7 +124,7 @@ class DatabaseManager: ObservableObject {
             return nil
         }
     }
-    
+
     /// Vacuum the database to reclaim space
     func vacuumDatabase() async throws {
         try await dbQueue.writeWithoutTransaction { db in
@@ -132,12 +132,12 @@ class DatabaseManager: ObservableObject {
         }
         Logger.info("Database vacuum completed")
     }
-    
+
     /// Rebuild FTS5 virtual tables to refresh search indexes
     /// This is useful after data corruption or to apply new FTS configurations
     func rebuildFTS() async throws {
         Logger.info("Rebuilding FTS5 virtual tables...")
-        
+
         try await dbQueue.write { db in
             // Rebuild each FTS table using FTS5's rebuild command
             // This repopulates the index from the content tables
@@ -146,7 +146,7 @@ class DatabaseManager: ObservableObject {
             try db.execute(sql: "INSERT INTO artists_fts(artists_fts) VALUES('rebuild')")
             try db.execute(sql: "INSERT INTO genres_fts(genres_fts) VALUES('rebuild')")
             try db.execute(sql: "INSERT INTO playlists_fts(playlists_fts) VALUES('rebuild')")
-            
+
             // Optimize FTS tables after rebuild for better performance
             try db.execute(sql: "INSERT INTO tracks_fts(tracks_fts) VALUES('optimize')")
             try db.execute(sql: "INSERT INTO albums_fts(albums_fts) VALUES('optimize')")
@@ -154,22 +154,22 @@ class DatabaseManager: ObservableObject {
             try db.execute(sql: "INSERT INTO genres_fts(genres_fts) VALUES('optimize')")
             try db.execute(sql: "INSERT INTO playlists_fts(playlists_fts) VALUES('optimize')")
         }
-        
+
         Logger.info("FTS5 rebuild completed successfully")
     }
-    
+
     /// Upgrade FTS5 tables with enhanced configuration (used in migrations)
     /// This drops existing FTS tables and recreates them with new tokenization settings
     static func upgradeFTSTables(in db: Database) throws {
         Logger.info("Upgrading FTS5 tables with enhanced tokenization...")
-        
+
         // Drop old FTS tables and their triggers
         try db.execute(sql: "DROP TABLE IF EXISTS tracks_fts")
         try db.execute(sql: "DROP TABLE IF EXISTS albums_fts")
         try db.execute(sql: "DROP TABLE IF EXISTS artists_fts")
         try db.execute(sql: "DROP TABLE IF EXISTS genres_fts")
         try db.execute(sql: "DROP TABLE IF EXISTS playlists_fts")
-        
+
         // Drop old triggers
         let triggersToDrop = [
             "tracks_fts_insert", "tracks_fts_delete", "tracks_fts_update",
@@ -178,37 +178,36 @@ class DatabaseManager: ObservableObject {
             "genres_fts_insert", "genres_fts_delete", "genres_fts_update",
             "playlists_fts_insert", "playlists_fts_delete", "playlists_fts_update"
         ]
-        
+
         for trigger in triggersToDrop {
             try db.execute(sql: "DROP TRIGGER IF EXISTS \(trigger)")
         }
-        
+
         // Recreate with enhanced configuration
         try createFTSTables(in: db)
-        
+
         // Rebuild FTS tables with existing data from content tables
         Logger.info("Rebuilding FTS5 indexes from existing data...")
-        
+
         // Use FTS5's 'rebuild' command to repopulate from content tables
         try db.execute(sql: "INSERT INTO tracks_fts(tracks_fts) VALUES('rebuild')")
         try db.execute(sql: "INSERT INTO albums_fts(albums_fts) VALUES('rebuild')")
         try db.execute(sql: "INSERT INTO artists_fts(artists_fts) VALUES('rebuild')")
         try db.execute(sql: "INSERT INTO genres_fts(genres_fts) VALUES('rebuild')")
         try db.execute(sql: "INSERT INTO playlists_fts(playlists_fts) VALUES('rebuild')")
-        
+
         // Optimize FTS tables for better query performance
         try db.execute(sql: "INSERT INTO tracks_fts(tracks_fts) VALUES('optimize')")
         try db.execute(sql: "INSERT INTO albums_fts(albums_fts) VALUES('optimize')")
         try db.execute(sql: "INSERT INTO artists_fts(artists_fts) VALUES('optimize')")
         try db.execute(sql: "INSERT INTO genres_fts(genres_fts) VALUES('optimize')")
         try db.execute(sql: "INSERT INTO playlists_fts(playlists_fts) VALUES('optimize')")
-        
+
         Logger.info("FTS5 tables upgraded and rebuilt successfully")
     }
 }
 
 // MARK: - Local Enums
-
 
 enum DatabaseError: Error {
     case invalidTrackId
@@ -221,7 +220,7 @@ enum DatabaseError: Error {
     case lyricsNotFound(trackId: Int64)
     case recordNotFound(table: String, id: Int64)
     case duplicateTrackInPlaylist
-    
+
     var localizedDescription: String {
         switch self {
         case .invalidTrackId:

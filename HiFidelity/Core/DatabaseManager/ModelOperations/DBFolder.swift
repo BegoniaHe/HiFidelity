@@ -10,9 +10,9 @@ import AppKit
 import GRDB
 
 extension DatabaseManager {
-    
+
     // MARK: - Folder DB operations
-    
+
     func updateFolderTrackCount(_ folder: Folder) async throws {
         try await dbQueue.write { db in
             let count = try Track
@@ -25,17 +25,17 @@ extension DatabaseManager {
             try updatedFolder.update(db)
         }
     }
-    
+
     func updateFolderMetadata(_ folderId: Int64) async throws {
         let folderData = try await dbQueue.read { db in
             try Folder.fetchOne(db, key: folderId)
         }
-        
+
         guard folderData != nil else { return }
-        
+
         try await dbQueue.write { db in
             guard var folder = try Folder.fetchOne(db, key: folderId) else { return }
-            
+
             // Get and store the file system's modification date
             if let attributes = try? FileManager.default.attributesOfItem(atPath: folder.url.path),
                let fsModDate = attributes[.modificationDate] as? Date {
@@ -44,19 +44,18 @@ extension DatabaseManager {
                 // Fallback to current date if we can't get FS date
                 folder.dateUpdated = Date()
             }
-            
-            
+
             // Update track count
             let trackCount = try Track
                 .filter(Track.Columns.folderId == folderId)
                 .filter(Track.Columns.isDuplicate == false)
                 .fetchCount(db)
             folder.trackCount = trackCount
-            
+
             try folder.update(db)
         }
     }
-    
+
     func updateFolderBookmark(_ folderId: Int64, bookmarkData: Data) async throws {
         _ = try await dbQueue.write { db in
             try Folder
@@ -64,9 +63,9 @@ extension DatabaseManager {
                 .updateAll(db, Folder.Columns.bookmarkData.set(to: bookmarkData))
         }
     }
-    
+
     // MARK: - Remove Folders
-    
+
     /// Remove a folder and all its tracks (orphaned entities auto-cleaned by database triggers)
     /// - Parameter folder: Folder to remove
     func removeFolder(_ folder: Folder) async throws {
@@ -74,23 +73,23 @@ extension DatabaseManager {
             Logger.error("Cannot remove folder without ID")
             return
         }
-        
+
         // Get track count for user notification
         let trackCount = try await dbQueue.read { db in
             try Track
                 .filter(Track.Columns.folderId == folderId)
                 .fetchCount(db)
         }
-        
+
         // Delete folder (cascade will delete all tracks, triggers will cleanup orphaned entities)
         try await dbQueue.write { db in
             _ = try Folder
                 .filter(Folder.Columns.id == folderId)
                 .deleteAll(db)
         }
-        
+
         Logger.info("Removed folder '\(folder.name)' with \(trackCount) tracks (orphaned entities auto-cleaned by triggers)")
-        
+
         // Notify UI
         await MainActor.run {
             let message = trackCount == 1
@@ -99,14 +98,14 @@ extension DatabaseManager {
             NotificationManager.shared.addMessage(.info, message)
             NotificationCenter.default.post(name: .libraryDataDidChange, object: nil)
             NotificationCenter.default.post(name: .foldersDataDidChange, object: nil)
-            
+
             // Stop monitoring this folder
             FolderWatcherService.shared.stopWatching(folder: folder)
         }
     }
-    
+
     // MARK: - Add Folders
-    
+
     func addFolder() {
         // Prevent adding folders while import is in progress
         if isImporting {
@@ -115,7 +114,7 @@ extension DatabaseManager {
             }
             return
         }
-        
+
         let openPanel = NSOpenPanel()
         openPanel.canChooseFiles = false
         openPanel.canChooseDirectories = true
@@ -159,7 +158,7 @@ extension DatabaseManager {
             }
         }
     }
-    
+
     func addFolders(_ urls: [URL], bookmarkDataMap: [URL: Data], completion: @escaping (Result<[Folder], Error>) -> Void) {
         Task {
             do {
@@ -184,14 +183,14 @@ extension DatabaseManager {
             importProgress = 0.0
             importStatusMessage = "Adding folders..."
         }
-        
+
         let addedFolders = try await dbQueue.write { db -> [Folder] in
             var folders: [Folder] = []
-            
+
             for url in urls {
                 let bookmarkData = bookmarkDataMap[url]
                 var folder = Folder(url: url, bookmarkData: bookmarkData)
-                
+
                 // Get the file system modification date
                 if let attributes = try? FileManager.default.attributesOfItem(atPath: url.path),
                    let fsModDate = attributes[.modificationDate] as? Date {
@@ -210,25 +209,25 @@ extension DatabaseManager {
                 } else {
                     // Insert new folder - didInsert() automatically sets the ID
                     try folder.insert(db)
-                    
+
                     // Verify insertion succeeded
                     guard folder.id != nil else {
                         Logger.error("Failed to insert folder: \(folder.name) - ID not set")
                         continue
                     }
-                    
+
                     folders.append(folder)
                     Logger.info("Added new folder: \(folder.name) with ID: \(folder.id ?? -1)")
                 }
             }
-            
+
             return folders
         }
 
         // INSTANT UI UPDATE: Notify observers immediately after folders are added
         await MainActor.run {
             NotificationCenter.default.post(name: .foldersDataDidChange, object: nil)
-            
+
             // Start watching newly added folders if monitoring is enabled
             if FolderWatcherService.shared.isWatching {
                 for folder in addedFolders {
@@ -278,9 +277,9 @@ extension DatabaseManager {
                 await MainActor.run {
                     NotificationManager.shared.addMessage(.info, "Started scanning '\(folder.name)' folder.")
                 }
-                
+
                 try await scanSingleFolder(folder)
-                
+
                 await MainActor.run {
                     NotificationManager.shared.addMessage(.info, "Scanning completed for '\(folder.name)' folder.")
                 }
@@ -296,28 +295,15 @@ extension DatabaseManager {
             NotificationManager.shared.addMessage(.info, "Scan complete")
         }
     }
-    
-    
-    // MARK: - Scan Folder
 
+    // MARK: - Scan Folder
 
     func scanSingleFolder(_ folder: Folder) async throws {
         let fileManager = FileManager.default
 
-        // Update status
-        await MainActor.run {
-            currentImportingFolder = folder.name
-            importStatusMessage = "Scanning '\(folder.name)'..."
-        }
+        await updateScanStatus(folder)
 
-        guard let enumerator = fileManager.enumerator(
-            at: folder.url,
-                includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey, .contentModificationDateKey],
-                options: [.skipsHiddenFiles, .skipsPackageDescendants]
-        ) else {
-            let error = DatabaseError.scanFailed("Unable to access folder contents")
-            throw error
-        }
+        let enumerator = try makeFolderEnumerator(fileManager: fileManager, folder: folder)
 
         guard let folderId = folder.id else {
             let error = DatabaseError.invalidFolderId
@@ -326,29 +312,12 @@ extension DatabaseManager {
         }
 
         let scanState = FolderScanState()
-        
+
         // Get existing tracks for this folder to check for updates
         let existingTracks = getTracksForFolder(folderId)
         let existingTracksDict = Dictionary(uniqueKeysWithValues: existingTracks.map { ($0.url, $0) })
 
-        // Collect all music files first - do this synchronously before async context
-        var musicFiles: [URL] = []
-        var scannedPaths = Set<URL>()
-
-        // Process enumerator synchronously
-//        var unsupportedFiles: [(url: URL, extension: String)] = []
-
-        while let fileURL = enumerator.nextObject() as? URL {
-            let fileExtension = fileURL.pathExtension.lowercased()
-            
-            // Skip files without extensions
-            guard !fileExtension.isEmpty else { continue }
-            
-            if AudioFormat.isSupported(fileExtension) {
-                musicFiles.append(fileURL)
-                scannedPaths.insert(fileURL)
-            }
-        }
+        let (musicFiles, scannedPaths) = collectMusicFiles(from: enumerator)
 
         // Now we can safely use these in async context
         let totalFiles = musicFiles.count
@@ -357,44 +326,15 @@ extension DatabaseManager {
         let foundPathStrings = Set(foundPaths.map { $0.path })
         let tracksToRemove = existingTracks.filter { !foundPathStrings.contains($0.url.path) }
         let trackIdsToRemove = tracksToRemove.compactMap { $0.trackId }
-        
+
         // Remove tracks (orphaned entities will be automatically cleaned up by database triggers)
-        if !trackIdsToRemove.isEmpty {
-            let removedCount = trackIdsToRemove.count
-            
-            // Log tracks to be removed (before deletion)
-            for track in tracksToRemove {
-                Logger.info("Removing track that no longer exists: \(track.url.lastPathComponent)")
-            }
-            
-            // Delete tracks in batch - database triggers will automatically cleanup orphaned entities and update statistics
-            let deletedCount = try await dbQueue.write { db in
-                // Delete the tracks (triggers will auto-cleanup orphans and update statistics)
-                let deleted = try Track
-                    .filter(trackIdsToRemove.contains(Track.Columns.trackId))
-                    .deleteAll(db)
-                
-                // Note: Statistics are automatically updated by database triggers
-                // Orphaned entities (albums/artists/genres with no tracks) are auto-deleted by triggers
-                
-                return deleted
-            }
-            
-            Logger.info("Batch deleted \(deletedCount) tracks from folder '\(folder.name)' (orphaned entities auto-cleaned by triggers)")
-            
-            // Notify about the cleanup
-            await MainActor.run {
-                if totalFiles == 0 {
-                    NotificationManager.shared.addMessage(.info, "Folder '\(folder.name)' is now empty, removed \(removedCount) tracks")
-                } else {
-                    let message = removedCount == 1
-                        ? "Removed 1 missing track from '\(folder.name)'"
-                        : "Removed \(removedCount) missing tracks from '\(folder.name)'"
-                    NotificationManager.shared.addMessage(.info, message)
-                }
-            }
-        }
-        
+        try await removeMissingTracks(
+            trackIdsToRemove: trackIdsToRemove,
+            tracksToRemove: tracksToRemove,
+            folder: folder,
+            totalFiles: totalFiles
+        )
+
         // If no music files found and all tracks removed, we're done
         if totalFiles == 0 {
             try await updateFolderTrackCount(folder)
@@ -402,20 +342,125 @@ extension DatabaseManager {
         }
 
         // Process music files in batches
+        try await processMusicFiles(
+            musicFiles,
+            folderId: folderId,
+            existingTracksDict: existingTracksDict,
+            scanState: scanState,
+            folder: folder
+        )
+
+        try await finalizeScan(folder: folder, folderId: folder.id, scanState: scanState)
+    }
+
+    private func updateScanStatus(_ folder: Folder) async {
+        await MainActor.run {
+            currentImportingFolder = folder.name
+            importStatusMessage = "Scanning '\(folder.name)'..."
+        }
+    }
+
+    private func makeFolderEnumerator(
+        fileManager: FileManager,
+        folder: Folder
+    ) throws -> FileManager.DirectoryEnumerator {
+        guard let enumerator = fileManager.enumerator(
+            at: folder.url,
+            includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey, .contentModificationDateKey],
+            options: [.skipsHiddenFiles, .skipsPackageDescendants]
+        ) else {
+            throw DatabaseError.scanFailed("Unable to access folder contents")
+        }
+
+        return enumerator
+    }
+
+    private func collectMusicFiles(
+        from enumerator: FileManager.DirectoryEnumerator
+    ) -> (musicFiles: [URL], scannedPaths: Set<URL>) {
+        var musicFiles: [URL] = []
+        var scannedPaths = Set<URL>()
+
+        while let fileURL = enumerator.nextObject() as? URL {
+            let fileExtension = fileURL.pathExtension.lowercased()
+
+            // Skip files without extensions
+            guard !fileExtension.isEmpty else { continue }
+
+            if AudioFormat.isSupported(fileExtension) {
+                musicFiles.append(fileURL)
+                scannedPaths.insert(fileURL)
+            }
+        }
+
+        return (musicFiles, scannedPaths)
+    }
+
+    private func removeMissingTracks(
+        trackIdsToRemove: [Int64],
+        tracksToRemove: [Track],
+        folder: Folder,
+        totalFiles: Int
+    ) async throws {
+        guard !trackIdsToRemove.isEmpty else { return }
+
+        let removedCount = trackIdsToRemove.count
+
+        // Log tracks to be removed (before deletion)
+        for track in tracksToRemove {
+            Logger.info("Removing track that no longer exists: \(track.url.lastPathComponent)")
+        }
+
+        // Delete tracks in batch - database triggers will automatically cleanup orphaned entities and update statistics
+        let deletedCount = try await dbQueue.write { db in
+            // Delete the tracks (triggers will auto-cleanup orphans and update statistics)
+            let deleted = try Track
+                .filter(trackIdsToRemove.contains(Track.Columns.trackId))
+                .deleteAll(db)
+
+            // Note: Statistics are automatically updated by database triggers
+            // Orphaned entities (albums/artists/genres with no tracks) are auto-deleted by triggers
+
+            return deleted
+        }
+
+        Logger.info("Batch deleted \(deletedCount) tracks from folder '\(folder.name)' (orphaned entities auto-cleaned by triggers)")
+
+        // Notify about the cleanup
+        await MainActor.run {
+            if totalFiles == 0 {
+                NotificationManager.shared.addMessage(.info, "Folder '\(folder.name)' is now empty, removed \(removedCount) tracks")
+            } else {
+                let message = removedCount == 1
+                    ? "Removed 1 missing track from '\(folder.name)'"
+                    : "Removed \(removedCount) missing tracks from '\(folder.name)'"
+                NotificationManager.shared.addMessage(.info, message)
+            }
+        }
+    }
+
+    private func processMusicFiles(
+        _ musicFiles: [URL],
+        folderId: Int64,
+        existingTracksDict: [URL: Track],
+        scanState: FolderScanState,
+        folder: Folder
+    ) async throws {
+        let totalFiles = musicFiles.count
         let batchSize = totalFiles > 1000 ? 200 : 100
         let fileBatches = musicFiles.chunked(into: batchSize)
         var batchCounter = 0
 
         for batch in fileBatches {
             let batchWithFolderId = batch.map { url in (url: url, folderId: folderId) }
-            
+
             do {
                 try await processBatch(batchWithFolderId, existingTracks: existingTracksDict)
                 await scanState.incrementProcessed(by: batch.count)
-                
+
                 let currentProcessed = await scanState.getProcessedCount()
                 batchCounter += 1
-                
+
                 // Calculate and update progress
                 let progress = Double(currentProcessed) / Double(totalFiles)
                 await MainActor.run {
@@ -423,7 +468,7 @@ extension DatabaseManager {
                     importStatusMessage = "Processing: \(currentProcessed)/\(totalFiles) files in '\(folder.name)'"
                     NotificationManager.shared.addMessage(.info, "Processing: \(currentProcessed)/\(totalFiles) files in \(folder.name)")
                 }
-                
+
                 // Notify UI every few batches to update track counts in real-time
                 if batchCounter % 3 == 0 {
                     // Notify observers to refresh UI
@@ -442,9 +487,15 @@ extension DatabaseManager {
         await MainActor.run {
             NotificationCenter.default.post(name: .libraryDataDidChange, object: nil)
         }
-        
+    }
+
+    private func finalizeScan(
+        folder: Folder,
+        folderId: Int64?,
+        scanState: FolderScanState
+    ) async throws {
         // Update folder metadata
-        if let folderId = folder.id {
+        if let folderId {
             try await updateFolderMetadata(folderId)
         }
 
@@ -462,17 +513,17 @@ extension DatabaseManager {
                 NotificationManager.shared.addMessage(.warning, message)
             }
         }
-        
+
         // Report skipped files
         if !skippedFiles.isEmpty {
             let extensionCounts = Dictionary(grouping: skippedFiles) { $0.extension }
                 .mapValues { $0.count }
                 .sorted { $0.value > $1.value }
-            
+
             let topExtensions = extensionCounts.prefix(3)
                 .map { ".\($0.key.uppercased()) (\($0.value))" }
                 .joined(separator: ", ")
-            
+
             await MainActor.run {
                 let message = skippedFiles.count == 1
                     ? "1 file skipped in '\(folder.name)' - unsupported format"
@@ -480,15 +531,12 @@ extension DatabaseManager {
                 NotificationManager.shared.addMessage(.warning, message)
             }
         }
-        
+
         Logger.info("Completed scanning folder \(folder.name): \(processedCount) processed, \(failedFiles.count) failed, \(skippedFiles.count) skipped")
     }
-    
-    
-    
-    
+
     // MARK: - Refresh Folders
-    
+
     func rescanFolder(_ folder: Folder) async throws {
         // First, ensure we have a valid bookmark
         Task {
@@ -513,7 +561,7 @@ extension DatabaseManager {
             }
         }
     }
-    
+
     func refreshFolder(_ folder: Folder, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
@@ -542,7 +590,7 @@ extension DatabaseManager {
                     importStatusMessage = ""
                     currentImportingFolder = ""
                 }
-                
+
                 completion(.success(()))
             } catch {
                 await MainActor.run {
@@ -558,8 +606,6 @@ extension DatabaseManager {
         }
     }
 
-    
-    
     func refreshBookmarkForFolder(_ folder: Folder) async {
         // Only refresh if we can access the folder
         guard FileManager.default.fileExists(atPath: folder.url.path) else {
@@ -587,49 +633,49 @@ extension DatabaseManager {
             Logger.error("Failed to refresh bookmark for \(folder.name): \(error)")
         }
     }
-    
+
     // MARK: - Folder Path Management
-    
+
     /// Update a folder's path in the database (for relocated folders)
     func updateFolderPath(folderId: Int64, newPath: String, newBookmarkData: Data? = nil) async throws {
         try await dbQueue.write { db in
             var updates: [String] = ["path = ?"]
             var arguments: [DatabaseValueConvertible?] = [newPath]
-            
+
             if let bookmarkData = newBookmarkData {
                 updates.append("bookmark_data = ?")
                 arguments.append(bookmarkData)
             }
-            
+
             arguments.append(folderId)
-            
+
             let sql = "UPDATE folders SET \(updates.joined(separator: ", ")) WHERE id = ?"
             try db.execute(sql: sql, arguments: StatementArguments(arguments))
         }
-        
+
         Logger.info("Updated folder path for ID \(folderId)")
     }
-    
+
     /// Update folder path by old path (useful for bulk relocations)
     func updateFolderPathByPath(oldPath: String, newPath: String, newBookmarkData: Data? = nil) async throws {
         try await dbQueue.write { db in
             var updates: [String] = ["path = ?"]
             var arguments: [DatabaseValueConvertible?] = [newPath]
-            
+
             if let bookmarkData = newBookmarkData {
                 updates.append("bookmark_data = ?")
                 arguments.append(bookmarkData)
             }
-            
+
             arguments.append(oldPath)
-            
+
             let sql = "UPDATE folders SET \(updates.joined(separator: ", ")) WHERE path = ?"
             try db.execute(sql: sql, arguments: StatementArguments(arguments))
         }
-        
+
         Logger.info("Updated folder path: \(oldPath) -> \(newPath)")
     }
-    
+
 }
 
 // MARK: - Folder Scan State Actor
@@ -639,19 +685,19 @@ actor FolderScanState {
     var processedCount = 0
     var failedFiles: [(url: URL, error: Error)] = []
     var skippedFiles: [(url: URL, extension: String)] = []
-    
+
     func incrementProcessed(by count: Int) {
         processedCount += count
     }
-    
+
     func addFailedFiles(_ files: [(url: URL, error: Error)]) {
         failedFiles.append(contentsOf: files)
     }
-    
+
     func addSkippedFiles(_ files: [(url: URL, extension: String)]) {
         skippedFiles.append(contentsOf: files)
     }
-    
+
     func getProcessedCount() -> Int { processedCount }
     func getFailedFiles() -> [(url: URL, error: Error)] { failedFiles }
     func getSkippedFiles() -> [(url: URL, extension: String)] { skippedFiles }

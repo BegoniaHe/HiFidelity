@@ -9,9 +9,9 @@ import Foundation
 import GRDB
 
 extension DatabaseManager {
-    
+
     // MARK: - Insert/Update Features
-    
+
     /// Insert or update song features for a track
     func saveSongFeatures(_ features: SongFeatures) async throws {
         try await dbQueue.write { db in
@@ -20,7 +20,7 @@ extension DatabaseManager {
         }
         Logger.debug("Saved song features for track ID: \(features.trackId)")
     }
-    
+
     /// Batch insert/update song features
     func batchSaveSongFeatures(_ featuresArray: [SongFeatures]) async throws {
         try await dbQueue.write { db in
@@ -30,9 +30,9 @@ extension DatabaseManager {
         }
         Logger.info("Batch saved \(featuresArray.count) song features")
     }
-    
+
     // MARK: - Fetch Features
-    
+
     /// Get song features for a specific track
     func getSongFeatures(forTrackId trackId: Int64) async throws -> SongFeatures? {
         try await dbQueue.read { db in
@@ -41,7 +41,7 @@ extension DatabaseManager {
                 .fetchOne(db)
         }
     }
-    
+
     /// Get song features for multiple tracks
     func getSongFeatures(forTrackIds trackIds: [Int64]) async throws -> [SongFeatures] {
         try await dbQueue.read { db in
@@ -50,7 +50,7 @@ extension DatabaseManager {
                 .fetchAll(db)
         }
     }
-    
+
     /// Get all tracks that have features extracted
     func getTracksWithFeatures() async throws -> [Track] {
         try await dbQueue.read { db in
@@ -59,7 +59,7 @@ extension DatabaseManager {
                 .fetchAll(db)
         }
     }
-    
+
     /// Get tracks without features (need extraction)
     func getTracksWithoutFeatures(limit: Int = 100) async throws -> [Track] {
         try await dbQueue.read { db in
@@ -67,7 +67,7 @@ extension DatabaseManager {
             let tracksWithFeatures = try SongFeatures
                 .select(SongFeatures.Columns.trackId)
                 .fetchSet(db) as Set<Int64>
-            
+
             // Get tracks that don't have features
             return try Track
                 .filter(!tracksWithFeatures.contains(Track.Columns.trackId))
@@ -75,7 +75,7 @@ extension DatabaseManager {
                 .fetchAll(db)
         }
     }
-    
+
     /// Get features that need update
     func getFeaturesNeedingUpdate(limit: Int = 100) async throws -> [SongFeatures] {
         try await dbQueue.read { db in
@@ -85,9 +85,9 @@ extension DatabaseManager {
                 .fetchAll(db)
         }
     }
-    
+
     // MARK: - Similarity Search
-    
+
     /// Find similar tracks based on embedding cosine similarity
     /// - Parameters:
     ///   - trackId: Source track ID
@@ -105,7 +105,7 @@ extension DatabaseManager {
             Logger.warning("No embedding found for track ID: \(trackId)")
             return []
         }
-        
+
         // Get all tracks with embeddings
         let allFeatures = try await dbQueue.read { db in
             try SongFeatures
@@ -113,23 +113,23 @@ extension DatabaseManager {
                 .filter(SongFeatures.Columns.trackId != trackId) // Exclude source
                 .fetchAll(db)
         }
-        
+
         // Calculate similarities
         var similarities: [(trackId: Int64, similarity: Double)] = []
-        
+
         for features in allFeatures {
             guard let embedding = features.embedding else { continue }
-            
+
             if let similarity = SongFeatures.cosineSimilarity(sourceEmbedding, embedding),
                similarity >= threshold {
                 similarities.append((trackId: features.trackId, similarity: similarity))
             }
         }
-        
+
         // Sort by similarity and get top N
         similarities.sort { $0.similarity > $1.similarity }
         let topSimilar = Array(similarities.prefix(limit))
-        
+
         // Fetch tracks
         let trackIds = topSimilar.map { $0.trackId }
         let tracks = try await dbQueue.read { db in
@@ -137,7 +137,7 @@ extension DatabaseManager {
                 .filter(trackIds.contains(Track.Columns.trackId))
                 .fetchAll(db)
         }
-        
+
         // Map tracks with their similarity scores
         return topSimilar.compactMap { similar in
             guard let track = tracks.first(where: { $0.trackId == similar.trackId }) else {
@@ -146,7 +146,7 @@ extension DatabaseManager {
             return (track: track, similarity: similar.similarity)
         }
     }
-    
+
     /// Find tracks with similar audio features (not embeddings)
     func findTracksWithSimilarFeatures(
         toTrackId trackId: Int64,
@@ -157,28 +157,28 @@ extension DatabaseManager {
         guard let sourceFeatures = try await getSongFeatures(forTrackId: trackId) else {
             return []
         }
-        
+
         // Get all other features
         let allFeatures = try await dbQueue.read { db in
             try SongFeatures
                 .filter(SongFeatures.Columns.trackId != trackId)
                 .fetchAll(db)
         }
-        
+
         // Calculate feature similarities
         var similarities: [(trackId: Int64, similarity: Double)] = []
-        
+
         for features in allFeatures {
             let similarity = sourceFeatures.featureSimilarity(to: features)
             if similarity >= threshold {
                 similarities.append((trackId: features.trackId, similarity: similarity))
             }
         }
-        
+
         // Sort and get top N
         similarities.sort { $0.similarity > $1.similarity }
         let topSimilar = Array(similarities.prefix(limit))
-        
+
         // Fetch tracks
         let trackIds = topSimilar.map { $0.trackId }
         let tracks = try await dbQueue.read { db in
@@ -186,7 +186,7 @@ extension DatabaseManager {
                 .filter(trackIds.contains(Track.Columns.trackId))
                 .fetchAll(db)
         }
-        
+
         return topSimilar.compactMap { similar in
             guard let track = tracks.first(where: { $0.trackId == similar.trackId }) else {
                 return nil
@@ -194,9 +194,9 @@ extension DatabaseManager {
             return (track: track, similarity: similar.similarity)
         }
     }
-    
+
     // MARK: - Feature-based Queries
-    
+
     /// Find high-energy tracks
     func getHighEnergyTracks(threshold: Double = 0.7, limit: Int = 50) async throws -> [Track] {
         try await dbQueue.read { db in
@@ -206,13 +206,13 @@ extension DatabaseManager {
                 .limit(limit)
                 .select(SongFeatures.Columns.trackId)
                 .fetchSet(db) as Set<Int64>
-            
+
             return try Track
                 .filter(featureIds.contains(Track.Columns.trackId))
                 .fetchAll(db)
         }
     }
-    
+
     /// Find calm/chill tracks
     func getCalmTracks(energyThreshold: Double = 0.4, valenceThreshold: Double = 0.3, limit: Int = 50) async throws -> [Track] {
         try await dbQueue.read { db in
@@ -222,13 +222,13 @@ extension DatabaseManager {
                 .limit(limit)
                 .select(SongFeatures.Columns.trackId)
                 .fetchSet(db) as Set<Int64>
-            
+
             return try Track
                 .filter(featureIds.contains(Track.Columns.trackId))
                 .fetchAll(db)
         }
     }
-    
+
     /// Find happy/upbeat tracks
     func getHappyTracks(valenceThreshold: Double = 0.7, limit: Int = 50) async throws -> [Track] {
         try await dbQueue.read { db in
@@ -238,13 +238,13 @@ extension DatabaseManager {
                 .limit(limit)
                 .select(SongFeatures.Columns.trackId)
                 .fetchSet(db) as Set<Int64>
-            
+
             return try Track
                 .filter(featureIds.contains(Track.Columns.trackId))
                 .fetchAll(db)
         }
     }
-    
+
     /// Find danceable tracks
     func getDanceableTracks(threshold: Double = 0.7, limit: Int = 50) async throws -> [Track] {
         try await dbQueue.read { db in
@@ -254,13 +254,13 @@ extension DatabaseManager {
                 .limit(limit)
                 .select(SongFeatures.Columns.trackId)
                 .fetchSet(db) as Set<Int64>
-            
+
             return try Track
                 .filter(featureIds.contains(Track.Columns.trackId))
                 .fetchAll(db)
         }
     }
-    
+
     /// Find acoustic tracks
     func getAcousticTracks(threshold: Double = 0.7, limit: Int = 50) async throws -> [Track] {
         try await dbQueue.read { db in
@@ -270,15 +270,15 @@ extension DatabaseManager {
                 .limit(limit)
                 .select(SongFeatures.Columns.trackId)
                 .fetchSet(db) as Set<Int64>
-            
+
             return try Track
                 .filter(featureIds.contains(Track.Columns.trackId))
                 .fetchAll(db)
         }
     }
-    
+
     // MARK: - Delete Features
-    
+
     /// Delete song features for a track
     func deleteSongFeatures(forTrackId trackId: Int64) async throws {
         try await dbQueue.write { db in
@@ -288,7 +288,7 @@ extension DatabaseManager {
         }
         Logger.debug("Deleted song features for track ID: \(trackId)")
     }
-    
+
     /// Mark features as needing update
     func markFeaturesForUpdate(trackIds: [Int64]) async throws {
         try await dbQueue.write { db in
@@ -301,22 +301,22 @@ extension DatabaseManager {
             )
         }
     }
-    
+
     // MARK: - Statistics
-    
+
     /// Get count of tracks with features
     func getFeaturesCount() async throws -> Int {
         try await dbQueue.read { db in
             try SongFeatures.fetchCount(db)
         }
     }
-    
+
     /// Get extraction coverage percentage
     func getFeaturesCoverage() async throws -> Double {
         try await dbQueue.read { db in
             let totalTracks = try Track.fetchCount(db)
             let tracksWithFeatures = try SongFeatures.fetchCount(db)
-            
+
             guard totalTracks > 0 else { return 0.0 }
             return Double(tracksWithFeatures) / Double(totalTracks) * 100.0
         }
@@ -327,9 +327,8 @@ extension DatabaseManager {
 
 extension Track {
     static let features = hasOne(SongFeatures.self, key: "features")
-    
+
     var features: QueryInterfaceRequest<SongFeatures> {
         request(for: Track.features)
     }
 }
-
