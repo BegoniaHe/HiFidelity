@@ -10,9 +10,9 @@ extension MetadataManagement {
 
     // MARK: - Extended Field Mappings
 
-    struct ExtendedFieldMapping {
-        let conditions: [(String) -> Bool]
-        let action: (String, inout TrackMetadata) -> Void
+    struct ExtendedFieldMapping: Sendable {
+        let conditions: [@Sendable (String) -> Bool]
+        let action: @Sendable (String, inout TrackMetadata) -> Void
 
         static let mappings: [ExtendedFieldMapping] = [
             // Label

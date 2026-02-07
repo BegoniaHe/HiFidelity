@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import AppKit
+import Observation
 
 /// Main SwiftUI App entry point for HiFidelity
 /// AppDelegate is defined in Core/AppDelegate.swift
@@ -17,7 +18,7 @@ struct HiFidelityApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     private let appCoordinator = AppCoordinator()
-    @StateObject private var appTheme = AppTheme.shared
+    @State private var appTheme = AppTheme.shared
 
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.openWindow) private var openWindow
@@ -25,9 +26,9 @@ struct HiFidelityApp: App {
     var body: some Scene {
         WindowGroup(id: "main-player") {
             ModernPlayerLayout()
-                .environmentObject(DatabaseManager.shared)
-                .environmentObject(appTheme)
-                .environmentObject(appCoordinator)
+                .environment(DatabaseManager.shared)
+                .environment(appTheme)
+                .environment(appCoordinator)
                 .themedAccentColor(appTheme)
                 .onAppear {
                     configureWindow()
@@ -115,7 +116,7 @@ struct HiFidelityApp: App {
         // Separate window for Equalizer (single instance only)
         Window("Equalizer", id: "audio-effects") {
             EqualizerView()
-                .environmentObject(appTheme)
+                .environment(appTheme)
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)

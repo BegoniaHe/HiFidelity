@@ -99,6 +99,8 @@ extension Notification.Name {
     // Playback
     static let playEntityTracks = Notification.Name("playEntityTracks")
     static let playPlaylistTracks = Notification.Name("playPlaylistTracks")
+    static let playbackQueueDidChange = Notification.Name("PlaybackQueueDidChange")
+    static let playbackQueueIndexDidChange = Notification.Name("PlaybackQueueIndexDidChange")
 
     // UI
     static let trackTableSortChanged = Notification.Name("trackTableSortChanged")

@@ -37,7 +37,7 @@ struct TagLibMetadataManager {
     /// - Parameters:
     ///   - url: URL to the audio file
     ///   - completion: Completion handler with extracted metadata
-    static func extractMetadata(from url: URL, completion: @escaping (TrackMetadata) -> Void) {
+    static func extractMetadata(from url: URL, completion: @escaping @Sendable (TrackMetadata) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
             let metadata = extractMetadata(from: url)
             DispatchQueue.main.async {
@@ -177,8 +177,8 @@ struct TagLibMetadataManager {
     ///   - completion: Completion handler with array of metadata
     static func extractMetadata(
         from urls: [URL],
-        progressHandler: ((Int, Int) -> Void)? = nil,
-        completion: @escaping ([TrackMetadata]) -> Void
+        progressHandler: (@Sendable (Int, Int) -> Void)? = nil,
+        completion: @escaping @Sendable ([TrackMetadata]) -> Void
     ) {
         DispatchQueue.global(qos: .userInitiated).async {
             var results: [TrackMetadata] = []
@@ -207,8 +207,8 @@ struct TagLibMetadataManager {
     static func extractMetadataParallel(
         from urls: [URL],
         maxConcurrent: Int = 4,
-        progressHandler: ((Int, Int) -> Void)? = nil,
-        completion: @escaping ([TrackMetadata]) -> Void
+        progressHandler: (@Sendable (Int, Int) -> Void)? = nil,
+        completion: @escaping @Sendable ([TrackMetadata]) -> Void
     ) {
         let queue = DispatchQueue(label: "com.hifidelity.metadata.extraction", attributes: .concurrent)
         let semaphore = DispatchSemaphore(value: maxConcurrent)

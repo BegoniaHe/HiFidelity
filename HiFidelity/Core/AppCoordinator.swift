@@ -6,16 +6,19 @@
 //
 
 import SwiftUI
+import Observation
 
-class AppCoordinator: ObservableObject {
+@MainActor
+@Observable
+class AppCoordinator {
     private(set) static var shared: AppCoordinator?
 
     // Security-scoped bookmark manager
     let bookmarkManager = SecurityScopedBookmarkManager()
 
     // Sheet presentation
-    @Published var showCreatePlaylist = false
-    @Published var trackForNewPlaylist: Track?
+    var showCreatePlaylist = false
+    var trackForNewPlaylist: Track?
 
     init() {
         Self.shared = self
@@ -28,7 +31,9 @@ class AppCoordinator: ObservableObject {
         Logger.info("Initializing HiFidelity application...")
 
         // Initialize security-scoped bookmarks for all folders
-        await bookmarkManager.initializeSecurityScopes()
+        await MainActor.run {
+            bookmarkManager.initializeSecurityScopes()
+        }
 
         // Start queue persistence manager
         await QueuePersistenceManager.shared.start()

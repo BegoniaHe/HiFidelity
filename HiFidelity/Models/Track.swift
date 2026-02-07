@@ -78,7 +78,6 @@ struct Track: Identifiable, Equatable, Hashable, FetchableRecord, MutablePersist
     var genreId: Int64?
 
     var artworkData: Data?
-    private static var artworkCache = NSCache<NSString, NSData>()
 
     // Extended metadata stored as JSON
     var extendedMetadata: ExtendedMetadata?

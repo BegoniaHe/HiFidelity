@@ -20,7 +20,7 @@ final class SystemInfo {
     /// Print all system information at app startup
     static func printStartupInfo() {
         Logger.info("═══════════════════════════════════════════════════════════")
-        Logger.info("🎵 HiFidelity - Startup System Information")
+        Logger.info("HiFidelity - Startup System Information")
         Logger.info("═══════════════════════════════════════════════════════════")
 
         printApplicationInfo()

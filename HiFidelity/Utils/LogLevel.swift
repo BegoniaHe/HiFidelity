@@ -100,7 +100,7 @@ struct LogEntry {
 
 // MARK: - Logger
 
-final class Logger {
+final class Logger: @unchecked Sendable {
     static let shared = Logger()
 
     private let fileManager = LogFileManager()

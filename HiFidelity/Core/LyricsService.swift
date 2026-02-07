@@ -11,6 +11,7 @@ import Foundation
 // MARK: - Lyrics Service
 
 /// Service for fetching synchronized lyrics from online sources
+@MainActor
 final class LyricsService {
 
     // MARK: - Singleton

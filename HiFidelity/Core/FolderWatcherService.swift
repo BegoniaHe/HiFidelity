@@ -6,15 +6,16 @@
 //
 
 import Foundation
-import Combine
+import Observation
 
 /// Service that monitors music folders for changes and triggers automatic rescans
 @MainActor
-class FolderWatcherService: ObservableObject {
+@Observable
+class FolderWatcherService {
     static let shared = FolderWatcherService()
 
-    @Published private(set) var isWatching = false
-    @Published private(set) var watchedFoldersCount = 0
+    private(set) var isWatching = false
+    private(set) var watchedFoldersCount = 0
 
     private var eventMonitors: [String: FSEventStreamRef] = [:]
     private var rescanDebounceTimers: [String: Timer] = [:]
