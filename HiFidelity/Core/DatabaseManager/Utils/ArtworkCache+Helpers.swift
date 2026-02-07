@@ -13,7 +13,7 @@ extension ArtworkCache {
     // MARK: - Private Generic Helpers
 
     /// Generic artwork loading for any entity type
-    private func loadArtwork(
+    func loadArtwork(
         entityType: EntityType,
         entityId: Int64,
         size: CGFloat,
@@ -96,14 +96,14 @@ extension ArtworkCache {
     }
 
     /// Get cached image synchronously
-    private func getCachedImage(entityType: EntityType, entityId: Int64, size: CGFloat) -> NSImage? {
+    func getCachedImage(entityType: EntityType, entityId: Int64, size: CGFloat) -> NSImage? {
         let key = cacheKey(entityType: entityType, entityId: entityId, size: size)
         let cache = cache(for: size)
         return cache.object(forKey: key)
     }
 
     /// Preload multiple images
-    private func preloadImages(
+    func preloadImages(
         entityType: EntityType,
         entityIds: [Int64],
         size: CGFloat,
@@ -122,7 +122,7 @@ extension ArtworkCache {
     }
 
     /// Invalidate cached artwork for an entity
-    private func invalidateCache(entityType: EntityType, entityId: Int64) {
+    func invalidateCache(entityType: EntityType, entityId: Int64) {
         let standardSizes: [Int] = [40, 56, 140, 160, 200, 300]
 
         for size in standardSizes {
@@ -140,27 +140,27 @@ extension ArtworkCache {
     // MARK: - Private Helper Methods
 
     /// Get the appropriate cache for a given size
-    private func cache(for size: CGFloat) -> NSCache<NSString, NSImage> {
+    func cache(for size: CGFloat) -> NSCache<NSString, NSImage> {
         size <= 200 ? thumbnailCache : fullSizeCache
     }
 
     /// Generate cache key for an entity
-    private func cacheKey(entityType: EntityType, entityId: Int64, size: CGFloat) -> NSString {
+    func cacheKey(entityType: EntityType, entityId: Int64, size: CGFloat) -> NSString {
         "\(entityType.rawValue)_\(entityId)_\(Int(size))" as NSString
     }
 
     /// Generate no-artwork key for an entity
-    private func noArtworkKey(entityType: EntityType, entityId: Int64) -> NSString {
+    func noArtworkKey(entityType: EntityType, entityId: Int64) -> NSString {
         "\(entityType.rawValue)_\(entityId)" as NSString
     }
 
     /// Generate request key for in-flight tracking
-    private func requestKey(entityType: EntityType, entityId: Int64, size: CGFloat) -> String {
+    func requestKey(entityType: EntityType, entityId: Int64, size: CGFloat) -> String {
         "\(entityType.rawValue)_\(entityId)_\(Int(size))"
     }
 
     /// Check if entity is known to have no artwork
-    private func isKnownNoArtwork(entityType: EntityType, entityId: Int64) -> Bool {
+    func isKnownNoArtwork(entityType: EntityType, entityId: Int64) -> Bool {
         let key = noArtworkKey(entityType: entityType, entityId: entityId)
         return noArtworkQueue.sync {
             noArtworkSet.contains(key)
@@ -168,7 +168,7 @@ extension ArtworkCache {
     }
 
     /// Mark entity as having no artwork
-    private func markNoArtwork(entityType: EntityType, entityId: Int64) {
+    func markNoArtwork(entityType: EntityType, entityId: Int64) {
         let key = noArtworkKey(entityType: entityType, entityId: entityId)
         noArtworkQueue.async(flags: .barrier) {
             self.noArtworkSet.add(key)
@@ -176,7 +176,7 @@ extension ArtworkCache {
     }
 
     /// Check if request is in-flight
-    private func isInflightRequest(_ requestKey: String) -> Bool {
+    func isInflightRequest(_ requestKey: String) -> Bool {
         inflightQueue.sync {
             let isInflight = inflightRequests.contains(requestKey)
             if !isInflight {
@@ -187,7 +187,7 @@ extension ArtworkCache {
     }
 
     /// Mark request as in-flight or complete
-    private func markInflightRequest(_ requestKey: String, inflight: Bool) {
+    func markInflightRequest(_ requestKey: String, inflight: Bool) {
         inflightQueue.sync {
             if inflight {
                 inflightRequests.insert(requestKey)

@@ -28,20 +28,20 @@ final class ArtworkCache {
     // MARK: - Properties
 
     // Two-tier cache system optimized for different use cases
-    private let thumbnailCache = NSCache<NSString, NSImage>()  // For lists/grids (≤200pt)
-    private let fullSizeCache = NSCache<NSString, NSImage>()   // For detail views (>200pt)
+    let thumbnailCache = NSCache<NSString, NSImage>()  // For lists/grids (≤200pt)
+    let fullSizeCache = NSCache<NSString, NSImage>()   // For detail views (>200pt)
 
     // Tracks entities known to have no artwork (avoid repeated DB queries)
-    private let noArtworkSet = NSMutableSet()
-    private let noArtworkQueue = DispatchQueue(label: "com.hifidelity.noArtworkSet", attributes: .concurrent)
+    let noArtworkSet = NSMutableSet()
+    let noArtworkQueue = DispatchQueue(label: "com.hifidelity.noArtworkSet", attributes: .concurrent)
 
     // Processing queues
-    private let decodingQueue = DispatchQueue(label: "com.hifidelity.imageDecoding", qos: .userInitiated, attributes: .concurrent)
-    private let dbQueue = DispatchQueue(label: "com.hifidelity.artworkCache", qos: .userInitiated)
+    let decodingQueue = DispatchQueue(label: "com.hifidelity.imageDecoding", qos: .userInitiated, attributes: .concurrent)
+    let dbQueue = DispatchQueue(label: "com.hifidelity.artworkCache", qos: .userInitiated)
 
     // In-flight request tracking (prevent duplicate loads)
-    private var inflightRequests = Set<String>()
-    private let inflightQueue = DispatchQueue(label: "com.hifidelity.inflightRequests")
+    var inflightRequests = Set<String>()
+    let inflightQueue = DispatchQueue(label: "com.hifidelity.inflightRequests")
 
     // MARK: - Initialization
 
@@ -80,7 +80,7 @@ final class ArtworkCache {
     // MARK: - Private Types
 
     /// Entity types that can have artwork
-    private enum EntityType: String {
+    enum EntityType: String {
         case track
         case album
         case artist

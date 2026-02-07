@@ -14,7 +14,7 @@ extension ArtworkCache {
 
     /// Downsample image to target size for memory efficiency
     /// Uses high-quality Lanczos resampling for best visual quality
-    private func downsampleImage(data: Data, targetSize: CGFloat) -> NSImage? {
+    func downsampleImage(data: Data, targetSize: CGFloat) -> NSImage? {
         guard let source = CGImageSourceCreateWithData(data as CFData, nil) else {
             return nil
         }
@@ -59,7 +59,7 @@ extension ArtworkCache {
     }
 
     /// Calculate memory cost for an image
-    private func calculateImageCost(_ image: NSImage) -> Int {
+    func calculateImageCost(_ image: NSImage) -> Int {
         let width = Int(image.size.width)
         let height = Int(image.size.height)
         // 4 bytes per pixel (RGBA)

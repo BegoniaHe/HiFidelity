@@ -148,7 +148,7 @@ extension ArtworkCache {
     ///   - completion: Called on main thread with result
     func getAlbumArtwork(for albumId: Int64, size: CGFloat = 160, completion: @escaping (NSImage?) -> Void) {
         loadArtwork(
-            entityType: .album,
+            entityType: ArtworkCache.EntityType.album,
             entityId: albumId,
             size: size,
             completion: completion
@@ -162,7 +162,7 @@ extension ArtworkCache {
     ///   - completion: Called on main thread with result
     func getArtistArtwork(for artistId: Int64, size: CGFloat = 160, completion: @escaping (NSImage?) -> Void) {
         loadArtwork(
-            entityType: .artist,
+            entityType: ArtworkCache.EntityType.artist,
             entityId: artistId,
             size: size,
             completion: completion
@@ -173,17 +173,17 @@ extension ArtworkCache {
 
     /// Get cached artwork for track (returns immediately, nil if not cached)
     func getCachedArtwork(for trackId: Int64, size: CGFloat = 40) -> NSImage? {
-        getCachedImage(entityType: .track, entityId: trackId, size: size)
+        getCachedImage(entityType: ArtworkCache.EntityType.track, entityId: trackId, size: size)
     }
 
     /// Get cached artwork for album (returns immediately, nil if not cached)
     func getCachedAlbumArtwork(for albumId: Int64, size: CGFloat = 160) -> NSImage? {
-        getCachedImage(entityType: .album, entityId: albumId, size: size)
+        getCachedImage(entityType: ArtworkCache.EntityType.album, entityId: albumId, size: size)
     }
 
     /// Get cached artwork for artist (returns immediately, nil if not cached)
     func getCachedArtistArtwork(for artistId: Int64, size: CGFloat = 160) -> NSImage? {
-        getCachedImage(entityType: .artist, entityId: artistId, size: size)
+        getCachedImage(entityType: ArtworkCache.EntityType.artist, entityId: artistId, size: size)
     }
 
     // MARK: - Public API - Preloading
@@ -194,29 +194,29 @@ extension ArtworkCache {
     ///   - size: Target size
     ///   - maxConcurrent: Limit to prevent system overload (default: 10)
     func preloadArtwork(for trackIds: [Int64], size: CGFloat = 40, maxConcurrent: Int = 10) {
-        preloadImages(entityType: .track, entityIds: trackIds, size: size, maxConcurrent: maxConcurrent)
+        preloadImages(entityType: ArtworkCache.EntityType.track, entityIds: trackIds, size: size, maxConcurrent: maxConcurrent)
     }
 
     /// Preload artwork for albums (call before scrolling into view)
     func preloadAlbumArtwork(for albumIds: [Int64], size: CGFloat = 160, maxConcurrent: Int = 10) {
-        preloadImages(entityType: .album, entityIds: albumIds, size: size, maxConcurrent: maxConcurrent)
+        preloadImages(entityType: ArtworkCache.EntityType.album, entityIds: albumIds, size: size, maxConcurrent: maxConcurrent)
     }
 
     // MARK: - Public API - Cache Invalidation
 
     /// Invalidate track artwork (call when artwork updated)
     func invalidate(trackId: Int64) {
-        invalidateCache(entityType: .track, entityId: trackId)
+        invalidateCache(entityType: ArtworkCache.EntityType.track, entityId: trackId)
     }
 
     /// Invalidate album artwork (call when artwork updated)
     func invalidateAlbum(albumId: Int64) {
-        invalidateCache(entityType: .album, entityId: albumId)
+        invalidateCache(entityType: ArtworkCache.EntityType.album, entityId: albumId)
     }
 
     /// Invalidate artist artwork (call when artwork updated)
     func invalidateArtist(artistId: Int64) {
-        invalidateCache(entityType: .artist, entityId: artistId)
+        invalidateCache(entityType: ArtworkCache.EntityType.artist, entityId: artistId)
     }
 
     /// Clear all cached artwork

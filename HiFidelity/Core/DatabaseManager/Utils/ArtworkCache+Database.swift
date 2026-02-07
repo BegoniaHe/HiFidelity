@@ -13,7 +13,7 @@ extension ArtworkCache {
     // MARK: - Private Database Loading
 
     /// Load artwork data from database with appropriate fallback
-    private func loadArtworkData(
+    func loadArtworkData(
         entityType: EntityType,
         entityId: Int64,
         completion: @escaping (Data?) -> Void
@@ -38,14 +38,14 @@ extension ArtworkCache {
     // MARK: - Private Database Fallback Logic
 
     /// Result type for track artwork (includes album ID for cache optimization)
-    private struct TrackArtworkResult {
+    struct TrackArtworkResult {
         let data: Data
         let albumId: Int64?
     }
 
     /// Load track artwork with fallback chain: album → track → nil
     /// Optimized: Uses DatabaseCache to avoid extra queries when possible
-    private func loadTrackArtworkWithFallback(trackId: Int64) throws -> TrackArtworkResult? {
+    func loadTrackArtworkWithFallback(trackId: Int64) throws -> TrackArtworkResult? {
         // Try to get albumId from DatabaseCache first (zero DB queries)
         let cachedAlbumId = DatabaseCache.shared.track(trackId)?.albumId
 
@@ -99,7 +99,7 @@ extension ArtworkCache {
     }
 
     /// Load album artwork with fallback chain: album → first track → nil
-    private func loadAlbumArtworkWithFallback(albumId: Int64) throws -> Data? {
+    func loadAlbumArtworkWithFallback(albumId: Int64) throws -> Data? {
         try DatabaseManager.shared.dbQueue.read { db in
             // Try album's own artwork
             if let row = try Row.fetchOne(db, sql: """
@@ -129,7 +129,7 @@ extension ArtworkCache {
     }
 
     /// Load artist artwork (no fallback - artists have their own artwork or none)
-    private func loadArtistArtworkWithFallback(artistId: Int64) throws -> Data? {
+    func loadArtistArtworkWithFallback(artistId: Int64) throws -> Data? {
         try DatabaseManager.shared.dbQueue.read { db in
             let row = try Row.fetchOne(db, sql: """
                 SELECT artwork_data
