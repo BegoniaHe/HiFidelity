@@ -1,0 +1,35 @@
+//  BASSAudioEngine+Cleanup.swift
+//  HiFidelity
+//
+//  Cleanup and shutdown
+//
+
+import Foundation
+import Bass
+
+extension BASSAudioEngine {
+    // MARK: - Cleanup
+
+    func cleanup() {
+        stop()
+
+        if isInitialized {
+            // Unload plugins
+            for plugin in loadedPlugins {
+                BASS_PluginFree(plugin)
+            }
+            loadedPlugins.removeAll()
+
+            // Free BASS
+            BASS_Free()
+            isInitialized = false
+
+            // Release hog mode
+            if dacManager.isInHogMode() {
+                dacManager.disableHogMode()
+            }
+
+            Logger.info("BASS audio engine cleaned up")
+        }
+    }
+}

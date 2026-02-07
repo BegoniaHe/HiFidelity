@@ -12,11 +12,11 @@ import Combine
 /// Implements replay gain normalization for consistent playback loudness
 class ReplayGainSettings: ObservableObject {
     static let shared = ReplayGainSettings()
-    
+
     private let defaults = UserDefaults.standard
-    
+
     // MARK: - Published Properties
-    
+
     /// Enable/disable replay gain
     @Published var isEnabled: Bool {
         didSet {
@@ -24,7 +24,7 @@ class ReplayGainSettings: ObservableObject {
             postNotification()
         }
     }
-    
+
     /// Replay gain mode: track or album
     @Published var mode: ReplayGainMode {
         didSet {
@@ -32,7 +32,7 @@ class ReplayGainSettings: ObservableObject {
             postNotification()
         }
     }
-    
+
     /// Loudness source preference
     @Published var source: LoudnessSource {
         didSet {
@@ -40,66 +40,66 @@ class ReplayGainSettings: ObservableObject {
             postNotification()
         }
     }
-    
+
     // MARK: - Settings Keys
-    
+
     private enum SettingsKey: String {
         case enabled
         case mode
         case source
-        
+
         var fullKey: String {
             return "replayGain.\(rawValue)"
         }
     }
-    
+
     // MARK: - Initialization
-    
+
     private init() {
         // Initialize with default values
         self.isEnabled = false
         self.mode = .track
         self.source = .automatic
-        
+
         // Load saved settings
         loadSettings()
     }
-    
+
     private func loadSettings() {
         self.isEnabled = defaults.bool(forKey: SettingsKey.enabled.fullKey)
-        
+
         if let modeString = defaults.string(forKey: SettingsKey.mode.fullKey),
            let mode = ReplayGainMode(rawValue: modeString) {
             self.mode = mode
         }
-        
+
         if let sourceString = defaults.string(forKey: SettingsKey.source.fullKey),
            let source = LoudnessSource(rawValue: sourceString) {
             self.source = source
         }
     }
-    
+
     // MARK: - UserDefaults Helpers
-    
+
     private func save<T>(_ value: T, forKey key: SettingsKey) {
         defaults.set(value, forKey: key.fullKey)
     }
-    
+
     private func postNotification() {
         NotificationCenter.default.post(
             name: NSNotification.Name("ReplayGainSettingsChanged"),
             object: nil
         )
     }
-    
+
     // MARK: - Replay Gain Calculation
-    
+
     /// Calculate the volume adjustment for a track
     /// - Parameter track: The track to calculate gain for
     /// - Returns: Linear volume multiplier (0.0 to 1.0+)
     func calculateGainMultiplier(for track: Track) -> Float {
         guard isEnabled else { return 1.0 }
-        
+
         // Apply source preference
         switch source {
         case .automatic:
@@ -109,7 +109,7 @@ class ReplayGainSettings: ObservableObject {
             }
             // Priority 2: Fall back to traditional ReplayGain tags
             return calculateReplayGainMultiplier(for: track)
-            
+
         case .r128Only:
             // Use only R128 data
             if let r128Loudness = track.r128IntegratedLoudness {
@@ -117,24 +117,24 @@ class ReplayGainSettings: ObservableObject {
             }
             Logger.debug("No R128 data for track: \(track.title)")
             return 1.0
-            
+
         case .replayGainOnly:
             // Use only ReplayGain tags
             return calculateReplayGainMultiplier(for: track)
         }
     }
-    
+
     private func calculateR128Multiplier(loudness: Double) -> Float {
         let targetLoudness: Double = -18.0 // LUFS target for music
         let gainDB = targetLoudness - loudness
         let multiplier = pow(10.0, gainDB / 20.0)
         let clampedMultiplier = max(0.01, min(10.0, multiplier))
-        
+
         Logger.debug("R128 gain: \(String(format: "%.1f", loudness)) LUFS → \(String(format: "%.1f", gainDB)) dB (×\(String(format: "%.3f", clampedMultiplier)))")
-        
+
         return Float(clampedMultiplier)
     }
-    
+
     private func calculateReplayGainMultiplier(for track: Track) -> Float {
         let gainString: String?
         switch mode {
@@ -144,50 +144,50 @@ class ReplayGainSettings: ObservableObject {
             // Prefer album gain, fall back to track gain
             gainString = track.extendedMetadata?.replayGainAlbum ?? track.extendedMetadata?.replayGainTrack
         }
-        
+
         guard let gainString = gainString else {
             Logger.debug("No ReplayGain data for track: \(track.title)")
             return 1.0
         }
-        
+
         // Parse the gain value (e.g., "-4.52 dB" or "+3.21 dB")
         guard let gainDB = parseGainValue(gainString) else {
             Logger.warning("Failed to parse replay gain value: \(gainString)")
             return 1.0
         }
-        
+
         // Convert dB to linear multiplier: multiplier = 10^(dB/20)
         let multiplier = pow(10.0, gainDB / 20.0)
-        
+
         // Clamp to reasonable range (0.01 to 10.0)
         let clampedMultiplier = max(0.01, min(10.0, multiplier))
-        
+
         Logger.debug("ReplayGain: \(gainDB) dB (×\(String(format: "%.3f", clampedMultiplier)))")
-        
+
         return Float(clampedMultiplier)
     }
-    
+
     /// Parse a replay gain value string to dB
     /// Handles formats like: "-4.52 dB", "+3.21 dB", "3.21", "-4.52"
     private func parseGainValue(_ value: String) -> Double? {
         // Remove whitespace and convert to uppercase
         let cleaned = value.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
-        
+
         // Remove "dB" suffix if present
         let numberPart = cleaned.replacingOccurrences(of: "DB", with: "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
-        
+
         // Try to parse as double
         return Double(numberPart)
     }
-    
+
     // MARK: - Reset
-    
+
     func resetToDefaults() {
         isEnabled = false
         mode = .track
         source = .automatic
-        
+
         Logger.info("ReplayGain settings reset to defaults")
     }
 }
@@ -197,7 +197,7 @@ class ReplayGainSettings: ObservableObject {
 enum ReplayGainMode: String, CaseIterable {
     case track = "track"
     case album = "album"
-    
+
     var displayName: String {
         switch self {
         case .track:
@@ -206,7 +206,7 @@ enum ReplayGainMode: String, CaseIterable {
             return "Album Gain"
         }
     }
-    
+
     var description: String {
         switch self {
         case .track:
@@ -223,7 +223,7 @@ enum LoudnessSource: String, CaseIterable {
     case automatic = "automatic"
     case r128Only = "r128Only"
     case replayGainOnly = "replayGainOnly"
-    
+
     var displayName: String {
         switch self {
         case .automatic:
@@ -234,7 +234,7 @@ enum LoudnessSource: String, CaseIterable {
             return "ReplayGain Tags Only"
         }
     }
-    
+
     var description: String {
         switch self {
         case .automatic:
