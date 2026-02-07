@@ -23,9 +23,9 @@ struct Playlist: Identifiable, Hashable, Codable, FetchableRecord, MutablePersis
     var isSmart: Bool
     var dateLastPlayed: Date?
     var playCount: Int
-    
+
     // MARK: - Initialization
-    
+
     init(name: String, description: String? = nil, isSmart: Bool = false) {
         self.id = nil
         self.name = name
@@ -39,11 +39,11 @@ struct Playlist: Identifiable, Hashable, Codable, FetchableRecord, MutablePersis
         self.isSmart = isSmart
         self.playCount = 0
     }
-    
+
     // MARK: - Database Configuration
-    
+
     static let databaseTableName = "playlists"
-    
+
     enum Columns {
         static let id = Column("id")
         static let name = Column("name")
@@ -60,7 +60,7 @@ struct Playlist: Identifiable, Hashable, Codable, FetchableRecord, MutablePersis
         static let dateLastPlayed = Column("date_last_played")
         static let playCount = Column("play_count")
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -77,24 +77,23 @@ struct Playlist: Identifiable, Hashable, Codable, FetchableRecord, MutablePersis
         case dateLastPlayed = "date_last_played"
         case playCount = "play_count"
     }
-    
+
     // MARK: - Relationships
-    
+
     // Playlist has many playlist_tracks
     static let playlistTracks = hasMany(PlaylistTrack.self)
     var playlistTracks: QueryInterfaceRequest<PlaylistTrack> {
         request(for: Playlist.playlistTracks)
     }
-    
+
     // Get actual tracks through the junction table
     static let tracks = hasMany(Track.self, through: playlistTracks, using: PlaylistTrack.track)
     var tracks: QueryInterfaceRequest<Track> {
         request(for: Playlist.tracks)
     }
-    
+
     // Auto-increment id
     mutating func didInsert(_ inserted: InsertionSuccess) {
         id = inserted.rowID
     }
 }
-

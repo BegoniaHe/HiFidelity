@@ -17,11 +17,11 @@ struct TrackLyrics: Identifiable, Codable, FetchableRecord, MutablePersistableRe
     var source: String?     // "user", "api", "embedded", etc.
     var dateAdded: Date
     var dateModified: Date
-    
+
     // MARK: - Database Configuration
-    
+
     static let databaseTableName = "lyrics"
-    
+
     enum Columns {
         static let id = Column("id")
         static let trackId = Column("track_id")
@@ -31,7 +31,7 @@ struct TrackLyrics: Identifiable, Codable, FetchableRecord, MutablePersistableRe
         static let dateAdded = Column("date_added")
         static let dateModified = Column("date_modified")
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case trackId = "track_id"
@@ -41,9 +41,9 @@ struct TrackLyrics: Identifiable, Codable, FetchableRecord, MutablePersistableRe
         case dateAdded = "date_added"
         case dateModified = "date_modified"
     }
-    
+
     // MARK: - Initialization
-    
+
     init(trackId: Int64, lrcContent: String, language: String? = nil, source: String? = "user") {
         self.trackId = trackId
         self.lrcContent = lrcContent
@@ -52,43 +52,43 @@ struct TrackLyrics: Identifiable, Codable, FetchableRecord, MutablePersistableRe
         self.dateAdded = Date()
         self.dateModified = Date()
     }
-    
+
     // MARK: - Relationships
-    
+
     static let track = belongsTo(Track.self)
     var track: QueryInterfaceRequest<Track> {
         request(for: TrackLyrics.track)
     }
-    
+
     // MARK: - Auto-incrementing ID
-    
+
     mutating func didInsert(_ inserted: InsertionSuccess) {
         id = inserted.rowID
     }
-    
+
     // MARK: - Computed Properties
-    
+
     /// Parse LRC content into Lyrics object
     var parsedLyrics: Lyrics {
         Lyrics(lrcContent: lrcContent)
     }
-    
+
     /// Check if lyrics have content
     var isEmpty: Bool {
         parsedLyrics.lines.isEmpty
     }
-    
+
     /// Get line count
     var lineCount: Int {
         parsedLyrics.lines.count
     }
-    
+
     /// Display name for language
     var languageDisplayName: String {
         guard let language = language else {
             return "Unknown"
         }
-        
+
         let locale = Locale.current
         return locale.localizedString(forLanguageCode: language)?.capitalized ?? language.uppercased()
     }
@@ -103,4 +103,3 @@ extension Track {
         request(for: Track.lyrics)
     }
 }
-
