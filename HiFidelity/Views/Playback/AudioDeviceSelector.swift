@@ -5,8 +5,8 @@
 //  Audio output device selector for bottom playback bar
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Audio device selector button with popover menu
 struct AudioDeviceSelector: View {
@@ -20,7 +20,7 @@ struct AudioDeviceSelector: View {
             dacManager.refreshDeviceList()
         }) {
             Image(systemName: "hifispeaker")
-                .font(.system(size: 16))
+                .font(AppFonts.bodyLarge)
                 .foregroundColor(.secondary)
                 .frame(width: 28, height: 28)
                 .contentShape(Rectangle())
@@ -41,10 +41,10 @@ struct AudioDeviceSelector: View {
                 Image(systemName: "hifispeaker")
                     .foregroundColor(theme.currentTheme.primaryColor)
                 Text("Audio Output Device")
-                    .font(.headline)
+                    .font(AppFonts.heading4)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+            .padding(.horizontal, DesignTokens.Spacing.lg)
+            .padding(.vertical, DesignTokens.Spacing.md)
 
             Divider()
 
@@ -53,7 +53,7 @@ struct AudioDeviceSelector: View {
                 VStack(alignment: .leading, spacing: 0) {
                     if dacManager.availableDevices.isEmpty {
                         Text("No output devices found")
-                            .font(.system(size: 12))
+                            .font(AppFonts.captionLarge)
                             .foregroundColor(.secondary)
                             .padding()
                     } else {
@@ -71,19 +71,21 @@ struct AudioDeviceSelector: View {
             if let currentDevice = dacManager.currentDevice {
                 HStack(spacing: 4) {
                     Image(systemName: "info.circle")
-                        .font(.system(size: 11))
-                    Text("\(Int(currentDevice.sampleRate)) Hz • \(channelDescription(currentDevice.channels))")
-                        .font(.system(size: 11))
+                        .font(AppFonts.captionMedium)
+                    Text(
+                        "\(Int(currentDevice.sampleRate)) Hz • \(channelDescription(currentDevice.channels))"
+                    )
+                    .font(AppFonts.captionMedium)
 
                     if AudioSettings.shared.synchronizeSampleRate {
                         Text("• Sync Mode")
-                            .font(.system(size: 11))
+                            .font(AppFonts.captionMedium)
                             .foregroundColor(theme.currentTheme.primaryColor)
                     }
                 }
                 .foregroundColor(.secondary)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
+                .padding(.horizontal, DesignTokens.Spacing.lg)
+                .padding(.vertical, DesignTokens.Spacing.sm)
             }
         }
         .frame(width: 300)
@@ -99,41 +101,42 @@ struct AudioDeviceSelector: View {
             HStack(spacing: 12) {
                 // Selection indicator
                 Image(systemName: isCurrentDevice(device) ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 14))
-                    .foregroundColor(isCurrentDevice(device) ? theme.currentTheme.primaryColor : .secondary.opacity(0.3))
+                    .font(AppFonts.labelLarge)
+                    .foregroundColor(
+                        isCurrentDevice(device)
+                            ? theme.currentTheme.primaryColor : .secondary.opacity(0.3)
+                    )
                     .frame(width: 20)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(device.name)
-                        .font(.system(size: 13))
+                        .font(AppFonts.bodySmall)
                         .foregroundColor(.primary)
 
                     HStack(spacing: 6) {
                         Text("\(Int(device.sampleRate)) Hz")
-                            .font(.system(size: 11))
+                            .font(AppFonts.captionMedium)
                             .foregroundColor(.secondary)
 
                         Text("•")
-                            .font(.system(size: 11))
+                            .font(AppFonts.captionMedium)
                             .foregroundColor(.secondary.opacity(0.5))
 
                         Text(channelDescription(device.channels))
-                            .font(.system(size: 11))
+                            .font(AppFonts.captionMedium)
                             .foregroundColor(.secondary)
                     }
                 }
 
                 Spacer()
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
+            .padding(.horizontal, DesignTokens.Spacing.lg)
+            .padding(.vertical, DesignTokens.Spacing.sm)
             .contentShape(Rectangle())
         }
         .buttonStyle(PlainButtonStyle())
         .background(
-            isCurrentDevice(device) ?
-                Color.accentColor.opacity(0.1) :
-                Color.clear
+            isCurrentDevice(device) ? Color.accentColor.opacity(0.1) : Color.clear
         )
         .onHover { hovering in
             if hovering && !isCurrentDevice(device) {

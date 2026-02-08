@@ -143,7 +143,7 @@ struct EntityDetailView: View {
                     .tint(theme.currentTheme.primaryColor)
 
                 Text("Loading tracks...")
-                    .font(.system(size: 14))
+                    .font(AppFonts.bodySmall)
                     .foregroundColor(.secondary)
             }
 
@@ -157,15 +157,15 @@ struct EntityDetailView: View {
     private var emptyStateView: some View {
         VStack(spacing: 18) {
             Image(systemName: entity.icon)
-                .font(.system(size: 48))
+                .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.3))
 
             Text("No tracks found")
-                .font(.system(size: 18, weight: .semibold))
+                .font(AppFonts.heading4)
                 .foregroundColor(.primary)
 
             Text("This \(entity.displayName.lowercased()) has no tracks")
-                .font(.system(size: 12))
+                .font(AppFonts.captionLarge)
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -464,23 +464,22 @@ struct EntityHeader: View {
         HStack(spacing: 40) {
             // Artwork
             artworkView
-                .padding(.leading, 12)
+                .padding(.leading, DesignTokens.Spacing.md)
 
             // Info and controls
             VStack(alignment: .leading, spacing: 16) {
                 // Entity badge
                 HStack(spacing: 6) {
                     Image(systemName: entity.badgeIcon)
-                        .font(.system(size: 11, weight: .semibold))
+                        .font(AppFonts.captionMedium)
                     Text(entity.badgeText)
-                        .font(.system(size: 11, weight: .bold))
+                        .font(AppFonts.captionMedium)
                 }
                 .foregroundColor(entity.isPinned ? theme.currentTheme.primaryColor : .secondary)
 
                 // Entity name
                 Text(entity.displayName)
-                    .font(.title)
-                    .fontWeight(.bold)
+                    .font(AppFonts.heading1)
                     .foregroundColor(.primary)
                     .lineLimit(2)
 
@@ -490,20 +489,20 @@ struct EntityHeader: View {
                     HStack(spacing: 8) {
                         if entity.isPinned {
                             Image(systemName: "pin.fill")
-                                .font(.system(size: 12))
+                                .font(AppFonts.captionLarge)
                                 .foregroundColor(theme.currentTheme.primaryColor)
                         }
 
                         if let subtitle = entity.subtitle {
                             Text(subtitle)
-                                .font(.system(size: 12, weight: .medium))
+                                .font(AppFonts.labelSmall)
                                 .foregroundColor(.secondary)
                             Text("•")
                                 .foregroundColor(.secondary.opacity(0.5))
                         }
 
                         Text("\(trackCount) \(trackCount == 1 ? "song" : "songs")")
-                            .font(.system(size: 12, weight: .medium))
+                            .font(AppFonts.labelSmall)
                             .foregroundColor(.secondary)
 
                         if totalDuration > 0 {
@@ -511,7 +510,7 @@ struct EntityHeader: View {
                                 .foregroundColor(.secondary.opacity(0.5))
 
                             Text(formatDuration(totalDuration))
-                                .font(.system(size: 12, weight: .medium))
+                                .font(AppFonts.labelSmall)
                                 .foregroundColor(.secondary)
                         }
                     }
@@ -523,14 +522,14 @@ struct EntityHeader: View {
                     Button(action: onPlay) {
                         HStack(spacing: 8) {
                             Image(systemName: "play.fill")
-                                .font(.system(size: 14, weight: .bold))
+                                .font(AppFonts.labelLarge)
 
                             Text("Play")
-                                .font(.system(size: 12, weight: .semibold))
+                                .font(AppFonts.buttonSmall)
                         }
                         .foregroundColor(.white)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
+                        .padding(.horizontal, DesignTokens.Spacing.lg)
+                        .padding(.vertical, DesignTokens.Spacing.sm)
                         .background(
                             RoundedRectangle(cornerRadius: 24)
                                 .fill(isPlayHovered ? theme.currentTheme.primaryColor.opacity(0.9) : theme.currentTheme.primaryColor)
@@ -547,13 +546,13 @@ struct EntityHeader: View {
                     Button(action: onShuffle) {
                         HStack(spacing: 8) {
                             Image(systemName: "shuffle")
-                                .font(.system(size: 14, weight: .bold))
+                                .font(AppFonts.labelLarge)
                             Text("Shuffle")
-                                .font(.system(size: 12, weight: .semibold))
+                                .font(AppFonts.buttonSmall)
                         }
                         .foregroundColor(.primary)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
+                        .padding(.horizontal, DesignTokens.Spacing.lg)
+                        .padding(.vertical, DesignTokens.Spacing.sm)
                         .background(
                             RoundedRectangle(cornerRadius: 24)
                                 .fill(isShuffleHovered ? Color(nsColor: .controlBackgroundColor).opacity(0.8) : Color(nsColor: .controlBackgroundColor))
@@ -566,12 +565,12 @@ struct EntityHeader: View {
                     }
                     .disabled(trackCount == 0)
                 }
-                .padding(.top, 8)
+                .padding(.top, DesignTokens.Spacing.sm)
             }
 
             Spacer()
         }
-        .padding(20)
+        .padding(DesignTokens.Spacing.xl)
         .background(.regularMaterial)
 //        .background(gradientBackground)
         .textSelection(.enabled)
@@ -587,14 +586,14 @@ struct EntityHeader: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 160, height: 160)
-                    .cornerRadius(entity.isArtist ? 100 : 12)
-                    .shadow(radius: 20)
+                    .cornerRadius(entity.isArtist ? 100 : DesignTokens.CornerRadius.lg)
+                    .tokenShadow(DesignTokens.Shadow.level3)
             } else if entity.isArtist, let artistId = entity.entityId {
                 ArtistArtworkView(artistId: artistId, size: 160)
-                    .shadow(radius: 20)
+                    .tokenShadow(DesignTokens.Shadow.level3)
             } else if entity.isAlbum, let albumId = entity.entityId {
                 AlbumArtworkView(albumId: albumId, size: 160, cornerRadius: 12)
-                    .shadow(radius: 20)
+                    .tokenShadow(DesignTokens.Shadow.level3)
             } else {
                 placeholderArtwork
             }
@@ -610,20 +609,20 @@ struct EntityHeader: View {
                     .frame(width: 160, height: 160)
                     .overlay {
                         Image(systemName: entity.icon)
-                            .font(.system(size: 60, weight: .medium))
+                            .font(AppFonts.displayLarge)
                             .foregroundColor(.white.opacity(0.8))
                     }
-                    .shadow(radius: 20)
+                    .tokenShadow(DesignTokens.Shadow.level3)
             } else {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(entityGradient)
                     .frame(width: 160, height: 160)
                     .overlay {
                         Image(systemName: entity.icon)
-                            .font(.system(size: 60, weight: .medium))
+                            .font(AppFonts.displayLarge)
                             .foregroundColor(.white.opacity(0.8))
                     }
-                    .shadow(radius: 20)
+                    .tokenShadow(DesignTokens.Shadow.level3)
             }
         }
     }

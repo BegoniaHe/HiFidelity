@@ -4,8 +4,8 @@
 //
 //  Created by Varun Rathod
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Right side controls including queue, lyrics buttons, and volume
 struct RightControlsSection: View {
@@ -80,12 +80,12 @@ private struct PanelToggleButton: View {
     let isShowing: Bool
     let action: () -> Void
 
-        @Bindable var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
 
     var body: some View {
         Button(action: action) {
             Image(systemName: icon)
-                .font(.system(size: 16))
+                .font(AppFonts.bodyLarge)
                 .foregroundColor(isActive ? theme.currentTheme.primaryColor : .secondary)
                 .frame(width: 28, height: 28)
                 .contentShape(Rectangle())
@@ -102,7 +102,7 @@ private struct PanelToggleButton: View {
 
 /// Button to open the audio effects window
 struct EqualizerButton: View {
-        @Bindable var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
@@ -110,7 +110,7 @@ struct EqualizerButton: View {
             openWindow(id: "audio-effects")
         }) {
             Image(systemName: "slider.vertical.3")
-                .font(.system(size: 16))
+                .font(AppFonts.bodyLarge)
                 .foregroundColor(.secondary)
                 .frame(width: 28, height: 28)
                 .contentShape(Rectangle())
@@ -132,13 +132,18 @@ struct SampleRateSyncButton: View {
             settings.synchronizeSampleRate.toggle()
         }) {
             Image(systemName: settings.synchronizeSampleRate ? "lock.fill" : "lock")
-                .font(.system(size: 16))
-                .foregroundColor(settings.synchronizeSampleRate ? theme.currentTheme.primaryColor : .secondary)
+                .font(AppFonts.bodyLarge)
+                .foregroundColor(
+                    settings.synchronizeSampleRate ? theme.currentTheme.primaryColor : .secondary
+                )
                 .frame(width: 28, height: 28)
                 .contentShape(Rectangle())
         }
         .buttonStyle(PlainHoverButtonStyle())
-        .help(settings.synchronizeSampleRate ? "Disable Bit-Perfect Playback (Hog Mode Active)" : "Enable Bit-Perfect Playback (Hog Mode Active)")
+        .help(
+            settings.synchronizeSampleRate
+                ? "Disable Bit-Perfect Playback (Hog Mode Active)"
+                : "Enable Bit-Perfect Playback (Hog Mode Active)")
     }
 }
 

@@ -47,7 +47,7 @@ struct CreatePlaylistView: View {
                     // Options section
                     optionsSection
                 }
-                .padding(32)
+                .padding(DesignTokens.Spacing.xxxl)
             }
 
             Divider()
@@ -80,7 +80,7 @@ extension CreatePlaylistView {
     private var header: some View {
         HStack {
             Text("Create Playlist")
-                .font(.system(size: 20, weight: .bold))
+                .font(AppFonts.heading2)
 
             Spacer()
 
@@ -90,13 +90,13 @@ extension CreatePlaylistView {
                 } label: {
                     HStack(spacing: 6) {
                         Image(systemName: "square.and.arrow.down")
-                            .font(.system(size: 14))
+                            .font(AppFonts.labelLarge)
                         Text("Import M3U")
-                            .font(.system(size: 13, weight: .medium))
+                            .font(AppFonts.labelMedium)
                     }
                     .foregroundColor(theme.currentTheme.primaryColor)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
+                    .padding(.horizontal, DesignTokens.Spacing.md)
+                    .padding(.vertical, DesignTokens.Spacing.sm)
                     .background(
                         RoundedRectangle(cornerRadius: 6)
                             .fill(theme.currentTheme.primaryColor.opacity(0.1))
@@ -110,13 +110,13 @@ extension CreatePlaylistView {
                 } label: {
                     HStack(spacing: 6) {
                         Image(systemName: "folder.badge.plus")
-                            .font(.system(size: 14))
+                            .font(AppFonts.labelLarge)
                         Text("Import Folder")
-                            .font(.system(size: 13, weight: .medium))
+                            .font(AppFonts.labelMedium)
                     }
                     .foregroundColor(theme.currentTheme.primaryColor)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
+                    .padding(.horizontal, DesignTokens.Spacing.md)
+                    .padding(.vertical, DesignTokens.Spacing.sm)
                     .background(
                         RoundedRectangle(cornerRadius: 6)
                             .fill(theme.currentTheme.primaryColor.opacity(0.1))
@@ -130,13 +130,13 @@ extension CreatePlaylistView {
                 dismiss()
             } label: {
                 Image(systemName: "xmark.circle.fill")
-                    .font(.system(size: 20))
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(.secondary)
             }
             .buttonStyle(.plain)
         }
-        .padding(.horizontal, 24)
-        .padding(.vertical, 16)
+        .padding(.horizontal, DesignTokens.Spacing.xxl)
+        .padding(.vertical, DesignTokens.Spacing.lg)
     }
 
     // MARK: - Artwork Section
@@ -144,7 +144,7 @@ extension CreatePlaylistView {
     private var artworkSection: some View {
         VStack(spacing: 16) {
             Text("Artwork")
-                .font(.system(size: 14, weight: .semibold))
+                .font(AppFonts.heading5)
                 .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -155,7 +155,7 @@ extension CreatePlaylistView {
                 // Artwork controls
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Add custom artwork to personalize your playlist")
-                        .font(.system(size: 13))
+                        .font(AppFonts.bodySmall)
                         .foregroundColor(.secondary)
 
                     Button {
@@ -165,12 +165,12 @@ extension CreatePlaylistView {
                             Image(systemName: "photo")
                             Text(selectedImage == nil ? "Choose Image" : "Change Image")
                         }
-                        .font(.system(size: 13, weight: .medium))
+                        .font(AppFonts.buttonSmall)
                         .foregroundColor(.white)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
+                        .padding(.horizontal, DesignTokens.Spacing.lg)
+                        .padding(.vertical, DesignTokens.Spacing.sm)
                         .background(theme.currentTheme.primaryColor)
-                        .cornerRadius(8)
+                        .cornerRadius(DesignTokens.CornerRadius.sm)
                     }
                     .buttonStyle(.plain)
 
@@ -183,12 +183,12 @@ extension CreatePlaylistView {
                                 Image(systemName: "trash")
                                 Text("Remove")
                             }
-                            .font(.system(size: 13, weight: .medium))
+                            .font(AppFonts.buttonSmall)
                             .foregroundColor(.red)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
+                            .padding(.horizontal, DesignTokens.Spacing.lg)
+                            .padding(.vertical, DesignTokens.Spacing.sm)
                             .background(Color.red.opacity(0.1))
-                            .cornerRadius(8)
+                            .cornerRadius(DesignTokens.CornerRadius.sm)
                         }
                         .buttonStyle(.plain)
                     }
@@ -206,8 +206,8 @@ extension CreatePlaylistView {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 180, height: 180)
-                    .cornerRadius(12)
-                    .shadow(radius: 10)
+                    .cornerRadius(DesignTokens.CornerRadius.lg)
+                    .tokenShadow(DesignTokens.Shadow.level1)
             } else {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(
@@ -223,10 +223,10 @@ extension CreatePlaylistView {
                     .frame(width: 180, height: 180)
                     .overlay {
                         Image(systemName: "music.note.list")
-                            .font(.system(size: 60))
+                            .font(AppFonts.displayLarge)
                             .foregroundColor(.white.opacity(0.8))
                     }
-                    .shadow(radius: 10)
+                    .tokenShadow(DesignTokens.Shadow.level1)
             }
         }
     }
@@ -239,7 +239,7 @@ extension CreatePlaylistView {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text("Name")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(AppFonts.heading5)
                         .foregroundColor(.secondary)
 
                     Text("*")
@@ -248,8 +248,8 @@ extension CreatePlaylistView {
 
                 TextField("My Awesome Playlist", text: $playlistName)
                     .textFieldStyle(.plain)
-                    .font(.system(size: 16))
-                    .padding(12)
+                    .font(AppFonts.bodyLarge)
+                    .padding(DesignTokens.Spacing.md)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
                             .fill(Color(nsColor: .controlBackgroundColor))
@@ -259,13 +259,13 @@ extension CreatePlaylistView {
             // Description
             VStack(alignment: .leading, spacing: 8) {
                 Text("Description")
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(AppFonts.heading5)
                     .foregroundColor(.secondary)
 
                 TextEditor(text: $description)
-                    .font(.system(size: 14))
+                    .font(AppFonts.bodySmall)
                     .frame(height: 80)
-                    .padding(8)
+                    .padding(DesignTokens.Spacing.sm)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
                             .fill(Color(nsColor: .controlBackgroundColor))
@@ -283,17 +283,17 @@ extension CreatePlaylistView {
     private var optionsSection: some View {
         VStack(spacing: 20) {
             Text("Options")
-                .font(.system(size: 14, weight: .semibold))
+                .font(AppFonts.heading5)
                 .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             // Pin to top
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Pin to Top")
-                        .font(.system(size: 14, weight: .medium))
-                    Text("Keep this playlist at the top of your library")
-                        .font(.system(size: 12))
+                Text("Pin to Top")
+                    .font(AppFonts.labelLarge)
+                Text("Keep this playlist at the top of your library")
+                    .font(AppFonts.captionLarge)
                         .foregroundColor(.secondary)
                 }
 
@@ -302,7 +302,7 @@ extension CreatePlaylistView {
                 Toggle("", isOn: $isFavorite)
                     .labelsHidden()
             }
-            .padding(16)
+            .padding(DesignTokens.Spacing.lg)
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color(nsColor: .controlBackgroundColor).opacity(0.5))
@@ -310,8 +310,8 @@ extension CreatePlaylistView {
 
             // Color scheme
             VStack(alignment: .leading, spacing: 12) {
-                Text("Color Scheme")
-                    .font(.system(size: 14, weight: .medium))
+            Text("Color Scheme")
+                .font(AppFonts.labelLarge)
 
                 HStack(spacing: 12) {
                     ForEach(PlaylistColorScheme.allCases, id: \.self) { scheme in
@@ -324,7 +324,7 @@ extension CreatePlaylistView {
                     }
                 }
             }
-            .padding(16)
+            .padding(DesignTokens.Spacing.lg)
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color(nsColor: .controlBackgroundColor).opacity(0.5))
@@ -340,10 +340,10 @@ extension CreatePlaylistView {
                 dismiss()
             } label: {
                 Text("Cancel")
-                    .font(.system(size: 14, weight: .medium))
+                    .font(AppFonts.buttonMedium)
                     .foregroundColor(.primary)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
+                    .padding(.vertical, DesignTokens.Spacing.md)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
                             .fill(Color(nsColor: .controlBackgroundColor))
@@ -363,11 +363,11 @@ extension CreatePlaylistView {
                             .tint(.white)
                     }
                     Text(isCreating ? "Creating..." : "Create Playlist")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(AppFonts.buttonMedium)
                 }
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 10)
+                .padding(.vertical, DesignTokens.Spacing.md)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
                         .fill(playlistName.isEmpty ? Color.gray : theme.currentTheme.primaryColor)
@@ -376,8 +376,8 @@ extension CreatePlaylistView {
             .buttonStyle(.plain)
             .disabled(playlistName.isEmpty || isCreating)
         }
-        .padding(.horizontal, 24)
-        .padding(.vertical, 16)
+        .padding(.horizontal, DesignTokens.Spacing.xxl)
+        .padding(.vertical, DesignTokens.Spacing.lg)
     }
 
     // MARK: - Actions

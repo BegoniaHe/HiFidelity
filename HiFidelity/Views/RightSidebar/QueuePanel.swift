@@ -32,7 +32,7 @@ struct QueuePanel: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.bottom, 90)
+        .padding(.bottom, DesignTokens.ControlHeight.playbackBar)
         .background(Color(nsColor: .windowBackgroundColor))
     }
 
@@ -41,8 +41,8 @@ struct QueuePanel: View {
     private var header: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("Queue")
-                    .font(.system(size: 16, weight: .bold))
+            Text("Queue")
+                .font(AppFonts.heading4)
                     .frame(height: 28)
                     .foregroundColor(.primary)
 
@@ -53,8 +53,8 @@ struct QueuePanel: View {
                     Button {
                         scrollToCurrentTrack()
                     } label: {
-                        Image(systemName: "scope")
-                            .font(.system(size: 18))
+                    Image(systemName: "scope")
+                        .font(AppFonts.bodyLarge)
                             .foregroundColor(.secondary)
                     }
                     .buttonStyle(.plain)
@@ -69,15 +69,15 @@ struct QueuePanel: View {
                     Button {
                         playback.clearQueue()
                     } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 18))
+                    Image(systemName: "xmark.circle.fill")
+                        .font(AppFonts.bodyLarge)
                             .foregroundColor(.secondary)
                     }
                     .buttonStyle(.plain)
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 12)
+            .padding(.horizontal, DesignTokens.Spacing.xl)
+            .padding(.vertical, DesignTokens.Spacing.md)
         }
         .background(Color(nsColor: .windowBackgroundColor))
     }
@@ -90,7 +90,7 @@ struct QueuePanel: View {
 
                 // Play/Pause overlay for current track
                 Color.black.opacity(0.5)
-                    .cornerRadius(4)
+                    .cornerRadius(DesignTokens.CornerRadius.xxs)
 
                 Button(action: {
                     if playback.isPlaying {
@@ -100,7 +100,7 @@ struct QueuePanel: View {
                     }
                 }) {
                     Image(systemName: playback.isPlaying ? "pause.fill" : "play.fill")
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(AppFonts.heading4)
                         .foregroundColor(.white)
                 }
                 .buttonStyle(.plain)
@@ -112,20 +112,20 @@ struct QueuePanel: View {
             // Info
             VStack(alignment: .leading, spacing: 4) {
                 Text(track.title)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(AppFonts.heading5)
                     .foregroundColor(theme.currentTheme.primaryColor)
                     .lineLimit(1)
 
                 Text(track.artist)
-                    .font(.system(size: 13))
+                    .font(AppFonts.bodySmall)
                     .foregroundColor(.secondary)
                     .lineLimit(1)
             }
 
             Spacer()
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 8)
+        .padding(.horizontal, DesignTokens.Spacing.xl)
+        .padding(.vertical, DesignTokens.Spacing.sm)
         .background(Color(nsColor: .controlBackgroundColor).opacity(0.3))
         .contextMenu {
             if !track.album.isEmpty && track.album != "Unknown Album" {
@@ -187,7 +187,7 @@ struct QueuePanel: View {
         HStack(spacing: 14) {
             // Drag handle
             Image(systemName: "line.3.horizontal")
-                .font(.system(size: 14))
+                .font(AppFonts.labelLarge)
                 .foregroundColor(.secondary.opacity(0.5))
                 .frame(width: 18)
 
@@ -200,13 +200,13 @@ struct QueuePanel: View {
 
             // Track info
             VStack(alignment: .leading, spacing: 4) {
-                Text(track.title)
-                    .font(.system(size: 14, weight: index == playback.currentQueueIndex ? .semibold : .regular))
+            Text(track.title)
+                .font(index == playback.currentQueueIndex ? AppFonts.heading5 : AppFonts.bodySmall)
                     .foregroundColor(index == playback.currentQueueIndex ? theme.currentTheme.primaryColor : .primary)
                     .lineLimit(1)
 
-                Text(track.artist)
-                    .font(.system(size: 13))
+            Text(track.artist)
+                .font(AppFonts.bodySmall)
                     .foregroundColor(.secondary)
                     .lineLimit(1)
             }
@@ -223,14 +223,14 @@ struct QueuePanel: View {
                 }
             } else {
                 // Duration
-                Text(track.formattedDuration)
-                    .font(.system(size: 13))
+            Text(track.formattedDuration)
+                .font(AppFonts.bodySmall)
                     .foregroundColor(.secondary)
                     .monospacedDigit()
             }
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 10)
+        .padding(.horizontal, DesignTokens.Spacing.xl)
+        .padding(.vertical, DesignTokens.Spacing.sm)
         .background(
             Group {
                 if draggedIndex == index {
@@ -281,14 +281,14 @@ struct QueuePanel: View {
         }, preview: {
             // Lightweight drag preview - just the track title
             Text(track.title)
-                .font(.system(size: 13, weight: .medium))
+                .font(AppFonts.labelMedium)
                 .foregroundColor(.primary)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
+                .padding(.horizontal, DesignTokens.Spacing.md)
+                .padding(.vertical, DesignTokens.Spacing.sm)
                 .background(
                     RoundedRectangle(cornerRadius: 6)
                         .fill(Color(nsColor: .controlBackgroundColor))
-                        .shadow(radius: 4)
+                        .tokenShadow(DesignTokens.Shadow.level1)
                 )
         })
         .onDrop(of: [.text], delegate: QueueDropDelegate(
@@ -307,7 +307,7 @@ struct QueuePanel: View {
         var body: some View {
             Button(action: action) {
                 Image(systemName: "minus.circle.fill")
-                    .font(.system(size: 20))
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(isHovered ? .red.opacity(0.8) : .secondary)
                     .frame(width: 28, height: 28)
                     .contentShape(Rectangle())
@@ -341,23 +341,23 @@ struct QueuePanel: View {
     private var emptyState: some View {
         VStack(spacing: 20) {
             Image(systemName: "music.note.list")
-                .font(.system(size: 56))
+                .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.2))
 
             VStack(spacing: 8) {
                 Text("No Upcoming Songs")
-                    .font(.system(size: 20, weight: .semibold))
+                    .font(AppFonts.heading2)
                     .foregroundColor(.primary)
 
                 Text("Queue is empty. Play something to get started.")
-                    .font(.system(size: 14))
+                    .font(AppFonts.bodySmall)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, 40)
+                    .padding(.horizontal, DesignTokens.Spacing.xxxxl)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.bottom, 90)
+        .padding(.bottom, DesignTokens.ControlHeight.playbackBar)
     }
 }
 
@@ -406,16 +406,16 @@ private struct AutoplayToggle: View {
             playback.isAutoplayEnabled.toggle()
         } label: {
             HStack(spacing: 6) {
-                Text("Autoplay")
-                    .font(.system(size: 13, weight: .medium))
+            Text("Autoplay")
+                .font(AppFonts.labelMedium)
                     .foregroundColor(playback.isAutoplayEnabled ? theme.currentTheme.primaryColor : .secondary)
 
-                Image(systemName: playback.isAutoplayEnabled ? "infinity.circle.fill" : "infinity.circle")
-                    .font(.system(size: 16, weight: .medium))
+            Image(systemName: playback.isAutoplayEnabled ? "infinity.circle.fill" : "infinity.circle")
+                .font(AppFonts.labelLarge)
                     .foregroundColor(playback.isAutoplayEnabled ? theme.currentTheme.primaryColor : .secondary)
             }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
+            .padding(.horizontal, DesignTokens.Spacing.sm)
+            .padding(.vertical, DesignTokens.Spacing.xs)
             .background(
                 RoundedRectangle(cornerRadius: 6)
                     .fill(playback.isAutoplayEnabled ? theme.currentTheme.primaryColor.opacity(0.15) : Color.clear)

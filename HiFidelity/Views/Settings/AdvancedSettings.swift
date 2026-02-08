@@ -155,8 +155,8 @@ struct AdvancedSettings: View {
                 }
                 .font(.subheadline)
                 .foregroundColor(.white)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
+                .padding(.horizontal, DesignTokens.Spacing.lg)
+                .padding(.vertical, DesignTokens.Spacing.sm)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color.red)

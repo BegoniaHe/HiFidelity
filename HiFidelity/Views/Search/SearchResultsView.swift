@@ -59,17 +59,17 @@ struct SearchResultsView: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 8) {
                     Text("Search Results")
-                        .font(.system(size: 24, weight: .bold))
+                        .font(AppFonts.heading2)
 
                     Image(systemName: "info.circle")
-                        .font(.system(size: 14))
+                        .font(AppFonts.labelLarge)
                         .foregroundColor(.secondary)
                         .help(searchTips)
                 }
 
                 if !results.isEmpty {
                     Text("\(results.totalCount) results for \"\(searchQuery)\"")
-                        .font(.system(size: 14))
+                        .font(AppFonts.bodySmall)
                         .foregroundColor(.secondary)
                 }
             }
@@ -92,8 +92,8 @@ struct SearchResultsView: View {
                 }
             }
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 16)
+        .padding(.horizontal, DesignTokens.Spacing.xl)
+        .padding(.vertical, DesignTokens.Spacing.lg)
     }
 
     private var searchTips: String {
@@ -124,8 +124,8 @@ struct SearchResultsView: View {
                     }
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 12)
+            .padding(.horizontal, DesignTokens.Spacing.xl)
+            .padding(.vertical, DesignTokens.Spacing.md)
         }
     }
 
@@ -194,7 +194,7 @@ struct SearchResultsView: View {
                     }
                 }
             }
-            .padding(20)
+            .padding(DesignTokens.Spacing.xl)
         }
         .id(selectedCategory)
     }
@@ -211,14 +211,14 @@ struct SearchResultsView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Image(systemName: icon)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(AppFonts.heading4)
                     .foregroundColor(theme.currentTheme.primaryColor)
 
                 Text(title)
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(AppFonts.heading3)
 
                 Text("(\(count))")
-                    .font(.system(size: 14))
+                    .font(AppFonts.bodySmall)
                     .foregroundColor(.secondary)
             }
 
@@ -237,7 +237,7 @@ struct SearchResultsView: View {
 
                 if track.id != tracksToShow.last?.id {
                     Divider()
-                        .padding(.leading, 60)
+                        .padding(.leading, DesignTokens.Spacing.xxl)
                 }
             }
         }
@@ -318,7 +318,7 @@ struct SearchResultsView: View {
                 .tint(theme.currentTheme.primaryColor)
 
             Text("Searching...")
-                .font(.system(size: 14))
+                .font(AppFonts.bodySmall)
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -329,14 +329,14 @@ struct SearchResultsView: View {
     private var emptyStateView: some View {
         VStack(spacing: 16) {
             Image(systemName: "magnifyingglass")
-                .font(.system(size: 48))
+                .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.3))
 
             Text("No results found")
-                .font(.system(size: 18, weight: .semibold))
+                .font(AppFonts.heading3)
 
             Text("Try a different search term")
-                .font(.system(size: 14))
+                .font(AppFonts.bodySmall)
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -401,11 +401,11 @@ struct TrackSearchRow: View {
             // Track info
             VStack(alignment: .leading, spacing: 4) {
                 Text(track.title)
-                    .font(.system(size: 14, weight: .medium))
+                    .font(AppFonts.labelLarge)
                     .lineLimit(1)
 
                 Text("\(track.artist) • \(track.album)")
-                    .font(.system(size: 12))
+                    .font(AppFonts.captionLarge)
                     .foregroundColor(.secondary)
                     .lineLimit(1)
             }
@@ -414,7 +414,7 @@ struct TrackSearchRow: View {
 
             // Duration
             Text(formatDuration(track.duration))
-                .font(.system(size: 12))
+                .font(AppFonts.captionLarge)
                 .foregroundColor(.secondary)
                 .monospacedDigit()
 
@@ -424,7 +424,7 @@ struct TrackSearchRow: View {
                     onPlay()
                 } label: {
                     Image(systemName: "play.fill")
-                        .font(.system(size: 14))
+                        .font(AppFonts.labelLarge)
                         .foregroundColor(.white)
                         .frame(width: 32, height: 32)
                         .background(
@@ -435,7 +435,7 @@ struct TrackSearchRow: View {
                 .buttonStyle(.plain)
             }
         }
-        .padding(12)
+        .padding(DesignTokens.Spacing.md)
         .contentShape(Rectangle())
         .textSelection(.enabled)
         .onHover { hovering in
@@ -478,22 +478,22 @@ struct PlaylistSearchCard: View {
                     )
 
                 Image(systemName: "music.note.list")
-                    .font(.system(size: 40))
+                    .font(AppFonts.displayLarge)
                     .foregroundColor(theme.currentTheme.primaryColor)
             }
             .aspectRatio(1, contentMode: .fit)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(playlist.name)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(AppFonts.heading5)
                     .lineLimit(1)
 
                 Text("\(playlist.trackCount) tracks")
-                    .font(.system(size: 12))
+                    .font(AppFonts.captionLarge)
                     .foregroundColor(.secondary)
             }
         }
-        .padding(8)
+        .padding(DesignTokens.Spacing.sm)
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(isHovered ? Color(nsColor: .controlBackgroundColor) : Color.clear)
@@ -523,17 +523,17 @@ struct CategoryButton: View {
         Button(action: action) {
             HStack(spacing: 6) {
                 Text(category.title)
-                    .font(.system(size: 13, weight: .medium))
+                    .font(AppFonts.labelMedium)
 
                 if count > 0 {
                     Text("\(count)")
-                        .font(.system(size: 11, weight: .semibold))
+                        .font(AppFonts.labelSmall)
                         .foregroundColor(isSelected ? .white : .secondary)
                 }
             }
             .foregroundColor(isSelected ? .white : .primary)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
+            .padding(.horizontal, DesignTokens.Spacing.lg)
+            .padding(.vertical, DesignTokens.Spacing.sm)
             .background(
                 Capsule()
                     .fill(isSelected ? theme.currentTheme.primaryColor : Color(nsColor: .controlBackgroundColor))

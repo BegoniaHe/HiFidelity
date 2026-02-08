@@ -67,7 +67,7 @@ struct TrackInfoPanel: View {
     private var header: some View {
         HStack {
             Text("Track Info")
-                .font(.system(size: 16, weight: .bold))
+                .font(AppFonts.heading4)
                 .frame(height: 28)
                 .foregroundColor(.primary)
 
@@ -77,13 +77,13 @@ struct TrackInfoPanel: View {
                 trackInfoManager.hide()
             }) {
                 Image(systemName: "xmark.circle.fill")
-                    .font(.system(size: 16))
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(.secondary)
             }
             .buttonStyle(.plain)
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
+        .padding(.horizontal, DesignTokens.Spacing.xl)
+        .padding(.vertical, DesignTokens.Spacing.md)
     }
 
     // MARK: - Data Loading
@@ -117,29 +117,29 @@ struct TrackInfoPanel: View {
                 VStack(spacing: 24) {
                     // Large album artwork
                     TrackArtworkView(track: track, size: 280, cornerRadius: 12)
-                        .shadow(color: .black.opacity(0.3), radius: 20, x: 0, y: 10)
-                        .padding(.top, 32)
+                    .tokenShadow(DesignTokens.Shadow.level3)
+                        .padding(.top, DesignTokens.Spacing.xxxl)
 
                     // Track info
                     VStack(spacing: 8) {
                         Text(track.title)
-                            .font(AppFonts.trackTitle)
+                            .font(AppFonts.heading2)
                             .foregroundColor(.primary)
                             .multilineTextAlignment(.center)
 
                         Text(track.artist)
-                            .font(AppFonts.trackArtist)
+                            .font(AppFonts.bodyLarge)
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
 
                         if !track.album.isEmpty {
                             Text(track.album)
-                                .font(AppFonts.trackAlbum)
+                                .font(AppFonts.bodySmall)
                                 .foregroundColor(.secondary.opacity(0.8))
                                 .multilineTextAlignment(.center)
                         }
                     }
-                    .padding(.horizontal, 24)
+                    .padding(.horizontal, DesignTokens.Spacing.xxl)
 
                     // Track details
                     VStack(spacing: 12) {
@@ -211,7 +211,7 @@ struct TrackInfoPanel: View {
                             DetailRow(icon: "metronome", label: "BPM", value: "\(bpm)")
                         }
                     }
-                    .padding(.horizontal, 24)
+                    .padding(.horizontal, DesignTokens.Spacing.xxl)
 
                     // Bottom spacer for playback bar clearance
                     Spacer()
@@ -226,7 +226,7 @@ struct TrackInfoPanel: View {
     private var emptyState: some View {
         VStack(spacing: 20) {
             Image(systemName: "info.circle")
-                .font(.system(size: 56))
+                .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.2))
 
             Text("No Track Selected")
@@ -237,7 +237,7 @@ struct TrackInfoPanel: View {
                 .font(AppFonts.bodySmall)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 40)
+                .padding(.horizontal, DesignTokens.Spacing.xxxxl)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -279,7 +279,7 @@ struct DetailRow: View {
                 .frame(width: 20)
 
             Text(label)
-                .font(AppFonts.trackMetadata)
+                .font(AppFonts.bodySmall)
                 .foregroundColor(.secondary)
 
             Spacer()
@@ -288,8 +288,8 @@ struct DetailRow: View {
                 .font(AppFonts.labelLarge)
                 .foregroundColor(.primary)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
+        .padding(.horizontal, DesignTokens.Spacing.lg)
+        .padding(.vertical, DesignTokens.Spacing.sm)
         .background(
             RoundedRectangle(cornerRadius: 8)
                 .fill(Color(nsColor: .controlBackgroundColor).opacity(0.5))
@@ -319,8 +319,8 @@ struct ActionButton: View {
                 Spacer()
             }
             .foregroundColor(color)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+            .padding(.horizontal, DesignTokens.Spacing.lg)
+            .padding(.vertical, DesignTokens.Spacing.md)
             .background(
                 RoundedRectangle(cornerRadius: 8)
                     .fill(isHovered ? color.opacity(0.1) : Color(nsColor: .controlBackgroundColor).opacity(0.5))

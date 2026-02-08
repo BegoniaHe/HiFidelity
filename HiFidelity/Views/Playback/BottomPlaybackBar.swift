@@ -38,8 +38,8 @@ struct BottomPlaybackBar: View {
                     )
                 }
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 12)
+            .padding(.horizontal, DesignTokens.Spacing.md)
+            .padding(.vertical, DesignTokens.Spacing.md)
             .background(controlBarBackground)
             .contentShape(Rectangle()) // Make entire area tappable
             .onTapGesture {
@@ -47,7 +47,7 @@ struct BottomPlaybackBar: View {
                 NotificationCenter.default.post(name: .dismissAllFocus, object: nil)
             }
         }
-        .frame(maxWidth: .infinity, minHeight: 90)
+        .frame(maxWidth: .infinity, minHeight: DesignTokens.ControlHeight.playbackBar)
     }
 
     // MARK: - Background

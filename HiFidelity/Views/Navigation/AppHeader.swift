@@ -4,8 +4,8 @@
 //
 //  Created by Varun Rathod
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Top application header with logo, search, and navigation controls
 struct AppHeader: View {
@@ -34,9 +34,9 @@ struct AppHeader: View {
             // Right: Controls
             trailingSection
         }
-        .padding(.horizontal, 6)
-        .padding(.vertical, 14)
-        .frame(height: 68)
+        .padding(.horizontal, DesignTokens.Spacing.sm)
+        .padding(.vertical, DesignTokens.Spacing.xl)
+        .frame(height: DesignTokens.ControlHeight.xxl)
         .background(headerBackground)
     }
 
@@ -81,13 +81,21 @@ struct AppHeader: View {
                 }
             } label: {
                 Image(systemName: "house.fill")
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(selectedTab == .home ? .white : .secondary)
                     .frame(width: 40, height: 40)
                     .background(
                         Circle()
-                            .fill(selectedTab == .home ? theme.currentTheme.primaryColor.opacity(0.60) : Color.primary.opacity(0.04))
-                            .shadow(color: selectedTab == .home ? theme.currentTheme.primaryColor.opacity(0.3) : .clear, radius: 4, y: 1)
+                            .fill(
+                                selectedTab == .home
+                                    ? theme.currentTheme.primaryColor.opacity(0.60)
+                                    : Color.primary.opacity(0.04)
+                            )
+                            .tokenShadow(
+                                DesignTokens.Shadow.level1,
+                                color: selectedTab == .home
+                                    ? theme.currentTheme.primaryColor.opacity(0.3) : .clear
+                            )
                     )
             }
             .buttonStyle(PlainScaleButtonStyle())
@@ -172,14 +180,22 @@ private struct RefreshButton: View {
                         : .default,
                     value: isRefreshing
                 )
-                .font(.system(size: 17, weight: .medium))
+                .font(AppFonts.bodyLarge)
                 .symbolRenderingMode(.hierarchical)
                 .foregroundColor(isRefreshing ? theme.currentTheme.primaryColor : .secondary)
                 .frame(width: 40, height: 40)
                 .background(
                     Circle()
-                        .fill(isRefreshing ? theme.currentTheme.primaryColor.opacity(0.12) : (isHovered ? Color.primary.opacity(0.06) : Color.clear))
-                        .shadow(color: isRefreshing ? theme.currentTheme.primaryColor.opacity(0.15) : .clear, radius: 3, y: 1)
+                        .fill(
+                            isRefreshing
+                                ? theme.currentTheme.primaryColor.opacity(0.12)
+                                : (isHovered ? Color.primary.opacity(0.06) : Color.clear)
+                        )
+                        .tokenShadow(
+                            DesignTokens.Shadow.level1,
+                            color: isRefreshing
+                                ? theme.currentTheme.primaryColor.opacity(0.15) : .clear
+                        )
                 )
                 .scaleEffect(isHovered && !isRefreshing ? 1.05 : 1.0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
@@ -222,14 +238,22 @@ private struct ToggleButton: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: icon)
-                .font(.system(size: 17, weight: .medium))
+                .font(AppFonts.bodyLarge)
                 .symbolRenderingMode(.hierarchical)
                 .foregroundColor(isActive ? theme.currentTheme.primaryColor : .secondary)
                 .frame(width: 40, height: 40)
                 .background(
                     Circle()
-                        .fill(isActive ? theme.currentTheme.primaryColor.opacity(0.12) : (isHovered ? Color.primary.opacity(0.06) : Color.clear))
-                        .shadow(color: isActive ? theme.currentTheme.primaryColor.opacity(0.15) : .clear, radius: 3, y: 1)
+                        .fill(
+                            isActive
+                                ? theme.currentTheme.primaryColor.opacity(0.12)
+                                : (isHovered ? Color.primary.opacity(0.06) : Color.clear)
+                        )
+                        .tokenShadow(
+                            DesignTokens.Shadow.level1,
+                            color: isActive
+                                ? theme.currentTheme.primaryColor.opacity(0.15) : .clear
+                        )
                 )
                 .scaleEffect(isHovered ? 1.05 : 1.0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
@@ -261,8 +285,15 @@ private struct GitHubButton: View {
                 .frame(width: 40, height: 40)
                 .background(
                     Circle()
-                        .fill(isHovered ? theme.currentTheme.primaryColor : theme.currentTheme.primaryColor.opacity(0.12))
-                        .shadow(color: theme.currentTheme.primaryColor.opacity(isHovered ? 0.3 : 0.15), radius: isHovered ? 6 : 3, y: isHovered ? 2 : 1)
+                        .fill(
+                            isHovered
+                                ? theme.currentTheme.primaryColor
+                                : theme.currentTheme.primaryColor.opacity(0.12)
+                        )
+                        .tokenShadow(
+                            isHovered ? DesignTokens.Shadow.level2 : DesignTokens.Shadow.level1,
+                            color: theme.currentTheme.primaryColor.opacity(isHovered ? 0.3 : 0.15)
+                        )
                 )
                 .scaleEffect(isHovered ? 1.06 : 1.0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
@@ -283,7 +314,7 @@ private struct SettingsButton: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: "gearshape.fill")
-                .font(.system(size: 17, weight: .medium))
+                .font(AppFonts.bodyLarge)
                 .symbolRenderingMode(.hierarchical)
                 .foregroundColor(.secondary)
                 .frame(width: 40, height: 40)
@@ -312,12 +343,12 @@ private struct SearchBar: View {
         HStack(spacing: 12) {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(isFocused ? .primary : .secondary)
-                .font(.system(size: 16, weight: .medium))
+                .font(AppFonts.labelLarge)
                 .symbolRenderingMode(.hierarchical)
 
             TextField("What do you want to play?", text: $text)
                 .textFieldStyle(.plain)
-                .font(.system(size: 15))
+                .font(AppFonts.bodyMedium)
                 .focused($isFocused)
                 .onSubmit {
                     if !text.isEmpty {
@@ -333,14 +364,14 @@ private struct SearchBar: View {
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.secondary)
-                        .font(.system(size: 16))
+                        .font(AppFonts.bodyLarge)
                 }
                 .buttonStyle(.plain)
                 .transition(.scale.combined(with: .opacity))
             }
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
+        .padding(.horizontal, DesignTokens.Spacing.xl)
+        .padding(.vertical, DesignTokens.Spacing.md)
         .frame(maxWidth: 440)
         .background(
             RoundedRectangle(cornerRadius: 22)
@@ -349,7 +380,10 @@ private struct SearchBar: View {
                     RoundedRectangle(cornerRadius: 22)
                         .strokeBorder(Color.primary.opacity(isFocused ? 0.1 : 0), lineWidth: 1.5)
                 )
-                .shadow(color: .black.opacity(isFocused ? 0.08 : 0.03), radius: isFocused ? 8 : 4, y: 2)
+                .tokenShadow(
+                    DesignTokens.Shadow.level1,
+                    color: .black.opacity(isFocused ? 0.08 : 0.03)
+                )
         )
         .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isFocused)
         .onChange(of: text) { _, newValue in

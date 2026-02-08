@@ -50,25 +50,34 @@ struct AppFonts {
 
     // MARK: - Specialized Fonts
 
-    static let trackTitle = Font.system(size: 20, weight: .bold)
-    static let trackArtist = Font.system(size: 16, weight: .regular)
-    static let trackAlbum = Font.system(size: 14, weight: .regular)
-    static let trackMetadata = Font.system(size: 14, weight: .regular)
-    static let trackDuration = Font.system(size: 13, weight: .regular)
+    static let trackTitle = heading2
+    static let trackArtist = bodyLarge
+    static let trackAlbum = bodySmall
+    static let trackMetadata = bodySmall
 
-    static let sidebarItem = Font.system(size: 14, weight: .medium)
-    static let sidebarHeader = Font.system(size: 16, weight: .bold)
-
-    static let playbackTime = Font.system(size: 11, weight: .medium)
-    static let playbackControl = Font.system(size: 16, weight: .regular)
-
-    static let tabBarItem = Font.system(size: 10, weight: .medium)
-    static let tabBarIcon = Font.system(size: 16, weight: .regular)
+    static func placeholder(
+        size: CGFloat,
+        weight: Font.Weight = .regular,
+        design: Font.Design = .default
+    ) -> Font {
+        Font.system(size: size, weight: weight, design: design)
+    }
 }
 
 /// Extension for easy access to consistent font sizing
 extension View {
     func appFont(_ font: Font) -> some View {
         self.font(font)
+    }
+
+    func appFont(_ font: Font, lineSpacing: CGFloat, tracking: CGFloat = 0) -> some View {
+        self.font(font)
+            .lineSpacing(lineSpacing)
+            .tracking(tracking)
+    }
+
+    func appFont(_ font: Font, tracking: CGFloat) -> some View {
+        self.font(font)
+            .tracking(tracking)
     }
 }

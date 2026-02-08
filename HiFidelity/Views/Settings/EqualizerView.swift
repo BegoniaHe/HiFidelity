@@ -35,16 +35,16 @@ struct EqualizerView: View {
         VStack(spacing: 0) {
             // Control bar
             controlBar
-                .padding(.horizontal, 24)
-                .padding(.vertical, 16)
+                .padding(.horizontal, DesignTokens.Spacing.xxl)
+                .padding(.vertical, DesignTokens.Spacing.lg)
 
             Divider()
 
             if effectsManager.isEqualizerEnabled {
                 // Equalizer sliders
                 equalizerContent
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 32)
+                    .padding(.horizontal, DesignTokens.Spacing.xxl)
+                    .padding(.vertical, DesignTokens.Spacing.xxxl)
             } else {
                 // Disabled state
                 disabledState
@@ -118,7 +118,7 @@ struct EqualizerView: View {
                 .disabled(newPresetName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
         }
-        .padding(30)
+        .padding(DesignTokens.Spacing.xxxl)
         .frame(width: 400)
     }
 
@@ -129,7 +129,7 @@ struct EqualizerView: View {
             // Power switch
             HStack(spacing: 8) {
                 Text("Power")
-                    .font(.system(size: 13, weight: .medium))
+                    .font(AppFonts.labelMedium)
                     .foregroundColor(.secondary)
 
                 Toggle("", isOn: $effectsManager.isEqualizerEnabled)
@@ -146,13 +146,13 @@ struct EqualizerView: View {
                 if isCustomMode && effectsManager.isEqualizerEnabled {
                     HStack(spacing: 6) {
                         Image(systemName: "hand.draw.fill")
-                            .font(.system(size: 11))
+                            .font(AppFonts.captionMedium)
                         Text("Custom")
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(AppFonts.labelSmall)
                     }
                     .foregroundColor(theme.currentTheme.primaryColor)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 5)
+                    .padding(.horizontal, DesignTokens.Spacing.md)
+                    .padding(.vertical, DesignTokens.Spacing.xs)
                     .background(
                         Capsule()
                             .fill(theme.currentTheme.primaryColor.opacity(0.15))
@@ -165,7 +165,7 @@ struct EqualizerView: View {
                     newPresetName = ""
                 }) {
                     Label("Save Preset", systemImage: "square.and.arrow.down")
-                        .font(.system(size: 13))
+                        .font(AppFonts.labelMedium)
                 }
                 .buttonStyle(.bordered)
                 .disabled(!effectsManager.isEqualizerEnabled)
@@ -181,7 +181,7 @@ struct EqualizerView: View {
                         }
                     }) {
                         Label("Delete Preset", systemImage: "trash")
-                            .font(.system(size: 13))
+                            .font(AppFonts.labelMedium)
                     }
                     .buttonStyle(.bordered)
                     .foregroundColor(.red)
@@ -193,7 +193,7 @@ struct EqualizerView: View {
                     effectsManager.resetEqualizer()
                 }) {
                     Label("Reset All", systemImage: "arrow.counterclockwise")
-                        .font(.system(size: 13))
+                        .font(AppFonts.labelMedium)
                 }
                 .buttonStyle(.bordered)
                 .disabled(!effectsManager.isEqualizerEnabled)
@@ -205,7 +205,7 @@ struct EqualizerView: View {
             // Preset selector
             HStack(spacing: 8) {
                 Text("Preset")
-                    .font(.system(size: 13, weight: .medium))
+                    .font(AppFonts.labelMedium)
                     .foregroundColor(.secondary)
 
                 Menu {
@@ -256,14 +256,14 @@ struct EqualizerView: View {
                 } label: {
                     HStack(spacing: 6) {
                         Text(displayPresetName)
-                            .font(.system(size: 13))
+                            .font(AppFonts.labelMedium)
                         Image(systemName: "chevron.down.circle.fill")
-                            .font(.system(size: 12))
+                            .font(AppFonts.captionLarge)
                             .foregroundColor(.secondary)
                     }
                     .frame(width: 180, alignment: .leading)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 5)
+                    .padding(.horizontal, DesignTokens.Spacing.md)
+                    .padding(.vertical, DesignTokens.Spacing.xs)
                     .background(
                         RoundedRectangle(cornerRadius: 6)
                             .fill(Color(nsColor: .controlBackgroundColor))
@@ -295,18 +295,18 @@ struct EqualizerView: View {
 
                 // Subtitle to indicate independence
                 Text("Master")
-                    .font(.system(size: 9, weight: .medium))
+                    .font(AppFonts.captionSmall)
                     .foregroundColor(.secondary.opacity(0.6))
-                    .padding(.top, 8)
+                    .padding(.top, DesignTokens.Spacing.sm)
             }
-            .padding(.trailing, 32)
+            .padding(.trailing, DesignTokens.Spacing.xxxl)
 
             // Separator
             Rectangle()
                 .fill(Color(nsColor: .separatorColor))
                 .frame(width: 1)
-                .padding(.vertical, 20)
-                .padding(.trailing, 32)
+                .padding(.vertical, DesignTokens.Spacing.xl)
+                .padding(.trailing, DesignTokens.Spacing.xxxl)
 
             // 10 frequency bands
             HStack(alignment: .center, spacing: 16) {
@@ -335,16 +335,15 @@ struct EqualizerView: View {
     private var disabledState: some View {
         VStack(spacing: 16) {
             Image(systemName: "slider.horizontal.3")
-                .font(.system(size: 56))
+                .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.3))
 
             Text("Equalizer Disabled")
-                .font(.title3)
-                .fontWeight(.semibold)
+                .font(AppFonts.heading3)
                 .foregroundColor(.secondary)
 
             Text("Enable the equalizer to adjust frequency response")
-                .font(.subheadline)
+                .font(AppFonts.bodySmall)
                 .foregroundColor(.secondary.opacity(0.8))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -381,16 +380,16 @@ struct ProfessionalEQSlider: View {
         VStack(spacing: 0) {
             // Label at top
             Text(label)
-                .font(.system(size: isPreamp ? 12 : 11, weight: .semibold))
+                .font(isPreamp ? AppFonts.buttonSmall : AppFonts.captionMedium)
                 .foregroundColor(.secondary)
-                .padding(.bottom, 12)
+                .padding(.bottom, DesignTokens.Spacing.md)
 
             // Value display
             Text(formattedValue)
-                .font(.system(size: isPreamp ? 14 : 12, weight: .semibold, design: .monospaced))
+                .font(AppFonts.placeholder(size: isPreamp ? 14 : 12, weight: .semibold, design: .monospaced))
                 .foregroundColor(value != 0 ? accentColor : .secondary)
                 .frame(height: 20)
-                .padding(.bottom, 8)
+                .padding(.bottom, DesignTokens.Spacing.sm)
 
             // Slider
             GeometryReader { geometry in
@@ -439,7 +438,10 @@ struct ProfessionalEQSlider: View {
                             Circle()
                                 .strokeBorder(value != 0 ? accentColor : Color.secondary, lineWidth: 2)
                         )
-                        .shadow(color: Color.black.opacity(isDragging ? 0.3 : 0.2), radius: isDragging ? 4 : 2, y: 1)
+                    .tokenShadow(
+                        DesignTokens.Shadow.level1,
+                        color: Color.black.opacity(isDragging ? 0.3 : 0.2)
+                    )
                         .frame(width: 20, height: 20)
                         .scaleEffect(isDragging ? 1.1 : (isHovering ? 1.05 : 1.0))
                         .animation(.easeInOut(duration: 0.15), value: isDragging)

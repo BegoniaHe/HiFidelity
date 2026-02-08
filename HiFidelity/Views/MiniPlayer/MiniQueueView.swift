@@ -38,12 +38,12 @@ struct MiniQueueView: View {
     private var header: some View {
         HStack {
             Text("Queue")
-                .font(.system(size: 14, weight: .semibold))
+                .font(AppFonts.heading5)
                 .foregroundColor(.primary)
 
             if !playback.queue.isEmpty {
                 Text("(\(playback.queue.count))")
-                    .font(.system(size: 12))
+                    .font(AppFonts.captionLarge)
                     .foregroundColor(.secondary)
             }
 
@@ -53,15 +53,15 @@ struct MiniQueueView: View {
             if !playback.queue.isEmpty {
                 HStack(spacing: 4) {
                     Image(systemName: playback.isAutoplayEnabled ? "infinity.circle.fill" : "infinity.circle")
-                        .font(.system(size: 14))
+                        .font(AppFonts.labelLarge)
                         .foregroundColor(playback.isAutoplayEnabled ? theme.currentTheme.primaryColor : .secondary)
 
                     Text("Autoplay")
-                        .font(.system(size: 11, weight: .medium))
+                        .font(AppFonts.labelSmall)
                         .foregroundColor(playback.isAutoplayEnabled ? theme.currentTheme.primaryColor : .secondary)
                 }
-                .padding(.horizontal, 6)
-                .padding(.vertical, 3)
+                .padding(.horizontal, DesignTokens.Spacing.sm)
+                .padding(.vertical, DesignTokens.Spacing.xs)
                 .background(
                     RoundedRectangle(cornerRadius: 4)
                         .fill(playback.isAutoplayEnabled ? theme.currentTheme.primaryColor.opacity(0.15) : Color.clear)
@@ -77,7 +77,7 @@ struct MiniQueueView: View {
                     playback.clearQueue()
                 }) {
                     Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 16))
+                        .font(AppFonts.bodyLarge)
                         .foregroundColor(.secondary)
                 }
                 .buttonStyle(.plain)
@@ -86,13 +86,13 @@ struct MiniQueueView: View {
             // Close button
             Button(action: onClose) {
                 Image(systemName: "chevron.down.circle.fill")
-                    .font(.system(size: 16))
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(.secondary)
             }
             .buttonStyle(.plain)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
+        .padding(.horizontal, DesignTokens.Spacing.md)
+        .padding(.vertical, DesignTokens.Spacing.sm)
     }
 
     // MARK: - Queue List
@@ -106,8 +106,8 @@ struct MiniQueueView: View {
 
                     if !playback.queue.isEmpty {
                         Divider()
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 4)
+                            .padding(.horizontal, DesignTokens.Spacing.md)
+                            .padding(.vertical, DesignTokens.Spacing.xs)
                     }
                 }
 
@@ -124,7 +124,7 @@ struct MiniQueueView: View {
                         }
                 }
             }
-            .padding(.vertical, 8)
+            .padding(.vertical, DesignTokens.Spacing.sm)
         }
     }
 
@@ -137,7 +137,7 @@ struct MiniQueueView: View {
                 // Animated playing indicator overlay
                 if playback.isPlaying {
                     Color.black.opacity(0.5)
-                        .cornerRadius(4)
+                        .cornerRadius(DesignTokens.CornerRadius.xxs)
 
                     HStack(spacing: 2) {
                         ForEach(0..<3) { index in
@@ -160,17 +160,17 @@ struct MiniQueueView: View {
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 4) {
                     Image(systemName: "waveform")
-                        .font(.system(size: 10))
+                        .font(AppFonts.captionSmall)
                         .foregroundColor(theme.currentTheme.primaryColor)
 
                     Text(track.title)
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(AppFonts.labelSmall)
                         .foregroundColor(theme.currentTheme.primaryColor)
                         .lineLimit(1)
                 }
 
                 Text(track.artist)
-                    .font(.system(size: 11))
+                    .font(AppFonts.captionMedium)
                     .foregroundColor(.secondary)
                     .lineLimit(1)
             }
@@ -179,12 +179,12 @@ struct MiniQueueView: View {
 
             // Duration
             Text(track.formattedDuration)
-                .font(.system(size: 10))
+                .font(AppFonts.captionSmall)
                 .foregroundColor(.secondary)
                 .monospacedDigit()
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
+        .padding(.horizontal, DesignTokens.Spacing.md)
+        .padding(.vertical, DesignTokens.Spacing.sm)
         .background(theme.currentTheme.primaryColor.opacity(0.1))
     }
 
@@ -192,7 +192,7 @@ struct MiniQueueView: View {
         HStack(spacing: 10) {
             // Position number
             Text("\(index + 1)")
-                .font(.system(size: 11, weight: .medium))
+                .font(AppFonts.labelSmall)
                 .foregroundColor(.secondary.opacity(0.6))
                 .frame(width: 20)
 
@@ -202,12 +202,12 @@ struct MiniQueueView: View {
             // Track info
             VStack(alignment: .leading, spacing: 2) {
                 Text(track.title)
-                    .font(.system(size: 12))
+                    .font(AppFonts.captionLarge)
                     .foregroundColor(.primary)
                     .lineLimit(1)
 
                 Text(track.artist)
-                    .font(.system(size: 10))
+                    .font(AppFonts.captionSmall)
                     .foregroundColor(.secondary)
                     .lineLimit(1)
             }
@@ -220,19 +220,19 @@ struct MiniQueueView: View {
                     playback.removeFromQueue(at: index)
                 }) {
                     Image(systemName: "minus.circle.fill")
-                        .font(.system(size: 16))
+                        .font(AppFonts.bodyLarge)
                         .foregroundColor(.red.opacity(0.8))
                 }
                 .buttonStyle(.plain)
             } else {
                 Text(track.formattedDuration)
-                    .font(.system(size: 10))
+                    .font(AppFonts.captionSmall)
                     .foregroundColor(.secondary)
                     .monospacedDigit()
             }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 4)
+        .padding(.horizontal, DesignTokens.Spacing.md)
+        .padding(.vertical, DesignTokens.Spacing.xs)
         .contentShape(Rectangle())
         .onTapGesture(count: 2) {
             playback.play(track: track)
@@ -253,11 +253,11 @@ struct MiniQueueView: View {
     private var emptyState: some View {
         VStack(spacing: 12) {
             Image(systemName: "music.note.list")
-                .font(.system(size: 36))
+                .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.3))
 
             Text("Queue is empty")
-                .font(.system(size: 13))
+                .font(AppFonts.bodySmall)
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 03/11/25.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 // MARK: - View Mode Button
 
@@ -21,7 +21,7 @@ struct ViewModeButton: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: icon)
-                .font(.system(size: 15, weight: .medium))
+                .font(AppFonts.labelLarge)
                 .symbolRenderingMode(.hierarchical)
                 .foregroundColor(isSelected ? theme.currentTheme.primaryColor : .secondary)
                 .frame(width: 32, height: 32)
@@ -40,7 +40,7 @@ struct ViewModeButton: View {
         }
         .buttonStyle(.plain)
         .onHover { hovering in
-                isHovered = hovering
+            isHovered = hovering
         }
     }
 }
@@ -65,7 +65,9 @@ struct PlainHoverButtonStyle: ButtonStyle {
                     .fill(isHovered ? Color.primary.opacity(0.06) : Color.clear)
             )
             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
-            .animation(.spring(response: 0.25, dampingFraction: 0.6), value: configuration.isPressed)
+            .animation(
+                .spring(response: 0.25, dampingFraction: 0.6), value: configuration.isPressed
+            )
             .onHover { hovering in
                 isHovered = hovering
             }

@@ -27,7 +27,7 @@ struct AppearanceSettings: View {
                 }
                 .buttonStyle(.bordered)
             }
-            .padding(.top, 8)
+            .padding(.top, DesignTokens.Spacing.sm)
 
         }
     }
@@ -38,11 +38,10 @@ struct AppearanceSettings: View {
         VStack(spacing: 28) {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Theme")
-                    .font(.title3)
-                    .fontWeight(.semibold)
+                    .font(AppFonts.heading3)
 
                 Text("Choose your preferred color theme")
-                    .font(.subheadline)
+                    .font(AppFonts.bodySmall)
                     .foregroundColor(.secondary)
 
                 LazyVGrid(columns: [
@@ -62,10 +61,10 @@ struct AppearanceSettings: View {
             VStack(spacing: 8) {
                 HStack {
                     Text("Accent Color Intensity")
-                        .font(.headline)
+                        .font(AppFonts.heading4)
                     Spacer()
                     Text("\(Int(accentOpacity * 100))%")
-                        .font(.subheadline)
+                        .font(AppFonts.bodySmall)
                         .foregroundColor(.secondary)
                 }
 
@@ -89,8 +88,8 @@ struct AppearanceSettings: View {
                 }
                 .font(.subheadline)
                 .foregroundColor(theme.currentTheme.primaryColor)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
+                .padding(.horizontal, DesignTokens.Spacing.lg)
+                .padding(.vertical, DesignTokens.Spacing.sm)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(theme.currentTheme.primaryColor, lineWidth: 1)
@@ -141,21 +140,21 @@ private struct ThemeCard: View {
                                     lineWidth: 3
                                 )
                         )
-                        .shadow(
-                            color: isHovered ? themeOption.primaryColor.opacity(0.3) : Color.clear,
-                            radius: 8
+                        .tokenShadow(
+                            DesignTokens.Shadow.level1,
+                            color: isHovered ? themeOption.primaryColor.opacity(0.3) : Color.clear
                         )
 
                     if theme.currentTheme == themeOption {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 28))
+                Image(systemName: "checkmark.circle.fill")
+                    .font(AppFonts.heading2)
                             .foregroundColor(.white)
-                            .shadow(radius: 2)
+                            .tokenShadow(DesignTokens.Shadow.level1)
                     }
                 }
 
-                Text(themeOption.name)
-                    .font(.subheadline)
+            Text(themeOption.name)
+                .font(AppFonts.bodySmall)
                     .fontWeight(theme.currentTheme == themeOption ? .semibold : .regular)
                     .foregroundColor(.primary)
             }

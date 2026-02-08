@@ -54,7 +54,7 @@ struct AudioSettingsView: View {
                 }
                 .buttonStyle(.bordered)
             }
-            .padding(.top, 8)
+            .padding(.top, DesignTokens.Spacing.sm)
         }
     }
 
@@ -139,9 +139,9 @@ struct AudioSettingsView: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Loudness Analysis")
-                                .font(.system(size: 13, weight: .medium))
+                                .font(AppFonts.labelMedium)
                             Text("Scan your library to calculate EBU R128 loudness for accurate normalization")
-                                .font(.system(size: 11))
+                                .font(AppFonts.captionMedium)
                                 .foregroundColor(.secondary)
                         }
 
@@ -168,19 +168,19 @@ struct AudioSettingsView: View {
                                     .frame(maxWidth: .infinity)
 
                                 Text("\(r128Scanner.scannedCount)/\(r128Scanner.totalCount)")
-                                    .font(.system(size: 11))
+                                    .font(AppFonts.captionMedium)
                                     .foregroundColor(.secondary)
                                     .monospacedDigit()
                             }
 
                             if let currentTrack = r128Scanner.currentTrack {
                                 Text("Analyzing: \(currentTrack.title)")
-                                    .font(.system(size: 10))
+                                    .font(AppFonts.captionSmall)
                                     .foregroundColor(.secondary)
                                     .lineLimit(1)
                             }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, DesignTokens.Spacing.xs)
                     }
                 }
             }
@@ -223,21 +223,21 @@ struct AudioSettingsView: View {
             // Info text when enabled
             if settings.synchronizeSampleRate {
                 HStack(spacing: 8) {
-                    Image(systemName: "info.circle")
-                        .foregroundColor(.secondary)
-                        .font(.system(size: 12))
+            Image(systemName: "info.circle")
+                .foregroundColor(.secondary)
+                .font(AppFonts.captionLarge)
 
                     Text(
                         "When enabled, the app takes exclusive control (hog mode) of your audio device and " +
                         "automatically switches the device sample rate to match each track (44.1kHz, 48kHz, " +
                         "96kHz, etc.) preventing BASS from resampling for true bit-perfect playback."
                     )
-                        .font(.system(size: 11))
+                        .font(AppFonts.captionMedium)
                         .foregroundColor(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                .padding(.vertical, 8)
-                .padding(.horizontal, 4)
+                .padding(.vertical, DesignTokens.Spacing.sm)
+                .padding(.horizontal, DesignTokens.Spacing.xs)
             }
         }
     }
@@ -251,8 +251,8 @@ struct AudioSettingsView: View {
     ) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 8) {
-                Image(systemName: icon)
-                    .font(.system(size: 18))
+            Image(systemName: icon)
+                .font(AppFonts.bodyLarge)
                     .foregroundColor(.accentColor)
 
                 Text(title)
@@ -271,10 +271,10 @@ struct AudioSettingsView: View {
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(label)
-                    .font(.system(size: 13, weight: .medium))
+                    .font(AppFonts.labelMedium)
 
                 Text(description)
-                    .font(.system(size: 11))
+                    .font(AppFonts.captionMedium)
                     .foregroundColor(.secondary)
             }
 
@@ -282,7 +282,7 @@ struct AudioSettingsView: View {
 
             control()
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, DesignTokens.Spacing.xs)
     }
 }
 

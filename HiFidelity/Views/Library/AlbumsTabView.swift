@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 31/10/25.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Albums tab view displaying all albums in a grid layout
 struct AlbumsTabView: View {
@@ -22,7 +22,8 @@ struct AlbumsTabView: View {
     @State private var hasLoadedOnce = false
     @AppStorage("albumsSortOptionId") private var sortOptionId: String = "name"
     @AppStorage("albumsSortAscending") private var sortAscending: Bool = true
-    @State private var selectedSort = SortOption(id: "name", title: "Name", type: .alphabetical, ascending: true)
+    @State private var selectedSort = SortOption(
+        id: "name", title: "Name", type: .alphabetical, ascending: true)
     @State private var selectedFilter: FilterOption?
 
     init(selectedEntity: Binding<EntityType?>, isVisible: Bool = true) {
@@ -59,14 +60,19 @@ struct AlbumsTabView: View {
                 if albums.isEmpty {
                     emptyStateView(icon: "square.stack", message: "No albums in library")
                 } else {
-                    emptyStateView(icon: "line.3.horizontal.decrease.circle", message: "No albums match your filter")
+                    emptyStateView(
+                        icon: "line.3.horizontal.decrease.circle",
+                        message: "No albums match your filter")
                 }
             } else {
                 ScrollView {
-                    LazyVGrid(columns: [
-                        GridItem(.adaptive(minimum: 160, maximum: 200), spacing: 20)
-                    ], spacing: 20) {
-                        ForEach(Array(filteredAlbums.enumerated()), id: \.element.id) { index, album in
+                    LazyVGrid(
+                        columns: [
+                            GridItem(.adaptive(minimum: 160, maximum: 200), spacing: 20)
+                        ], spacing: 20
+                    ) {
+                        ForEach(Array(filteredAlbums.enumerated()), id: \.element.id) {
+                            index, album in
                             AlbumCard(album: album) {
                                 withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                                     selectedEntity = .album(album)
@@ -78,7 +84,7 @@ struct AlbumsTabView: View {
                             }
                         }
                     }
-                    .padding(20)
+                    .padding(DesignTokens.Spacing.xl)
                 }
             }
         }
@@ -134,8 +140,8 @@ struct AlbumsTabView: View {
                     .scaleEffect(1.2)
                     .tint(theme.currentTheme.primaryColor)
 
-                Text("Loading albums...")
-                    .font(.system(size: 14))
+            Text("Loading albums...")
+                .font(AppFonts.bodySmall)
                     .foregroundColor(.secondary)
             }
 
@@ -150,7 +156,7 @@ struct AlbumsTabView: View {
         HStack(spacing: 16) {
             // Count label
             Text("\(filteredAlbums.count) albums")
-                .font(.system(size: 13, weight: .medium))
+                .font(AppFonts.labelMedium)
                 .foregroundColor(.secondary)
 
             Spacer()
@@ -164,9 +170,9 @@ struct AlbumsTabView: View {
             )
             .frame(width: 32)
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
-        .frame(height: 46)
+        .padding(.horizontal, DesignTokens.Spacing.xl)
+        .padding(.vertical, DesignTokens.Spacing.md)
+        .frame(height: DesignTokens.ControlHeight.xl)
         .background(Color(nsColor: .windowBackgroundColor))
     }
 
@@ -361,10 +367,10 @@ private struct AlbumOptionsDropdown: View {
         } label: {
             HStack(spacing: 6) {
                 Image(systemName: "line.3.horizontal.decrease.circle")
-                    .font(.system(size: 16, weight: .medium))
+                    .font(AppFonts.labelLarge)
                 if selectedFilter != nil {
                     Image(systemName: "circle.fill")
-                        .font(.system(size: 6))
+                        .font(AppFonts.captionSmall)
                         .foregroundColor(theme.currentTheme.primaryColor)
                 }
             }
@@ -372,7 +378,9 @@ private struct AlbumOptionsDropdown: View {
             .frame(width: 32, height: 32)
             .background(
                 Circle()
-                    .fill(selectedFilter != nil ? theme.currentTheme.primaryColor.opacity(0.15) : Color.clear)
+                    .fill(
+                        selectedFilter != nil
+                            ? theme.currentTheme.primaryColor.opacity(0.15) : Color.clear)
             )
         }
         .menuStyle(.borderlessButton)

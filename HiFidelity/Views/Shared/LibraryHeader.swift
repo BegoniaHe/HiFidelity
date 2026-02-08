@@ -4,8 +4,8 @@
 //
 //  Created by Varun Rathod
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Unified header for library views with consistent height and styling
 struct LibraryHeader: View {
@@ -23,7 +23,7 @@ struct LibraryHeader: View {
         HStack(spacing: 16) {
             // Count label
             Text(title)
-                .font(.system(size: 13, weight: .medium))
+                .font(AppFonts.labelMedium)
                 .foregroundColor(.secondary)
 
             Spacer()
@@ -38,7 +38,7 @@ struct LibraryHeader: View {
                 )
             } label: {
                 Image(systemName: selectedSort.ascending ? "arrow.up" : "arrow.down")
-                    .font(.system(size: 16, weight: .medium))
+                    .font(AppFonts.labelLarge)
                     .foregroundColor(.secondary)
                     .frame(width: 32, height: 32)
                     .background(
@@ -64,7 +64,7 @@ struct LibraryHeader: View {
                 }
             } label: {
                 Image(systemName: "arrow.up.arrow.down")
-                    .font(.system(size: 16, weight: .medium))
+                    .font(AppFonts.labelLarge)
                     .foregroundColor(.secondary)
                     .frame(width: 32, height: 32)
                     .background(
@@ -100,27 +100,31 @@ struct LibraryHeader: View {
                 } label: {
                     HStack(spacing: 6) {
                         Image(systemName: "line.3.horizontal.decrease.circle")
-                            .font(.system(size: 16, weight: .medium))
+                            .font(AppFonts.labelLarge)
                         if selectedFilter != nil {
                             Image(systemName: "circle.fill")
-                                .font(.system(size: 6))
+                                .font(AppFonts.captionSmall)
                                 .foregroundColor(theme.currentTheme.primaryColor)
                         }
                     }
-                    .foregroundColor(selectedFilter != nil ? theme.currentTheme.primaryColor : .secondary)
+                    .foregroundColor(
+                        selectedFilter != nil ? theme.currentTheme.primaryColor : .secondary
+                    )
                     .frame(width: 32, height: 32)
                     .background(
                         Circle()
-                            .fill(selectedFilter != nil ? theme.currentTheme.primaryColor.opacity(0.15) : Color.clear)
+                            .fill(
+                                selectedFilter != nil
+                                    ? theme.currentTheme.primaryColor.opacity(0.15) : Color.clear)
                     )
                 }
                 .menuStyle(.borderlessButton)
                 .buttonStyle(.plain)
             }
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
-        .frame(height: 52) // Fixed height for consistency
+        .padding(.horizontal, DesignTokens.Spacing.xl)
+        .padding(.vertical, DesignTokens.Spacing.md)
+        .frame(height: DesignTokens.ControlHeight.xl)
         .background(Color(nsColor: .windowBackgroundColor))
     }
 }
@@ -155,7 +159,8 @@ struct FilterOption: Identifiable, Equatable {
 
 #Preview {
     struct PreviewWrapper: View {
-        @State private var selectedSort = SortOption(id: "name", title: "Name", type: .alphabetical, ascending: true)
+        @State private var selectedSort = SortOption(
+            id: "name", title: "Name", type: .alphabetical, ascending: true)
         @State private var selectedFilter: FilterOption?
 
         let sortOptions = [

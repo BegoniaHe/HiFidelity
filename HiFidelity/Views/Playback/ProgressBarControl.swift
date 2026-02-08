@@ -4,15 +4,16 @@
 //
 //  Created by Varun Rathod
 
-import SwiftUI
+import AppKit
 import Observation
+import SwiftUI
 
 /// Interactive progress bar with scrubbing support
 struct ProgressBarControl: View {
     @Bindable var playback = PlaybackController.shared
     @Bindable var theme = AppTheme.shared
 
-    @State private var isHovering = false
+    @State private var hoverLocation: CGPoint?
     @State private var isDragging = false
     @State private var tempProgress: Double = 0
 
@@ -38,17 +39,29 @@ struct ProgressBarControl: View {
                         .offset(x: geometry.size.width * currentProgress - 8)
                         .transition(.scale.combined(with: .opacity))
                 }
+
+                if shouldShowPreview {
+                    previewBubble(width: geometry.size.width)
+                        .offset(x: previewOffsetX(in: geometry.size.width), y: -24)
+                        .transition(.opacity.combined(with: .scale))
+                }
             }
             .contentShape(Rectangle())
             .gesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { value in
                         isDragging = true
+                        hoverLocation = value.location
                         tempProgress = max(0, min(1, value.location.x / geometry.size.width))
                     }
                     .onEnded { value in
                         let progress = max(0, min(1, value.location.x / geometry.size.width))
                         playback.setProgress(progress)
+                        if value.location.x < 0 || value.location.x > geometry.size.width {
+                            hoverLocation = nil
+                        } else {
+                            hoverLocation = value.location
+                        }
                         isDragging = false
                     }
             )
@@ -58,11 +71,11 @@ struct ProgressBarControl: View {
                         // Tap is handled by drag gesture with minimumDistance: 0
                     }
             )
-            .onHover { hovering in
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    isHovering = hovering
+            .background(
+                HoverTrackingView { location in
+                    hoverLocation = location
                 }
-            }
+            )
         }
         .frame(height: isHovering ? 10 : 4)
         .animation(.easeInOut(duration: 0.2), value: isHovering)
@@ -86,7 +99,7 @@ struct ProgressBarControl: View {
             Circle()
                 .fill(Color.white)
                 .frame(width: 16, height: 16)
-                .shadow(color: .black.opacity(0.3), radius: 3, x: 0, y: 2)
+                .tokenShadow(DesignTokens.Shadow.level1)
 
             Circle()
                 .fill(theme.currentTheme.primaryColor)
@@ -101,6 +114,135 @@ struct ProgressBarControl: View {
         isDragging ? tempProgress : playback.progress
     }
 
+    private func previewProgress(in width: CGFloat) -> Double {
+        if isDragging {
+            return tempProgress
+        }
+        if let hoverLocation {
+            let clampedX = max(0, min(width, hoverLocation.x))
+            return width > 0 ? clampedX / width : 0
+        }
+        return playback.progress
+    }
+
+    private var isHovering: Bool {
+        hoverLocation != nil || isDragging
+    }
+
+    private var shouldShowPreview: Bool {
+        isDragging || hoverLocation != nil
+    }
+
+    private var previewBubbleWidth: CGFloat {
+        60
+    }
+
+    private func previewOffsetX(in width: CGFloat) -> CGFloat {
+        let rawX = width * previewProgress(in: width) - previewBubbleWidth / 2
+        return max(0, min(width - previewBubbleWidth, rawX))
+    }
+
+    private func previewBubble(width: CGFloat) -> some View {
+        let previewTime = playback.duration * previewProgress(in: width)
+        return Text(formatTime(previewTime))
+            .font(AppFonts.captionMedium)
+            .foregroundColor(.primary)
+            .monospacedDigit()
+            .padding(.horizontal, DesignTokens.Spacing.sm)
+            .padding(.vertical, DesignTokens.Spacing.xs)
+            .frame(width: previewBubbleWidth, alignment: .center)
+            .background(
+                BlurEffectView(material: .hudWindow, blendingMode: .behindWindow)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color.white.opacity(0.15), lineWidth: 1)
+            )
+    }
+
+    private func formatTime(_ time: Double) -> String {
+        let totalSeconds = max(0, Int(time))
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        let seconds = totalSeconds % 60
+        if hours > 0 {
+            return String(format: "%d:%02d:%02d", hours, minutes, seconds)
+        }
+        return String(format: "%d:%02d", minutes, seconds)
+    }
+
+}
+
+private struct BlurEffectView: NSViewRepresentable {
+    var material: NSVisualEffectView.Material
+    var blendingMode: NSVisualEffectView.BlendingMode
+
+    func makeNSView(context: Context) -> NSVisualEffectView {
+        let view = NSVisualEffectView()
+        view.material = material
+        view.blendingMode = blendingMode
+        view.state = .active
+        return view
+    }
+
+    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
+        nsView.material = material
+        nsView.blendingMode = blendingMode
+    }
+}
+
+private struct HoverTrackingView: NSViewRepresentable {
+    var onUpdate: (CGPoint?) -> Void
+
+    func makeNSView(context: Context) -> NSView {
+        let view = TrackingNSView()
+        view.onUpdate = onUpdate
+        return view
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {
+        guard let trackingView = nsView as? TrackingNSView else { return }
+        trackingView.onUpdate = onUpdate
+    }
+
+    private final class TrackingNSView: NSView {
+        var onUpdate: ((CGPoint?) -> Void)?
+        private var trackingArea: NSTrackingArea?
+
+        override func updateTrackingAreas() {
+            super.updateTrackingAreas()
+            if let trackingArea {
+                removeTrackingArea(trackingArea)
+            }
+            let options: NSTrackingArea.Options = [
+                .mouseEnteredAndExited,
+                .mouseMoved,
+                .activeInActiveApp,
+                .inVisibleRect
+            ]
+            let area = NSTrackingArea(rect: bounds, options: options, owner: self, userInfo: nil)
+            addTrackingArea(area)
+            trackingArea = area
+        }
+
+        override func mouseEntered(with event: NSEvent) {
+            updateLocation(with: event)
+        }
+
+        override func mouseMoved(with event: NSEvent) {
+            updateLocation(with: event)
+        }
+
+        override func mouseExited(with event: NSEvent) {
+            onUpdate?(nil)
+        }
+
+        private func updateLocation(with event: NSEvent) {
+            let location = convert(event.locationInWindow, from: nil)
+            onUpdate?(location)
+        }
+    }
 }
 
 // MARK: - Preview

@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 03/11/25.
 //
 
-import SwiftUI
 import AppKit
+import SwiftUI
 
 // MARK: - Track Artwork View
 
@@ -53,7 +53,7 @@ struct TrackArtworkView: View {
                 .fill(Color(nsColor: .controlBackgroundColor))
 
             Image(systemName: "music.note")
-                .font(.system(size: size * 0.4))
+                .font(AppFonts.placeholder(size: size * 0.4))
                 .foregroundColor(.secondary.opacity(0.5))
         }
     }
@@ -79,7 +79,8 @@ struct TrackArtworkView: View {
                 ArtworkCache.shared.getArtwork(for: trackId, size: size) { image in
                     Task { @MainActor in
                         guard !Task.isCancelled,
-                              self.track.trackId == trackId else {
+                            self.track.trackId == trackId
+                        else {
                             continuation.resume()
                             return
                         }
@@ -145,7 +146,7 @@ struct AlbumArtworkView: View {
                 )
 
             Image(systemName: "music.note")
-                .font(.system(size: size * 0.4))
+                .font(AppFonts.placeholder(size: size * 0.4))
                 .foregroundColor(.white)
         }
     }
@@ -229,7 +230,7 @@ struct ArtistArtworkView: View {
                 )
 
             Image(systemName: "person.fill")
-                .font(.system(size: size * 0.4))
+                .font(AppFonts.placeholder(size: size * 0.4))
                 .foregroundColor(.white)
         }
     }

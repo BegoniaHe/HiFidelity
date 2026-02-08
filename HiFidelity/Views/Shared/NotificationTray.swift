@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 28/10/25.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 // MARK: - Notification Types
 
@@ -161,7 +161,7 @@ struct NotificationTray: View {
             ZStack(alignment: .topTrailing) {
                 // Notification icon
                 Image(systemName: notificationIcon)
-                    .font(.system(size: 18, weight: .medium))
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(.secondary)
                     .frame(width: 36, height: 36)
                     .background(
@@ -172,7 +172,7 @@ struct NotificationTray: View {
                 // Unread count badge
                 if manager.unreadCount > 0 {
                     Text("\(manager.unreadCount)")
-                        .font(.system(size: 8, weight: .bold))
+                        .font(AppFonts.captionSmall)
                         .foregroundColor(.white)
                         .frame(minWidth: 14, minHeight: 14)
                         .background(
@@ -217,11 +217,11 @@ struct NotificationPopover: View {
             // Header
             HStack {
                 Text("Notifications")
-                    .font(.headline)
+                    .font(AppFonts.heading4)
 
                 if manager.unreadCount > 0 {
                     Text("(\(manager.unreadCount) new)")
-                        .font(.caption)
+                        .font(AppFonts.captionMedium)
                         .foregroundColor(.secondary)
                 }
 
@@ -237,7 +237,7 @@ struct NotificationPopover: View {
                     .help("Clear all notifications")
                 }
             }
-            .padding(10)
+            .padding(DesignTokens.Spacing.md)
 
             Divider()
 
@@ -260,11 +260,11 @@ struct NotificationPopover: View {
     private var emptyState: some View {
         VStack(spacing: 8) {
             Image(systemName: "bell.slash")
-                .font(.largeTitle)
+                .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary)
 
             Text("No notifications")
-                .font(.subheadline)
+                .font(AppFonts.bodySmall)
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -319,26 +319,26 @@ struct NotificationRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: message.type.icon)
-                .font(.system(size: 14))
+                .font(AppFonts.labelLarge)
                 .foregroundColor(message.type.color)
                 .frame(width: 20)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(message.title)
-                    .font(.system(size: 13))
+            Text(message.title)
+                .font(AppFonts.bodySmall)
                     .foregroundColor(.primary)
                     .fixedSize(horizontal: false, vertical: true)
 
                 Text(timeAgoText)
-                    .font(.caption)
+                    .font(AppFonts.captionMedium)
                     .foregroundColor(.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
             if isHovered {
                 Button(action: onDismiss) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 12))
+                Image(systemName: "xmark.circle.fill")
+                    .font(AppFonts.captionLarge)
                         .foregroundColor(.secondary)
                 }
                 .buttonStyle(.plain)
@@ -346,7 +346,7 @@ struct NotificationRow: View {
             }
         }
         .padding(.horizontal)
-        .padding(.vertical, 8)
+        .padding(.vertical, DesignTokens.Spacing.sm)
         .background(isHovered ? Color.secondary.opacity(0.1) : Color.clear)
         .onHover { hovering in
             isHovered = hovering

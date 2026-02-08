@@ -4,8 +4,8 @@
 //
 //  Created by Varun Rathod
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Volume control with mute button and slider
 struct VolumeControlSection: View {
@@ -39,7 +39,7 @@ struct VolumeControlSection: View {
         var body: some View {
             Button(action: action) {
                 Image(systemName: icon)
-                    .font(.system(size: 16, weight: .medium))
+                    .font(AppFonts.labelLarge)
                     .symbolRenderingMode(.hierarchical)
                     .foregroundColor(.secondary)
                     .frame(width: 32, height: 32)

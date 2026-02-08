@@ -5,9 +5,9 @@
 //  Created by Varun Rathod on 31/10/25.
 //
 
-import SwiftUI
 import AppKit
 import Observation
+import SwiftUI
 
 /// Playlist sidebar showing pinned and user playlists
 struct PlaylistSidebarView: View {
@@ -31,7 +31,7 @@ struct PlaylistSidebarView: View {
             playlistsHeader
 
             Divider()
-                .opacity(0) // invisible
+                .opacity(0)  // invisible
 
             // Search bar
             searchBar
@@ -42,10 +42,10 @@ struct PlaylistSidebarView: View {
             if viewModel.isLoading {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding(.bottom, 90)
+                    .padding(.bottom, DesignTokens.ControlHeight.playbackBar)
             } else if viewModel.allPlaylists.isEmpty {
                 emptyStateView
-                    .padding(.bottom, 90)
+                    .padding(.bottom, DesignTokens.ControlHeight.playbackBar)
             } else {
                 ScrollView {
                     LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
@@ -82,10 +82,10 @@ struct PlaylistSidebarView: View {
                             }
                         }
                     }
-                    .padding(.horizontal, 12)
-                    .padding(.top, 8)
+                    .padding(.horizontal, DesignTokens.Spacing.md)
+                    .padding(.top, DesignTokens.Spacing.sm)
                 }
-                .padding(.bottom, 90)
+                .padding(.bottom, DesignTokens.ControlHeight.playbackBar)
             }
         }
         .background(Color.black.opacity(0.02))
@@ -145,13 +145,15 @@ extension PlaylistSidebarView {
                     selectAllPlaylists()
                 } label: {
                     let visibleSelectable = viewModel.pinnedPlaylists + viewModel.userPlaylists
-                    let allVisibleSelected = !visibleSelectable.isEmpty && visibleSelectable.allSatisfy { selectedPlaylistIds.contains($0.id) }
+                    let allVisibleSelected =
+                        !visibleSelectable.isEmpty
+                        && visibleSelectable.allSatisfy { selectedPlaylistIds.contains($0.id) }
                     Text(allVisibleSelected ? "Deselect All" : "Select All")
                         .font(AppFonts.labelMedium)
                         .foregroundColor(theme.currentTheme.primaryColor)
                 }
                 .buttonStyle(.plain)
-                .padding(.leading, 8)
+                .padding(.leading, DesignTokens.Spacing.sm)
 
                 Spacer()
 
@@ -163,7 +165,7 @@ extension PlaylistSidebarView {
                     deleteSelectedPlaylists()
                 } label: {
                     Image(systemName: "trash")
-                        .font(.system(size: 16, weight: .medium))
+                        .font(AppFonts.labelLarge)
                         .foregroundColor(.red)
                 }
                 .buttonStyle(.plain)
@@ -171,11 +173,11 @@ extension PlaylistSidebarView {
             } else {
                 // Normal mode UI
                 Image(systemName: "music.note.list")
-                    .font(.system(size: 22))
+                    .font(AppFonts.heading4)
                     .foregroundColor(.secondary)
 
                 Text("Playlists")
-                    .font(AppFonts.sidebarHeader)
+                    .font(AppFonts.heading4)
 
                 Spacer()
 
@@ -188,9 +190,9 @@ extension PlaylistSidebarView {
                 CreatePlaylistButton(action: { showCreatePlaylist = true })
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-        .frame(height: 52)
+        .padding(.horizontal, DesignTokens.Spacing.lg)
+        .padding(.vertical, DesignTokens.Spacing.sm)
+        .frame(height: DesignTokens.ControlHeight.xl)
     }
 
     private struct SortMenuButton: View {
@@ -215,19 +217,23 @@ extension PlaylistSidebarView {
                             Text(option.label)
                             Spacer()
                             if sortOption == option {
-                                Image(systemName: sortAscending ? option.ascendingIcon : option.descendingIcon)
+                                Image(
+                                    systemName: sortAscending
+                                        ? option.ascendingIcon : option.descendingIcon)
                             }
                         }
                     }
                 }
             } label: {
                 Image(systemName: "line.3.horizontal.decrease.circle")
-                    .font(.system(size: 14, weight: .medium))
+                    .font(AppFonts.labelLarge)
                     .foregroundColor(isHovered ? theme.currentTheme.primaryColor : .secondary)
                     .frame(width: 32, height: 32)
                     .background(
                         Circle()
-                            .fill(isHovered ? theme.currentTheme.primaryColor.opacity(0.12) : Color.clear)
+                            .fill(
+                                isHovered
+                                    ? theme.currentTheme.primaryColor.opacity(0.12) : Color.clear)
                     )
                     .scaleEffect(isHovered ? 1.08 : 1.0)
                     .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
@@ -249,12 +255,15 @@ extension PlaylistSidebarView {
         var body: some View {
             Button(action: action) {
                 Image(systemName: "plus")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(AppFonts.heading4)
                     .foregroundColor(isHovered ? .white : theme.currentTheme.primaryColor)
                     .frame(width: 32, height: 32)
                     .background(
                         Circle()
-                            .fill(isHovered ? theme.currentTheme.primaryColor : theme.currentTheme.primaryColor.opacity(0.12))
+                            .fill(
+                                isHovered
+                                    ? theme.currentTheme.primaryColor
+                                    : theme.currentTheme.primaryColor.opacity(0.12))
                     )
                     .scaleEffect(isHovered ? 1.08 : 1.0)
                     .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
@@ -275,12 +284,14 @@ extension PlaylistSidebarView {
         var body: some View {
             Button(action: action) {
                 Image(systemName: "checkmark.circle")
-                    .font(.system(size: 14, weight: .medium))
+                    .font(AppFonts.labelLarge)
                     .foregroundColor(isHovered ? theme.currentTheme.primaryColor : .secondary)
                     .frame(width: 32, height: 32)
                     .background(
                         Circle()
-                            .fill(isHovered ? theme.currentTheme.primaryColor.opacity(0.12) : Color.clear)
+                            .fill(
+                                isHovered
+                                    ? theme.currentTheme.primaryColor.opacity(0.12) : Color.clear)
                     )
                     .scaleEffect(isHovered ? 1.08 : 1.0)
                     .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
@@ -300,7 +311,7 @@ extension PlaylistSidebarView {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.secondary)
-                .font(.system(size: 14))
+                .font(AppFonts.labelLarge)
 
             TextField("Search playlists", text: $searchText)
                 .textFieldStyle(.plain)
@@ -312,7 +323,7 @@ extension PlaylistSidebarView {
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.secondary)
-                        .font(.system(size: 14))
+                        .font(AppFonts.labelLarge)
                 }
                 .buttonStyle(.plain)
             }
@@ -323,15 +334,15 @@ extension PlaylistSidebarView {
                 sortAscending: $sortAscending
             )
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
+        .padding(.horizontal, DesignTokens.Spacing.md)
+        .padding(.vertical, DesignTokens.Spacing.sm)
         .background(
             RoundedRectangle(cornerRadius: 6)
                 .fill(Color(nsColor: .controlBackgroundColor).opacity(0.5))
         )
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-        .frame(height: 46)
+        .padding(.horizontal, DesignTokens.Spacing.lg)
+        .padding(.vertical, DesignTokens.Spacing.md)
+        .frame(height: DesignTokens.ControlHeight.xl)
     }
 
     // MARK: - Section Header
@@ -339,13 +350,13 @@ extension PlaylistSidebarView {
     private func sectionHeader(title: String) -> some View {
         HStack {
             Text(title)
-                .font(.system(size: 12, weight: .semibold))
+                .font(AppFonts.labelSmall)
                 .foregroundColor(.secondary)
                 .textCase(.uppercase)
             Spacer()
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 8)
+        .padding(.horizontal, DesignTokens.Spacing.sm)
+        .padding(.vertical, DesignTokens.Spacing.sm)
         .background(Color(nsColor: .windowBackgroundColor).opacity(0.95))
     }
 
@@ -359,7 +370,7 @@ extension PlaylistSidebarView {
             // Selection checkbox (only for user playlists in selection mode)
             if isSelectionMode && canBeDeleted {
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 20))
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(isSelected ? theme.currentTheme.primaryColor : .secondary)
             }
 
@@ -368,7 +379,7 @@ extension PlaylistSidebarView {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(playlist.name)
-                    .font(AppFonts.sidebarItem)
+                    .font(AppFonts.labelLarge)
                     .foregroundColor(.primary)
                     .lineLimit(1)
 
@@ -385,21 +396,25 @@ extension PlaylistSidebarView {
                             .foregroundColor(.secondary)
                             .lineLimit(1)
                     } else {
-                        Text("Playlist • \(playlist.trackCount) \(playlist.trackCount == 1 ? "song" : "songs")")
-                            .font(AppFonts.captionMedium)
-                            .foregroundColor(.secondary)
-                            .lineLimit(1)
+                        Text(
+                            "Playlist • \(playlist.trackCount) \(playlist.trackCount == 1 ? "song" : "songs")"
+                        )
+                        .font(AppFonts.captionMedium)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
                     }
                 }
             }
 
             Spacer()
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 6)
+        .padding(.horizontal, DesignTokens.Spacing.sm)
+        .padding(.vertical, DesignTokens.Spacing.sm)
         .background(
             RoundedRectangle(cornerRadius: 6)
-                .fill(isPlaylistSelected(playlist) ? theme.currentTheme.primaryColor.opacity(0.1) : Color.clear)
+                .fill(
+                    isPlaylistSelected(playlist)
+                        ? theme.currentTheme.primaryColor.opacity(0.1) : Color.clear)
         )
         .contentShape(Rectangle())
         .onTapGesture {
@@ -433,7 +448,7 @@ extension PlaylistSidebarView {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 56, height: 56)
-                    .cornerRadius(4)
+                    .cornerRadius(DesignTokens.CornerRadius.xxs)
             } else {
                 RoundedRectangle(cornerRadius: 4)
                     .fill(
@@ -449,7 +464,7 @@ extension PlaylistSidebarView {
                     .frame(width: 56, height: 56)
                     .overlay {
                         Image(systemName: playlist.icon)
-                            .font(.system(size: 20))
+                            .font(AppFonts.bodyLarge)
                             .foregroundColor(.white)
                     }
             }
@@ -475,7 +490,9 @@ extension PlaylistSidebarView {
                     await viewModel.togglePin(playlist: playlist)
                 }
             } label: {
-                Label(playlist.isPinned ? "Unpin" : "Pin to Top", systemImage: playlist.isPinned ? "pin.slash" : "pin")
+                Label(
+                    playlist.isPinned ? "Unpin" : "Pin to Top",
+                    systemImage: playlist.isPinned ? "pin.slash" : "pin")
             }
 
             Divider()
@@ -591,13 +608,16 @@ extension PlaylistSidebarView {
     private var emptyStateView: some View {
         VStack(spacing: 12) {
             Image(systemName: "music.note.list")
-                .font(.system(size: 48))
+                .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.5))
 
-            Text(searchText.isEmpty ? "No playlists yet\nCreate your first playlist" : "No playlists found")
-                .font(AppFonts.labelMedium)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
+            Text(
+                searchText.isEmpty
+                    ? "No playlists yet\nCreate your first playlist" : "No playlists found"
+            )
+            .font(AppFonts.labelMedium)
+            .foregroundColor(.secondary)
+            .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

@@ -5,9 +5,9 @@
 //  Compact mini player window with integrated queue and lyrics
 //
 
-import SwiftUI
-import Observation
 import AppKit
+import Observation
+import SwiftUI
 
 /// Compact mini player window view with expandable queue and lyrics
 struct MiniPlayerView: View {
@@ -53,7 +53,7 @@ struct MiniPlayerView: View {
             }
         )
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .padding(8)
+        .padding(DesignTokens.Spacing.sm)
         .onChange(of: expandedPanel) { _, newPanel in
             updateWindowSize(expanded: newPanel != nil)
         }
@@ -72,7 +72,8 @@ extension MiniPlayerView {
     // MARK: - Window Management
 
     private func updateWindowSize(expanded: Bool) {
-        guard let window = NSApplication.shared.windows.first(where: { $0.title == "Mini Player" }) else { return }
+        guard let window = NSApplication.shared.windows.first(where: { $0.title == "Mini Player" })
+        else { return }
 
         let padding: CGFloat = 16  // 8px on each side
         let baseHeight: CGFloat = 140 + padding  // 140 (content height) + padding
@@ -99,7 +100,8 @@ extension MiniPlayerView {
     }
 
     private func updateWindowWidth() {
-        guard let window = NSApplication.shared.windows.first(where: { $0.title == "Mini Player" }) else { return }
+        guard let window = NSApplication.shared.windows.first(where: { $0.title == "Mini Player" })
+        else { return }
 
         let padding: CGFloat = 16  // 8px on each side
         let targetWidth: CGFloat = (self.showArtwork ? 440 : 360) + padding
@@ -119,7 +121,10 @@ extension MiniPlayerView {
 
     private func updateWindowLevel() {
         DispatchQueue.main.async {
-            guard let window = NSApplication.shared.windows.first(where: { $0.title == "Mini Player" }) else { return }
+            guard
+                let window = NSApplication.shared.windows.first(where: { $0.title == "Mini Player" }
+                )
+            else { return }
 
             window.level = self.isFloatable ? .floating : .normal
         }
@@ -158,23 +163,23 @@ extension MiniPlayerView {
         HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(track.title)
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(AppFonts.heading5)
                     .foregroundColor(.primary)
                     .lineLimit(1)
 
                 HStack(spacing: 4) {
                     Text(track.artist)
-                        .font(.system(size: 11))
+                        .font(AppFonts.captionMedium)
                         .foregroundColor(.secondary)
                         .lineLimit(1)
 
                     if !track.album.isEmpty {
                         Text("•")
-                            .font(.system(size: 11))
+                            .font(AppFonts.captionMedium)
                             .foregroundColor(.secondary.opacity(0.5))
 
                         Text(track.album)
-                            .font(.system(size: 11))
+                            .font(AppFonts.captionMedium)
                             .foregroundColor(.secondary)
                             .lineLimit(1)
                     }
@@ -185,7 +190,7 @@ extension MiniPlayerView {
 
             // Time display
             Text("-\(formatRemainingTime())")
-                .font(.system(size: 11, weight: .medium))
+                .font(AppFonts.captionMedium)
                 .foregroundColor(.secondary)
                 .monospacedDigit()
 
@@ -195,22 +200,23 @@ extension MiniPlayerView {
                 // Show main window using its identifier
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     let mainWindowId = NSUserInterfaceItemIdentifier("MainPlayerWindow")
-                    if let mainWindow = NSApp.windows.first(where: { $0.identifier == mainWindowId }) {
+                    if let mainWindow = NSApp.windows.first(where: { $0.identifier == mainWindowId }
+                    ) {
                         mainWindow.makeKeyAndOrderFront(nil)
                         NSApp.activate(ignoringOtherApps: true)
                     }
                 }
             }) {
                 Image(systemName: "xmark.circle.fill")
-                    .font(.system(size: 16))
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(.secondary)
                     .frame(width: 24, height: 24)
             }
             .buttonStyle(.plain)
             .help("Close Mini Player")
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
+        .padding(.horizontal, DesignTokens.Spacing.lg)
+        .padding(.vertical, DesignTokens.Spacing.md)
         .background(Color.black.opacity(0.05))
     }
 
@@ -229,9 +235,9 @@ extension MiniPlayerView {
                     playback.togglePlayPause()
                 }) {
                     Image(systemName: playback.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                        .font(.system(size: 48))
+                        .font(AppFonts.displayLarge)
                         .foregroundColor(.white)
-                        .shadow(color: .black.opacity(0.3), radius: 10)
+                        .tokenShadow(DesignTokens.Shadow.level1)
                 }
                 .buttonStyle(.plain)
                 .transition(.scale.combined(with: .opacity))
@@ -270,8 +276,8 @@ extension MiniPlayerView {
                 // Right: Queue and Lyrics
                 actionButtons
             }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 12)
+            .padding(.horizontal, DesignTokens.Spacing.lg)
+            .padding(.bottom, DesignTokens.Spacing.md)
         }
         .frame(maxWidth: .infinity)
     }
@@ -300,8 +306,8 @@ extension MiniPlayerView {
             )
         }
         .frame(height: 4)
-        .padding(.horizontal, 16)
-        .padding(.top, 12)
+        .padding(.horizontal, DesignTokens.Spacing.lg)
+        .padding(.top, DesignTokens.Spacing.md)
     }
 
     // MARK: - Volume Section
@@ -312,7 +318,7 @@ extension MiniPlayerView {
                 showVolumePopover.toggle()
             }) {
                 Image(systemName: volumeIcon)
-                    .font(.system(size: 16))
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(.secondary)
                     .frame(width: 24, height: 24)
             }
@@ -405,7 +411,7 @@ extension MiniPlayerView {
                 .disabled(playback.currentTrack == nil)
             } label: {
                 Image(systemName: "ellipsis")
-                    .font(.system(size: 16))
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(.secondary)
                     .frame(width: 32, height: 32)
                     .contentShape(Rectangle())
@@ -424,7 +430,7 @@ extension MiniPlayerView {
                 playback.previous()
             }) {
                 Image(systemName: "backward.fill")
-                    .font(.system(size: 20))
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(.primary)
                     .frame(width: 32, height: 32)
             }
@@ -436,7 +442,7 @@ extension MiniPlayerView {
                 playback.togglePlayPause()
             }) {
                 Image(systemName: playback.isPlaying ? "pause.fill" : "play.fill")
-                    .font(.system(size: 18))
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(.primary)
                     .frame(width: 32, height: 32)
             }
@@ -448,7 +454,7 @@ extension MiniPlayerView {
                 playback.next()
             }) {
                 Image(systemName: "forward.fill")
-                    .font(.system(size: 20))
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(.primary)
                     .frame(width: 32, height: 32)
             }
@@ -466,12 +472,16 @@ extension MiniPlayerView {
                 expandedPanel = expandedPanel == .lyrics ? nil : .lyrics
             }) {
                 Image(systemName: "quote.bubble")
-                    .font(.system(size: 16))
-                    .foregroundColor(expandedPanel == .lyrics ? theme.currentTheme.primaryColor : .secondary)
+                    .font(AppFonts.bodyLarge)
+                    .foregroundColor(
+                        expandedPanel == .lyrics ? theme.currentTheme.primaryColor : .secondary
+                    )
                     .frame(width: 32, height: 32)
                     .background(
                         RoundedRectangle(cornerRadius: 6)
-                            .fill(expandedPanel == .lyrics ? theme.currentTheme.primaryColor.opacity(0.15) : Color.clear)
+                            .fill(
+                                expandedPanel == .lyrics
+                                    ? theme.currentTheme.primaryColor.opacity(0.15) : Color.clear)
                     )
                     .contentShape(Rectangle())
             }
@@ -483,22 +493,27 @@ extension MiniPlayerView {
             }) {
                 ZStack(alignment: .topTrailing) {
                     Image(systemName: "list.bullet")
-                        .font(.system(size: 16))
-                        .foregroundColor(expandedPanel == .queue ? theme.currentTheme.primaryColor : .secondary)
+                        .font(AppFonts.bodyLarge)
+                        .foregroundColor(
+                            expandedPanel == .queue ? theme.currentTheme.primaryColor : .secondary
+                        )
                         .frame(width: 32, height: 32)
                         .background(
                             RoundedRectangle(cornerRadius: 6)
-                                .fill(expandedPanel == .queue ? theme.currentTheme.primaryColor.opacity(0.15) : Color.clear)
+                                .fill(
+                                    expandedPanel == .queue
+                                        ? theme.currentTheme.primaryColor.opacity(0.15)
+                                        : Color.clear)
                         )
                         .contentShape(Rectangle())
 
                     if playback.queue.count > 0 {
                         Text("\(playback.queue.count)")
-                            .font(.system(size: 8, weight: .bold))
+                            .font(AppFonts.captionSmall)
                             .foregroundColor(.white)
-                            .padding(.horizontal, 3)
-                            .padding(.vertical, 1)
-                            .background(Capsule().fill(Color.red))
+                            .padding(.horizontal, DesignTokens.Spacing.xs)
+                            .padding(.vertical, DesignTokens.Spacing.xs)
+                            .background(Circle().fill(Color.red))
                             .offset(x: 4, y: -4)
                     }
                 }
@@ -514,7 +529,7 @@ extension MiniPlayerView {
             // Header with close button
             HStack {
                 Text("No Track Playing")
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(AppFonts.heading5)
                     .foregroundColor(.primary)
 
                 Spacer()
@@ -525,22 +540,24 @@ extension MiniPlayerView {
                     // Show main window using its identifier
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         let mainWindowId = NSUserInterfaceItemIdentifier("MainPlayerWindow")
-                        if let mainWindow = NSApp.windows.first(where: { $0.identifier == mainWindowId }) {
+                        if let mainWindow = NSApp.windows.first(where: {
+                            $0.identifier == mainWindowId
+                        }) {
                             mainWindow.makeKeyAndOrderFront(nil)
                             NSApp.activate(ignoringOtherApps: true)
                         }
                     }
                 }) {
                     Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 16))
+                        .font(AppFonts.bodyLarge)
                         .foregroundColor(.secondary)
                         .frame(width: 24, height: 24)
                 }
                 .buttonStyle(.plain)
                 .help("Close Mini Player")
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
+            .padding(.horizontal, DesignTokens.Spacing.lg)
+            .padding(.vertical, DesignTokens.Spacing.md)
             .background(Color.black.opacity(0.05))
 
             Divider()
@@ -554,7 +571,7 @@ extension MiniPlayerView {
                             .fill(Color(nsColor: .controlBackgroundColor))
 
                         Image(systemName: "music.note")
-                            .font(.system(size: 48))
+                            .font(AppFonts.displayLarge)
                             .foregroundColor(.secondary.opacity(0.3))
                     }
                     .frame(width: 140, height: 140)
@@ -565,10 +582,10 @@ extension MiniPlayerView {
                 HStack {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Play a song to get started")
-                            .font(.system(size: 12))
+                            .font(AppFonts.captionLarge)
                             .foregroundColor(.secondary.opacity(0.8))
                     }
-                    .padding(.leading, 16)
+                    .padding(.leading, DesignTokens.Spacing.lg)
 
                     Spacer()
                 }

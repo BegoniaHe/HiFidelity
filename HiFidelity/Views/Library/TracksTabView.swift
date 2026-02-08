@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 31/10/25.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Tracks tab view displaying all library tracks with list/grid view and sorting
 struct TracksTabView: View {
@@ -26,7 +26,9 @@ struct TracksTabView: View {
     @AppStorage("tracksSortAscending") private var savedSortAscending: Bool = true
     @State private var viewType: ViewType = .list
     @State private var selectedTrack: Track.ID?
-    @State private var sortOrder: [KeyPathComparator<Track>] = [KeyPathComparator(\Track.title, order: .forward)]
+    @State private var sortOrder: [KeyPathComparator<Track>] = [
+        KeyPathComparator(\Track.title, order: .forward)
+    ]
     @State private var selectedFilter: TrackFilter?
 
     init(isVisible: Bool = true) {
@@ -100,7 +102,7 @@ struct TracksTabView: View {
         HStack(spacing: 16) {
             // Track count
             Text("\(sortedTracks.count) tracks")
-                .font(.system(size: 13, weight: .medium))
+                .font(AppFonts.labelMedium)
                 .foregroundColor(.secondary)
 
             Spacer()
@@ -114,9 +116,9 @@ struct TracksTabView: View {
 
             viewToggle
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
-        .frame(height: 46)
+        .padding(.horizontal, DesignTokens.Spacing.xl)
+        .padding(.vertical, DesignTokens.Spacing.md)
+        .frame(height: DesignTokens.ControlHeight.xl)
         .background(Color(nsColor: .windowBackgroundColor))
     }
 
@@ -128,7 +130,7 @@ struct TracksTabView: View {
                 savedViewType = "list"
             } label: {
                 Image(systemName: "list.bullet")
-                    .font(.system(size: 13))
+                    .font(AppFonts.labelSmall)
                     .foregroundColor(viewType == .list ? .white : .primary)
                     .frame(width: 32, height: 28)
                     .background(
@@ -143,7 +145,7 @@ struct TracksTabView: View {
                 savedViewType = "grid"
             } label: {
                 Image(systemName: "square.grid.2x2")
-                    .font(.system(size: 13))
+                    .font(AppFonts.labelSmall)
                     .foregroundColor(viewType == .grid ? .white : .primary)
                     .frame(width: 32, height: 28)
                     .background(
@@ -187,16 +189,18 @@ struct TracksTabView: View {
 
     private var trackGridView: some View {
         ScrollView {
-            LazyVGrid(columns: [
-                GridItem(.adaptive(minimum: 140, maximum: 180), spacing: 16)
-            ], spacing: 16) {
+            LazyVGrid(
+                columns: [
+                    GridItem(.adaptive(minimum: 140, maximum: 180), spacing: 16)
+                ], spacing: 16
+            ) {
                 ForEach(sortedTracks.isEmpty ? tracks : sortedTracks) { track in
                     TrackGridCard(track: track) {
                         playTrack(track)
                     }
                 }
             }
-            .padding(16)
+            .padding(DesignTokens.Spacing.lg)
         }
     }
 
@@ -208,15 +212,15 @@ struct TracksTabView: View {
 
             VStack(spacing: 18) {
                 Image(systemName: "music.note")
-                    .font(.system(size: 48))
+                    .font(AppFonts.displayLarge)
                     .foregroundColor(.secondary.opacity(0.3))
 
                 Text("No Tracks")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(AppFonts.heading4)
                     .foregroundColor(.primary)
 
                 Text("Add music folders to see your library here")
-                    .font(.system(size: 12))
+                    .font(AppFonts.captionLarge)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
             }
@@ -238,7 +242,7 @@ struct TracksTabView: View {
                     .tint(theme.currentTheme.primaryColor)
 
                 Text("Loading tracks...")
-                    .font(.system(size: 14))
+                    .font(AppFonts.bodySmall)
                     .foregroundColor(.secondary)
             }
 
@@ -285,7 +289,8 @@ struct TracksTabView: View {
             case .favorites:
                 filteredTracks = tracks.filter { $0.isFavorite }
             case .recentlyAdded:
-                let thirtyDaysAgo = Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
+                let thirtyDaysAgo =
+                    Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
                 filteredTracks = tracks.filter {
                     guard let dateAdded = $0.dateAdded else { return false }
                     return dateAdded >= thirtyDaysAgo
@@ -402,11 +407,17 @@ enum TrackSortField: String, Hashable {
     }
 
     static var regularFields: [TrackSortField] {
-        [.title, .artist, .album, .genre, .year, .duration, .playCount, .codec, .dateAdded, .filename, .trackNumber, .discNumber, .playlistOrder]
+        [
+            .title, .artist, .album, .genre, .year, .duration, .playCount, .codec, .dateAdded,
+            .filename, .trackNumber, .discNumber, .playlistOrder
+        ]
     }
 
     static var allFields: [TrackSortField] {
-        [.title, .artist, .album, .genre, .year, .duration, .playCount, .codec, .dateAdded, .filename, .trackNumber, .discNumber, .playlistOrder]
+        [
+            .title, .artist, .album, .genre, .year, .duration, .playCount, .codec, .dateAdded,
+            .filename, .trackNumber, .discNumber, .playlistOrder
+        ]
     }
 
     func getComparator(ascending: Bool) -> KeyPathComparator<Track> {
@@ -580,10 +591,10 @@ struct TrackTableOptionsDropdown: View {
         } label: {
             HStack(spacing: 6) {
                 Image(systemName: "line.3.horizontal.decrease.circle")
-                    .font(.system(size: 16, weight: .medium))
+                    .font(AppFonts.labelLarge)
                 if selectedFilter != nil {
                     Image(systemName: "circle.fill")
-                        .font(.system(size: 6))
+                        .font(AppFonts.captionSmall)
                         .foregroundColor(theme.currentTheme.primaryColor)
                 }
             }
@@ -591,7 +602,9 @@ struct TrackTableOptionsDropdown: View {
             .frame(width: 32, height: 32)
             .background(
                 Circle()
-                    .fill(selectedFilter != nil ? theme.currentTheme.primaryColor.opacity(0.15) : Color.clear)
+                    .fill(
+                        selectedFilter != nil
+                            ? theme.currentTheme.primaryColor.opacity(0.15) : Color.clear)
             )
         }
         .menuStyle(.borderlessButton)

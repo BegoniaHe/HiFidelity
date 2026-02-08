@@ -5,19 +5,19 @@
 //  Created by Varun Rathod on 31/10/25.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 // MARK: - Shared Empty State View
 
 func emptyStateView(icon: String, message: String) -> some View {
     VStack(spacing: 20) {
         Image(systemName: icon)
-            .font(.system(size: 56, weight: .light))
+            .font(AppFonts.displayLarge)
             .foregroundColor(.secondary.opacity(0.35))
 
         Text(message)
-            .font(.system(size: 15, weight: .medium))
+            .font(AppFonts.bodyMedium)
             .foregroundColor(.secondary.opacity(0.8))
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -38,13 +38,16 @@ struct AlbumCard: View {
                 // Artwork
                 ZStack {
                     if let albumId = album.id {
-                        AlbumArtworkView(albumId: albumId, size: 160, cornerRadius: 8)
-                            .shadow(color: .black.opacity(isHovered ? 0.25 : 0.15), radius: isHovered ? 12 : 8, y: isHovered ? 6 : 4)
+                        AlbumArtworkView(
+                            albumId: albumId, size: 160, cornerRadius: DesignTokens.CornerRadius.sm
+                        )
+                        .tokenShadow(
+                            isHovered ? DesignTokens.Shadow.level2 : DesignTokens.Shadow.level1)
                     } else {
-                        RoundedRectangle(cornerRadius: 10)
+                        RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.md)
                             .fill(theme.currentTheme.primaryColor.opacity(0.3))
                             .frame(width: 160, height: 160)
-                            .shadow(color: .black.opacity(0.1), radius: 6, y: 3)
+                            .tokenShadow(DesignTokens.Shadow.level1)
                     }
 
                     if isHovered {
@@ -54,10 +57,13 @@ struct AlbumCard: View {
                                 .frame(width: 54, height: 54)
                                 .overlay(
                                     Image(systemName: "play.fill")
-                                        .font(.system(size: 20, weight: .semibold))
+                                        .font(AppFonts.heading4)
                                         .foregroundColor(.white)
                                 )
-                                .shadow(color: theme.currentTheme.primaryColor.opacity(0.4), radius: 12, y: 4)
+                                .tokenShadow(
+                                    DesignTokens.Shadow.level2,
+                                    color: theme.currentTheme.primaryColor.opacity(0.4)
+                                )
                         }
                         .buttonStyle(.plain)
                         .transition(.scale(scale: 0.8).combined(with: .opacity))
@@ -70,27 +76,30 @@ struct AlbumCard: View {
                 // Info
                 VStack(alignment: .leading, spacing: 5) {
                     Text(album.title)
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(AppFonts.heading5)
                         .foregroundColor(.primary)
                         .lineLimit(1)
                         .help(album.title)
 
                     Text(album.displayArtist)
-                        .font(.system(size: 10, weight: .medium))
+                        .font(AppFonts.captionMedium)
                         .foregroundColor(.secondary)
                         .lineLimit(1)
 
-                    let albumYear = (album.year != nil && !album.year!.isEmpty) ? "\(album.year!) • " : ""
-                    Text("\(albumYear)\(album.trackCount.description) \(album.trackCount == 1 ? "song" : "songs")")
-                        .font(.system(size: 10))
-                        .foregroundColor(.secondary.opacity(0.85))
-                        .lineLimit(1)
+                    let albumYear =
+                        (album.year != nil && !album.year!.isEmpty) ? "\(album.year!) • " : ""
+                    Text(
+                        "\(albumYear)\(album.trackCount.description) \(album.trackCount == 1 ? "song" : "songs")"
+                    )
+                    .font(AppFonts.captionSmall)
+                    .foregroundColor(.secondary.opacity(0.85))
+                    .lineLimit(1)
                 }
                 .textSelection(.enabled)
             }
             .frame(width: 160, alignment: .leading)
         }
-        .padding(8)
+        .padding(DesignTokens.Spacing.sm)
         .buttonStyle(.plain)
         .onHover { hovering in
             withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
@@ -111,7 +120,8 @@ struct AlbumCard: View {
                 guard !tracks.isEmpty else { return }
 
                 // Apply saved sorting preference
-                let sortField = UserDefaults.standard.string(forKey: "albumDetailSortField") ?? "trackNumber"
+                let sortField =
+                    UserDefaults.standard.string(forKey: "albumDetailSortField") ?? "trackNumber"
                 let sortAscending = UserDefaults.standard.bool(forKey: "albumDetailSortAscending")
 
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
@@ -145,17 +155,18 @@ struct ArtistCard: View {
                 ZStack {
                     if let artistId = artist.id {
                         ArtistArtworkView(artistId: artistId, size: 160)
-                            .shadow(color: .black.opacity(isHovered ? 0.25 : 0.15), radius: isHovered ? 12 : 8, y: isHovered ? 6 : 4)
+                            .tokenShadow(
+                                isHovered ? DesignTokens.Shadow.level2 : DesignTokens.Shadow.level1)
                     } else {
                         Circle()
                             .fill(theme.currentTheme.primaryColor.opacity(0.3))
                             .frame(width: 160, height: 160)
                             .overlay(
                                 Image(systemName: "person.fill")
-                                    .font(.system(size: 54, weight: .medium))
+                                    .font(AppFonts.displayLarge)
                                     .foregroundColor(.white.opacity(0.7))
                             )
-                            .shadow(color: .black.opacity(0.1), radius: 6, y: 3)
+                            .tokenShadow(DesignTokens.Shadow.level1)
                     }
 
                     if isHovered {
@@ -165,10 +176,13 @@ struct ArtistCard: View {
                                 .frame(width: 54, height: 54)
                                 .overlay(
                                     Image(systemName: "play.fill")
-                                        .font(.system(size: 20, weight: .semibold))
+                                        .font(AppFonts.heading4)
                                         .foregroundColor(.white)
                                 )
-                                .shadow(color: theme.currentTheme.primaryColor.opacity(0.4), radius: 12, y: 4)
+                                .tokenShadow(
+                                    DesignTokens.Shadow.level2,
+                                    color: theme.currentTheme.primaryColor.opacity(0.4)
+                                )
                         }
                         .buttonStyle(.plain)
                         .transition(.scale(scale: 0.8).combined(with: .opacity))
@@ -181,19 +195,21 @@ struct ArtistCard: View {
                 // Info
                 VStack(spacing: 5) {
                     Text(artist.name)
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(AppFonts.heading5)
                         .foregroundColor(.primary)
                         .lineLimit(1)
 
-                    Text("\(artist.trackCount.description) \(artist.trackCount == 1 ? "song" : "songs")")
-                        .font(.system(size: 10))
-                        .foregroundColor(.secondary.opacity(0.85))
+                    Text(
+                        "\(artist.trackCount.description) \(artist.trackCount == 1 ? "song" : "songs")"
+                    )
+                    .font(AppFonts.captionSmall)
+                    .foregroundColor(.secondary.opacity(0.85))
                 }
                 .textSelection(.enabled)
             }
             .frame(width: 160, alignment: .center)
         }
-        .padding(8)
+        .padding(DesignTokens.Spacing.sm)
         .buttonStyle(.plain)
         .onHover { hovering in
             withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
@@ -214,7 +230,8 @@ struct ArtistCard: View {
                 guard !tracks.isEmpty else { return }
 
                 // Apply saved sorting preference
-                let sortField = UserDefaults.standard.string(forKey: "artistDetailSortField") ?? "title"
+                let sortField =
+                    UserDefaults.standard.string(forKey: "artistDetailSortField") ?? "title"
                 let sortAscending = UserDefaults.standard.bool(forKey: "artistDetailSortAscending")
 
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
@@ -245,30 +262,39 @@ struct GenreCard: View {
         Button(action: onTap) {
             ZStack(alignment: .bottomLeading) {
                 // Background gradient specific to genre
-                RoundedRectangle(cornerRadius: 14)
+                RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.lg)
                     .fill(genreGradient)
                     .frame(height: 130)
 
                 // Genre info
                 VStack(alignment: .leading, spacing: 7) {
                     Text(genre.name)
-                        .font(.system(size: 19, weight: .bold, design: .rounded))
-                                            .foregroundColor(.white)
+                        .font(AppFonts.heading2)
+                        .foregroundColor(.white)
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
-                        .shadow(color: .black.opacity(0.2), radius: 2, y: 1)
+                        .tokenShadow(
+                            DesignTokens.Shadow.level1,
+                            color: .black.opacity(0.2)
+                        )
 
                     Text("\(genre.trackCount) \(genre.trackCount == 1 ? "track" : "tracks")")
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(AppFonts.labelLarge)
                         .foregroundColor(.white.opacity(0.9))
-                        .shadow(color: .black.opacity(0.15), radius: 1, y: 1)
-                    }
-                .padding(18)
+                        .tokenShadow(
+                            DesignTokens.Shadow.level1,
+                            color: .black.opacity(0.15)
+                        )
+                }
+                .padding(DesignTokens.Spacing.lg)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .textSelection(.enabled)
             }
             .scaleEffect(isHovered ? 1.03 : 1.0)
-            .shadow(color: .black.opacity(isHovered ? 0.35 : 0.2), radius: isHovered ? 14 : 10, y: isHovered ? 6 : 4)
+            .tokenShadow(
+                isHovered ? DesignTokens.Shadow.level2 : DesignTokens.Shadow.level1,
+                color: .black.opacity(isHovered ? 0.35 : 0.2)
+            )
             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
         }
         .buttonStyle(.plain)
@@ -296,31 +322,48 @@ struct GenreCard: View {
         case let name where name.contains("rock"):
             return [Color(red: 0.8, green: 0.2, blue: 0.2), Color(red: 0.5, green: 0.1, blue: 0.1)]
         case let name where name.contains("jazz"):
-            return [Color(red: 0.2, green: 0.3, blue: 0.6), Color(red: 0.1, green: 0.15, blue: 0.35)]
+            return [
+                Color(red: 0.2, green: 0.3, blue: 0.6), Color(red: 0.1, green: 0.15, blue: 0.35)
+            ]
         case let name where name.contains("classical"):
-            return [Color(red: 0.5, green: 0.3, blue: 0.6), Color(red: 0.3, green: 0.15, blue: 0.4)]
-        case let name where name.contains("electronic") || name.contains("edm") || name.contains("techno"):
+            return [
+                Color(red: 0.5, green: 0.3, blue: 0.6), Color(red: 0.3, green: 0.15, blue: 0.4)
+            ]
+        case let name
+        where name.contains("electronic") || name.contains("edm") || name.contains("techno"):
             return [Color(red: 0.0, green: 0.7, blue: 0.9), Color(red: 0.0, green: 0.4, blue: 0.6)]
         case let name where name.contains("pop"):
-            return [Color(red: 0.9, green: 0.3, blue: 0.6), Color(red: 0.6, green: 0.15, blue: 0.4)]
+            return [
+                Color(red: 0.9, green: 0.3, blue: 0.6), Color(red: 0.6, green: 0.15, blue: 0.4)
+            ]
         case let name where name.contains("hip hop") || name.contains("rap"):
-            return [Color(red: 0.3, green: 0.25, blue: 0.3), Color(red: 0.15, green: 0.12, blue: 0.15)]
+            return [
+                Color(red: 0.3, green: 0.25, blue: 0.3), Color(red: 0.15, green: 0.12, blue: 0.15)
+            ]
         case let name where name.contains("metal"):
-            return [Color(red: 0.2, green: 0.2, blue: 0.2), Color(red: 0.05, green: 0.05, blue: 0.05)]
+            return [
+                Color(red: 0.2, green: 0.2, blue: 0.2), Color(red: 0.05, green: 0.05, blue: 0.05)
+            ]
         case let name where name.contains("country"):
             return [Color(red: 0.7, green: 0.5, blue: 0.2), Color(red: 0.5, green: 0.3, blue: 0.1)]
         case let name where name.contains("blues"):
-            return [Color(red: 0.1, green: 0.3, blue: 0.5), Color(red: 0.05, green: 0.15, blue: 0.3)]
+            return [
+                Color(red: 0.1, green: 0.3, blue: 0.5), Color(red: 0.05, green: 0.15, blue: 0.3)
+            ]
         case let name where name.contains("reggae"):
             return [Color(red: 0.0, green: 0.6, blue: 0.3), Color(red: 0.0, green: 0.4, blue: 0.2)]
         case let name where name.contains("folk"):
             return [Color(red: 0.5, green: 0.6, blue: 0.3), Color(red: 0.3, green: 0.4, blue: 0.2)]
         case let name where name.contains("r&b") || name.contains("soul"):
-            return [Color(red: 0.6, green: 0.2, blue: 0.4), Color(red: 0.4, green: 0.1, blue: 0.25)]
+            return [
+                Color(red: 0.6, green: 0.2, blue: 0.4), Color(red: 0.4, green: 0.1, blue: 0.25)
+            ]
         case let name where name.contains("indie"):
             return [Color(red: 0.4, green: 0.5, blue: 0.6), Color(red: 0.2, green: 0.3, blue: 0.4)]
         case let name where name.contains("ambient") || name.contains("chill"):
-            return [Color(red: 0.3, green: 0.5, blue: 0.6), Color(red: 0.15, green: 0.3, blue: 0.4)]
+            return [
+                Color(red: 0.3, green: 0.5, blue: 0.6), Color(red: 0.15, green: 0.3, blue: 0.4)
+            ]
         case let name where name.contains("latin"):
             return [Color(red: 0.9, green: 0.4, blue: 0.2), Color(red: 0.6, green: 0.2, blue: 0.1)]
         default:
@@ -345,7 +388,8 @@ struct GenreCard: View {
             return "music.note"
         case let name where name.contains("classical"):
             return "music.quarternote.3"
-        case let name where name.contains("electronic") || name.contains("edm") || name.contains("techno"):
+        case let name
+        where name.contains("electronic") || name.contains("edm") || name.contains("techno"):
             return "waveform"
         case let name where name.contains("pop"):
             return "sparkles"
@@ -389,8 +433,10 @@ struct TrackGridCard: View {
         VStack(spacing: 8) {
             // Artwork
             ZStack {
-                TrackArtworkView(track: track, size: 140, cornerRadius: 10)
-                    .shadow(color: .black.opacity(isHovered ? 0.25 : 0.15), radius: isHovered ? 12 : 8, y: isHovered ? 6 : 4)
+                TrackArtworkView(
+                    track: track, size: 140, cornerRadius: DesignTokens.CornerRadius.md
+                )
+                .tokenShadow(isHovered ? DesignTokens.Shadow.level2 : DesignTokens.Shadow.level1)
 
                 // Play button overlay
                 if isHovered {
@@ -400,10 +446,13 @@ struct TrackGridCard: View {
                             .frame(width: 50, height: 50)
                             .overlay(
                                 Image(systemName: "play.fill")
-                                    .font(.system(size: 20, weight: .semibold))
+                                    .font(AppFonts.heading4)
                                     .foregroundColor(.white)
                             )
-                            .shadow(color: theme.currentTheme.primaryColor.opacity(0.4), radius: 12, y: 4)
+                            .tokenShadow(
+                                DesignTokens.Shadow.level2,
+                                color: theme.currentTheme.primaryColor.opacity(0.4)
+                            )
                     }
                     .buttonStyle(.plain)
                     .transition(.scale(scale: 0.8).combined(with: .opacity))
@@ -416,20 +465,20 @@ struct TrackGridCard: View {
             // Track info
             VStack(alignment: .leading, spacing: 4) {
                 Text(track.title)
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(AppFonts.labelMedium)
                     .foregroundColor(.primary)
                     .lineLimit(1)
 
                 Text(track.artist)
-                    .font(.system(size: 11))
+                    .font(AppFonts.captionMedium)
                     .foregroundColor(.secondary.opacity(0.85))
                     .lineLimit(1)
             }
             .textSelection(.enabled)
-            .padding(.leading, 6)
+            .padding(.leading, DesignTokens.Spacing.sm)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(8)
+        .padding(DesignTokens.Spacing.sm)
         .background(
             RoundedRectangle(cornerRadius: 10)
                 .fill(isHovered ? Color.primary.opacity(0.04) : Color.clear)
@@ -492,7 +541,8 @@ struct AlbumContextMenu: View {
                 guard !tracks.isEmpty else { return }
 
                 // Apply saved sorting preference
-                let sortField = UserDefaults.standard.string(forKey: "albumDetailSortField") ?? "trackNumber"
+                let sortField =
+                    UserDefaults.standard.string(forKey: "albumDetailSortField") ?? "trackNumber"
                 let sortAscending = UserDefaults.standard.bool(forKey: "albumDetailSortAscending")
 
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
@@ -517,7 +567,8 @@ struct AlbumContextMenu: View {
                 guard !tracks.isEmpty else { return }
 
                 // Apply saved sorting preference
-                let sortField = UserDefaults.standard.string(forKey: "albumDetailSortField") ?? "trackNumber"
+                let sortField =
+                    UserDefaults.standard.string(forKey: "albumDetailSortField") ?? "trackNumber"
                 let sortAscending = UserDefaults.standard.bool(forKey: "albumDetailSortAscending")
 
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
@@ -542,7 +593,8 @@ struct AlbumContextMenu: View {
                 guard !tracks.isEmpty else { return }
 
                 // Apply saved sorting preference before shuffling
-                let sortField = UserDefaults.standard.string(forKey: "albumDetailSortField") ?? "trackNumber"
+                let sortField =
+                    UserDefaults.standard.string(forKey: "albumDetailSortField") ?? "trackNumber"
                 let sortAscending = UserDefaults.standard.bool(forKey: "albumDetailSortAscending")
 
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
@@ -605,7 +657,8 @@ struct ArtistContextMenu: View {
                 guard !tracks.isEmpty else { return }
 
                 // Apply saved sorting preference
-                let sortField = UserDefaults.standard.string(forKey: "artistDetailSortField") ?? "title"
+                let sortField =
+                    UserDefaults.standard.string(forKey: "artistDetailSortField") ?? "title"
                 let sortAscending = UserDefaults.standard.bool(forKey: "artistDetailSortAscending")
 
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
@@ -630,7 +683,8 @@ struct ArtistContextMenu: View {
                 guard !tracks.isEmpty else { return }
 
                 // Apply saved sorting preference
-                let sortField = UserDefaults.standard.string(forKey: "artistDetailSortField") ?? "title"
+                let sortField =
+                    UserDefaults.standard.string(forKey: "artistDetailSortField") ?? "title"
                 let sortAscending = UserDefaults.standard.bool(forKey: "artistDetailSortAscending")
 
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
@@ -655,7 +709,8 @@ struct ArtistContextMenu: View {
                 guard !tracks.isEmpty else { return }
 
                 // Apply saved sorting preference before shuffling
-                let sortField = UserDefaults.standard.string(forKey: "artistDetailSortField") ?? "title"
+                let sortField =
+                    UserDefaults.standard.string(forKey: "artistDetailSortField") ?? "title"
                 let sortAscending = UserDefaults.standard.bool(forKey: "artistDetailSortAscending")
 
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {

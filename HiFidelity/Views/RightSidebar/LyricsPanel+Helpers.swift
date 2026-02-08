@@ -18,27 +18,27 @@ extension LyricsPanel {
 
             VStack(spacing: 20) {
                 Image(systemName: "arrow.down.doc")
-                    .font(.system(size: 64, weight: .light))
+                    .font(AppFonts.placeholder(size: 64, weight: .light))
                     .foregroundColor(theme.currentTheme.primaryColor)
 
                 Text("Drop LRC file here")
-                    .font(.system(size: 20, weight: .semibold))
+                    .font(AppFonts.heading2)
                     .foregroundColor(.primary)
 
                 Text("Release to import lyrics")
-                    .font(.system(size: 14))
+                    .font(AppFonts.bodySmall)
                     .foregroundColor(.secondary)
             }
-            .padding(40)
+            .padding(DesignTokens.Spacing.xxxxl)
             .background(
                 RoundedRectangle(cornerRadius: 16)
                     .fill(Color(nsColor: .windowBackgroundColor))
-                    .shadow(color: .black.opacity(0.2), radius: 20, x: 0, y: 10)
+                    .tokenShadow(DesignTokens.Shadow.level3)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
                     .strokeBorder(theme.currentTheme.primaryColor, lineWidth: 3)
-                    .padding(1)
+                    .padding(DesignTokens.Spacing.hairline)
             )
         }
         .transition(.opacity)
@@ -367,14 +367,14 @@ extension LyricsPanel {
         VStack(spacing: 0) {
             // Header
             HStack {
-                Text("Search Results")
-                    .font(.system(size: 18, weight: .bold))
+                        Text("Search Results")
+                            .font(AppFonts.heading3)
 
                 Spacer()
 
                 Button(action: { showSearchResults = false }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 20))
+                        Image(systemName: "xmark.circle.fill")
+                            .font(AppFonts.bodyLarge)
                         .foregroundColor(.secondary)
                 }
                 .buttonStyle(.plain)
@@ -387,11 +387,11 @@ extension LyricsPanel {
             if searchResults.isEmpty {
                 VStack(spacing: 16) {
                     Image(systemName: "magnifyingglass")
-                        .font(.system(size: 48))
+                        .font(AppFonts.displayLarge)
                         .foregroundColor(.secondary.opacity(0.3))
 
                     Text("No results found")
-                        .font(.system(size: 16))
+                        .font(AppFonts.heading4)
                         .foregroundColor(.secondary)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -418,16 +418,16 @@ extension LyricsPanel {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(result.trackName)
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(AppFonts.heading5)
                             .foregroundColor(.primary)
 
                         Text(result.artistName)
-                            .font(.system(size: 13))
+                            .font(AppFonts.bodySmall)
                             .foregroundColor(.secondary)
 
                         if let album = result.albumName {
                             Text(album)
-                                .font(.system(size: 12))
+                                .font(AppFonts.captionLarge)
                                 .foregroundColor(.secondary.opacity(0.8))
                         }
                     }
@@ -438,23 +438,23 @@ extension LyricsPanel {
                         if result.hasSyncedLyrics {
                             HStack(spacing: 4) {
                                 Image(systemName: "waveform")
-                                    .font(.system(size: 10))
+                                    .font(AppFonts.captionSmall)
                                 Text("Synced")
-                                    .font(.system(size: 11, weight: .medium))
+                                    .font(AppFonts.labelSmall)
                             }
                             .foregroundColor(theme.currentTheme.primaryColor)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
+                            .padding(.horizontal, DesignTokens.Spacing.sm)
+                            .padding(.vertical, DesignTokens.Spacing.xs)
                             .background(
                                 Capsule()
                                     .fill(theme.currentTheme.primaryColor.opacity(0.1))
                             )
                         } else if result.plainLyrics != nil {
                             Text("Plain")
-                                .font(.system(size: 11))
+                                .font(AppFonts.captionMedium)
                                 .foregroundColor(.secondary)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
+                                .padding(.horizontal, DesignTokens.Spacing.sm)
+                                .padding(.vertical, DesignTokens.Spacing.xs)
                                 .background(
                                     Capsule()
                                         .fill(Color.secondary.opacity(0.1))
@@ -462,7 +462,7 @@ extension LyricsPanel {
                         }
 
                         Text(formatDuration(result.duration))
-                            .font(.system(size: 12))
+                            .font(AppFonts.captionLarge)
                             .foregroundColor(.secondary)
                     }
                 }
@@ -470,9 +470,9 @@ extension LyricsPanel {
                 if result.instrumental {
                     HStack(spacing: 4) {
                         Image(systemName: "music.note")
-                            .font(.system(size: 10))
+                            .font(AppFonts.captionSmall)
                         Text("Instrumental")
-                            .font(.system(size: 11))
+                            .font(AppFonts.captionMedium)
                     }
                     .foregroundColor(.orange)
                 }

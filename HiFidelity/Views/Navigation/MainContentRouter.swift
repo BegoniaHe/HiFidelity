@@ -60,7 +60,7 @@ struct MainContentRouter: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.bottom, 90)
+        .padding(.bottom, DesignTokens.ControlHeight.playbackBar)
         .onChange(of: isSearchActive) { _, _ in
             if selectedEntity != nil && isSearchActive {
                 selectedEntity = nil
@@ -101,13 +101,13 @@ private struct EntityDetailWithNavigation: View {
             } label: {
                 HStack(spacing: 8) {
                     Image(systemName: "chevron.left")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(AppFonts.heading5)
                     Text("Back")
-                        .font(.system(size: 14, weight: .medium))
+                        .font(AppFonts.labelLarge)
                 }
                 .foregroundColor(theme.currentTheme.primaryColor)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
+                .padding(.horizontal, DesignTokens.Spacing.md)
+                .padding(.vertical, DesignTokens.Spacing.sm)
                 .frame(height: 28)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
@@ -118,8 +118,8 @@ private struct EntityDetailWithNavigation: View {
 
             Spacer()
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
+        .padding(.horizontal, DesignTokens.Spacing.xl)
+        .padding(.vertical, DesignTokens.Spacing.md)
     }
 }
 

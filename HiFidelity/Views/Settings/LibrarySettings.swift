@@ -70,7 +70,7 @@ struct LibrarySettings: View {
 
                                 if folder.id != folders.last?.id {
                                     Divider()
-                                        .padding(.leading, 60)
+                                        .padding(.leading, DesignTokens.Spacing.xxxxxl)
                                 }
                             }
                         }
@@ -126,18 +126,18 @@ struct LibrarySettings: View {
                 // Info
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Importing Music")
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(AppFonts.labelMedium)
                         .foregroundColor(.primary)
 
                     if !databaseManager.currentImportingFolder.isEmpty {
                         Text(databaseManager.currentImportingFolder)
-                            .font(.system(size: 11, weight: .medium))
+                            .font(AppFonts.captionMedium)
                             .foregroundColor(theme.currentTheme.primaryColor)
                     }
 
                     if !databaseManager.importStatusMessage.isEmpty {
                         Text(databaseManager.importStatusMessage)
-                            .font(.system(size: 10))
+                            .font(AppFonts.captionSmall)
                             .foregroundColor(.secondary)
                     }
                 }
@@ -147,7 +147,7 @@ struct LibrarySettings: View {
                 // Progress percentage
                 if databaseManager.importProgress > 0 {
                     Text("\(Int(databaseManager.importProgress * 100))%")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(AppFonts.labelSmall)
                         .foregroundColor(theme.currentTheme.primaryColor)
                 }
             }
@@ -172,8 +172,8 @@ struct LibrarySettings: View {
             }
             .frame(height: 4)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.horizontal, DesignTokens.Spacing.lg)
+        .padding(.vertical, DesignTokens.Spacing.md)
         .background(theme.currentTheme.primaryColor.opacity(0.05))
     }
 
@@ -183,7 +183,7 @@ struct LibrarySettings: View {
         HStack(spacing: 12) {
             // Icon
             Image(systemName: folderWatcher.isWatching ? "eye.fill" : "eye.slash.fill")
-                .font(.system(size: 16))
+                .font(AppFonts.labelLarge)
                 .foregroundColor(
                     folderWatcher.isWatching ? theme.currentTheme.primaryColor : .secondary
                 )
@@ -192,7 +192,7 @@ struct LibrarySettings: View {
             // Info
             VStack(alignment: .leading, spacing: 2) {
                 Text("Automatic Folder Monitoring")
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(AppFonts.labelMedium)
                     .foregroundColor(.primary)
 
                 Text(
@@ -200,7 +200,7 @@ struct LibrarySettings: View {
                         ? "Watching \(folderWatcher.watchedFoldersCount) folder\(folderWatcher.watchedFoldersCount == 1 ? "" : "s") for changes"
                         : "Enable to automatically update your library when files change"
                 )
-                .font(.system(size: 11))
+                .font(AppFonts.captionMedium)
                 .foregroundColor(.secondary)
             }
 
@@ -214,8 +214,8 @@ struct LibrarySettings: View {
                     handleMonitoringToggle(newValue)
                 }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.horizontal, DesignTokens.Spacing.lg)
+        .padding(.vertical, DesignTokens.Spacing.md)
         .background(Color(nsColor: .controlBackgroundColor))
     }
 
@@ -224,7 +224,7 @@ struct LibrarySettings: View {
     private var header: some View {
         HStack {
             Text("Music Folders")
-                .font(.system(size: 16, weight: .bold))
+                .font(AppFonts.heading4)
                 .foregroundColor(.primary)
 
             Spacer()
@@ -234,13 +234,13 @@ struct LibrarySettings: View {
             } label: {
                 HStack(spacing: 6) {
                     Image(systemName: "plus")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(AppFonts.buttonSmall)
                     Text("Add Folder")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(AppFonts.buttonSmall)
                 }
                 .foregroundColor(.white)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
+                .padding(.horizontal, DesignTokens.Spacing.lg)
+                .padding(.vertical, DesignTokens.Spacing.sm)
                 .background(
                     RoundedRectangle(cornerRadius: 20)
                         .fill(
@@ -252,8 +252,8 @@ struct LibrarySettings: View {
             .disabled(databaseManager.isImporting)
             .opacity(databaseManager.isImporting ? 0.5 : 1.0)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 16)
+        .padding(.horizontal, DesignTokens.Spacing.lg)
+        .padding(.vertical, DesignTokens.Spacing.lg)
     }
 
     // MARK: - Action Buttons
@@ -268,15 +268,15 @@ struct LibrarySettings: View {
             } label: {
                 HStack(spacing: 6) {
                     Image(systemName: "arrow.clockwise")
-                        .font(.system(size: 13))
+                        .font(AppFonts.labelMedium)
                     Text("Scan All")
-                        .font(.system(size: 13, weight: .medium))
+                        .font(AppFonts.labelMedium)
                 }
                 .foregroundColor(
                     databaseManager.isImporting ? .gray : theme.currentTheme.primaryColor
                 )
-                .padding(.horizontal, 14)
-                .padding(.vertical, 7)
+                .padding(.horizontal, DesignTokens.Spacing.lg)
+                .padding(.vertical, DesignTokens.Spacing.sm)
                 .background(
                     RoundedRectangle(cornerRadius: 16)
                         .fill(
@@ -295,13 +295,13 @@ struct LibrarySettings: View {
             } label: {
                 HStack(spacing: 6) {
                     Image(systemName: "trash")
-                        .font(.system(size: 13))
+                        .font(AppFonts.labelMedium)
                     Text("Delete All")
-                        .font(.system(size: 13, weight: .medium))
+                        .font(AppFonts.labelMedium)
                 }
                 .foregroundColor(databaseManager.isImporting ? .gray : .red)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 7)
+                .padding(.horizontal, DesignTokens.Spacing.lg)
+                .padding(.vertical, DesignTokens.Spacing.sm)
                 .background(
                     RoundedRectangle(cornerRadius: 16)
                         .fill(
@@ -315,8 +315,8 @@ struct LibrarySettings: View {
 
             Spacer()
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.horizontal, DesignTokens.Spacing.lg)
+        .padding(.vertical, DesignTokens.Spacing.md)
     }
 
     // MARK: - Empty State
@@ -324,15 +324,15 @@ struct LibrarySettings: View {
     private var emptyStateView: some View {
         VStack(spacing: 18) {
             Image(systemName: "folder.badge.plus")
-                .font(.system(size: 48))
+                .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.3))
 
             Text("No Music Folders")
-                .font(.system(size: 18, weight: .semibold))
+                .font(AppFonts.heading3)
                 .foregroundColor(.primary)
 
             Text("Add folders to build your music library")
-                .font(.system(size: 12))
+                .font(AppFonts.captionLarge)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
 
@@ -341,13 +341,13 @@ struct LibrarySettings: View {
             } label: {
                 HStack(spacing: 8) {
                     Image(systemName: "plus")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(AppFonts.buttonSmall)
                     Text("Add Your First Folder")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(AppFonts.buttonSmall)
                 }
                 .foregroundColor(.white)
-                .padding(.horizontal, 18)
-                .padding(.vertical, 8)
+                .padding(.horizontal, DesignTokens.Spacing.xl)
+                .padding(.vertical, DesignTokens.Spacing.sm)
                 .background(
                     RoundedRectangle(cornerRadius: 20)
                         .fill(
@@ -370,7 +370,7 @@ struct LibrarySettings: View {
                 .scaleEffect(1.5)
                 .tint(theme.currentTheme.primaryColor)
             Text("Loading folders...")
-                .font(.system(size: 14))
+                .font(AppFonts.bodySmall)
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -509,14 +509,14 @@ struct FolderRow: View {
         HStack(spacing: 12) {
             // Folder icon
             Image(systemName: "folder.fill")
-                .font(.system(size: 30))
+                .font(AppFonts.displayLarge)
                 .foregroundColor(theme.currentTheme.primaryColor)
                 .frame(width: 40)
 
             // Folder path (left column)
             HStack {
                 Text(folder.url.path)
-                    .font(.system(size: 13))
+                    .font(AppFonts.bodySmall)
                     .foregroundColor(.primary)
                     .lineLimit(1)
                     .truncationMode(.middle)
@@ -536,8 +536,8 @@ struct FolderRow: View {
                     Button {
                         relocateFolder()
                     } label: {
-                        Image(systemName: "arrow.triangle.swap")
-                            .font(.system(size: 12))
+                    Image(systemName: "arrow.triangle.swap")
+                        .font(AppFonts.captionLarge)
                             .foregroundColor(isImporting ? .gray : .orange)
                             .frame(width: 24, height: 24)
                             .background(
@@ -556,8 +556,8 @@ struct FolderRow: View {
                     Button {
                         onScan()
                     } label: {
-                        Image(systemName: "arrow.clockwise")
-                            .font(.system(size: 12))
+                    Image(systemName: "arrow.clockwise")
+                        .font(AppFonts.captionLarge)
                             .foregroundColor(isImporting ? .gray : theme.currentTheme.primaryColor)
                             .frame(width: 24, height: 24)
                             .background(
@@ -577,8 +577,8 @@ struct FolderRow: View {
                     Button(role: .destructive) {
                         onRemove()
                     } label: {
-                        Image(systemName: "trash")
-                            .font(.system(size: 12))
+                    Image(systemName: "trash")
+                        .font(AppFonts.captionLarge)
                             .foregroundColor(isImporting ? .gray : .red)
                             .frame(width: 24, height: 24)
                             .background(
@@ -597,8 +597,8 @@ struct FolderRow: View {
             }
 
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.horizontal, DesignTokens.Spacing.lg)
+        .padding(.vertical, DesignTokens.Spacing.md)
         .background(
             isHovered ? Color(nsColor: .selectedContentBackgroundColor).opacity(0.5) : Color.clear
         )

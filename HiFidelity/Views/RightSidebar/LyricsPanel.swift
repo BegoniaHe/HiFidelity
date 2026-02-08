@@ -98,7 +98,7 @@ extension LyricsPanel {
     private var header: some View {
         HStack {
             Text("Lyrics")
-                .font(.system(size: 16, weight: .bold))
+                .font(AppFonts.heading4)
                 .foregroundColor(.primary)
                 .frame(height: 28)
 
@@ -131,7 +131,7 @@ extension LyricsPanel {
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")
-                        .font(.system(size: 16))
+                        .font(AppFonts.bodyLarge)
                         .foregroundColor(.secondary)
                         .frame(width: 28, height: 28)
                 }
@@ -139,8 +139,8 @@ extension LyricsPanel {
                 .frame(width: 28)
             }
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
+        .padding(.horizontal, DesignTokens.Spacing.xl)
+        .padding(.vertical, DesignTokens.Spacing.md)
 
     }
 
@@ -161,8 +161,8 @@ extension LyricsPanel {
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.horizontal, 32)
-                .padding(.bottom, 90)
+                .padding(.horizontal, DesignTokens.Spacing.xxxl)
+                .padding(.bottom, DesignTokens.ControlHeight.playbackBar)
             }
         }
     }
@@ -171,7 +171,7 @@ extension LyricsPanel {
         VStack(spacing: 12) {
             // Album artwork
             TrackArtworkView(track: track, size: 120, cornerRadius: 12)
-                .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
+                .tokenShadow(DesignTokens.Shadow.level1)
 
             VStack(spacing: 4) {
                 Text(track.title)
@@ -184,7 +184,7 @@ extension LyricsPanel {
                     .foregroundColor(.secondary)
             }
         }
-        .padding(.top, 40)
+        .padding(.top, DesignTokens.Spacing.xxxxl)
     }
 
     private func karaokeLyrics(lyrics: Lyrics, proxy: ScrollViewProxy) -> some View {
@@ -199,7 +199,7 @@ extension LyricsPanel {
                     isPast: isPast
                 )
                 .id(line.id)
-                .padding(.vertical, 12)
+                .padding(.vertical, DesignTokens.Spacing.md)
                 .background(
                     isCurrent ?
                     RoundedRectangle(cornerRadius: 8)
@@ -216,12 +216,12 @@ extension LyricsPanel {
                 }
             }
         }
-        .padding(.vertical, 16)
+        .padding(.vertical, DesignTokens.Spacing.lg)
     }
 
     private func lyricLine(text: String, isCurrent: Bool, isPast: Bool) -> some View {
         Text(text)
-            .font(isCurrent ? .system(size: 20, weight: .semibold) : .system(size: 16))
+            .font(isCurrent ? AppFonts.heading2 : AppFonts.bodyLarge)
             .foregroundColor(
                 isCurrent ? theme.currentTheme.primaryColor :
                 isPast ? .secondary :
@@ -229,14 +229,14 @@ extension LyricsPanel {
             )
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)
-            .padding(.horizontal, 16)
+            .padding(.horizontal, DesignTokens.Spacing.lg)
             .animation(.easeInOut(duration: 0.3), value: isCurrent)
     }
 
     private var noLyricsView: some View {
         VStack(spacing: 16) {
             Image(systemName: "text.quote")
-                .font(.system(size: 52))
+                .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.2))
 
             Text("No lyrics available")
@@ -253,8 +253,8 @@ extension LyricsPanel {
                         .frame(height: 28)
                 } else {
                     Label("Search Online", systemImage: "magnifyingglass")
-                        .font(.system(size: 14, weight: .medium))
-                        .padding(4)
+                        .font(AppFonts.buttonMedium)
+                        .padding(DesignTokens.Spacing.xs)
                 }
             }
             .buttonStyle(.borderedProminent)
@@ -268,26 +268,26 @@ extension LyricsPanel {
 
             Button(action: { isImportingLRC = true }) {
                 Label("Import LRC File", systemImage: "doc.badge.plus")
-                    .font(.system(size: 14, weight: .medium))
-                    .padding(4)
+                    .font(AppFonts.buttonMedium)
+                    .padding(DesignTokens.Spacing.xs)
             }
             .buttonStyle(.bordered)
             .frame(minWidth: 140)
 
             Text("or drag and drop an LRC file here")
-                .font(.system(size: 12))
+                .font(AppFonts.captionLarge)
                 .foregroundColor(.secondary.opacity(0.7))
-                .padding(.top, 4)
+                .padding(.top, DesignTokens.Spacing.xs)
 
             if let error = searchError {
                 Text(error)
-                    .font(.system(size: 12))
+                    .font(AppFonts.captionLarge)
                     .foregroundColor(.red)
-                    .padding(.top, 8)
+                    .padding(.top, DesignTokens.Spacing.sm)
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 60)
+        .padding(.vertical, DesignTokens.Spacing.xxxxxl)
     }
 
     // MARK: - Empty State
@@ -295,17 +295,17 @@ extension LyricsPanel {
     private var emptyState: some View {
         VStack(spacing: 20) {
             Image(systemName: "text.quote")
-                .font(.system(size: 56))
+                .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.2))
 
             Text("Play a song to see the lyrics here.")
                 .font(AppFonts.bodyLarge)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 40)
+                .padding(.horizontal, DesignTokens.Spacing.xxxxl)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.bottom, 90)
+        .padding(.bottom, DesignTokens.ControlHeight.playbackBar)
     }
 
 }

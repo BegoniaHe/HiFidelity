@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 26/11/25.
 //
 
-import SwiftUI
 import Sparkle
+import SwiftUI
 
 struct AboutMenuView: View {
     @State private var libraryStats: LibraryStats?
@@ -58,7 +58,7 @@ struct AboutMenuView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 16))
             } else {
                 Image(systemName: "drop.fill")
-                    .font(.system(size: 80))
+                    .font(AppFonts.displayLarge)
                     .foregroundColor(.accentColor)
             }
         }
@@ -67,18 +67,17 @@ struct AboutMenuView: View {
     private var appDetails: some View {
         VStack(spacing: 8) {
             Text(About.appTitle)
-                .font(.title)
-                .fontWeight(.bold)
+                .font(AppFonts.heading1)
 
             Text(AppInfo.version)
-                .font(.subheadline)
+                .font(AppFonts.bodySmall)
                 .foregroundColor(.secondary)
 
             Toggle("Check for updates automatically", isOn: $automaticUpdatesEnabled)
-                .help("Automatically download and install updates when available")
+                .help(String(localized: "Automatically download and install updates when available"))
                 .onChange(of: automaticUpdatesEnabled) { _, newValue in
                     if let appDelegate = NSApp.delegate as? AppDelegate,
-                       let updater = appDelegate.updaterController?.updater {
+                        let updater = appDelegate.updaterController?.updater {
                         updater.automaticallyChecksForUpdates = newValue
                     }
                 }
@@ -90,7 +89,7 @@ struct AboutMenuView: View {
     private var libraryStatisticsSection: some View {
         VStack(spacing: 12) {
             Text("Library Statistics")
-                .font(.headline)
+                .font(AppFonts.heading4)
 
             if let stats = libraryStats {
                 statisticsRow(stats: stats)
@@ -122,16 +121,15 @@ struct AboutMenuView: View {
         }
         .padding()
         .background(Color.secondary.opacity(0.08))
-        .cornerRadius(12)
+        .cornerRadius(DesignTokens.CornerRadius.lg)
     }
 
-    private func statisticItem(value: String, label: String) -> some View {
+    private func statisticItem(value: String, label: LocalizedStringKey) -> some View {
         VStack(spacing: 4) {
             Text(value)
-                .font(.title2)
-                .fontWeight(.semibold)
+                .font(AppFonts.heading2)
             Text(label)
-                .font(.caption)
+                .font(AppFonts.captionMedium)
                 .foregroundColor(.secondary)
         }
     }
@@ -142,37 +140,39 @@ struct AboutMenuView: View {
         HStack(spacing: 20) {
             FooterLink(
                 icon: "globe",
-                title: "Website",
+                title: String(localized: "Website"),
                 url: URL(string: About.appWebsite)!,
-                tooltip: "Visit project website"
+                tooltip: String(localized: "Visit project website")
             )
 
             FooterLink(
                 icon: "questionmark.circle",
-                title: "Help",
+                title: String(localized: "Help"),
                 url: URL(string: About.appWiki)!,
-                tooltip: "Visit Help Wiki"
+                tooltip: String(localized: "Visit Help Wiki")
             )
 
             FooterLink(
                 icon: "doc.text",
-                title: "License",
+                title: String(localized: "License"),
                 url: URL(string: "\(About.appWebsite)/blob/main/LICENSE"),
-                tooltip: "View license"
+                tooltip: String(localized: "View license")
             )
 
             FooterLink(
                 icon: "folder",
-                title: "App Data",
+                title: String(localized: "App Data"),
                 action: {
-                    let appDataURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?
-                        .appendingPathComponent(Bundle.main.bundleIdentifier ?? About.bundleIdentifier)
+                    let appDataURL = FileManager.default.urls(
+                        for: .applicationSupportDirectory, in: .userDomainMask
+                    ).first?
+                    .appendingPathComponent(Bundle.main.bundleIdentifier ?? About.bundleIdentifier)
 
                     if let url = appDataURL {
                         NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: url.path)
                     }
                 },
-                tooltip: "Show app data directory in Finder"
+                tooltip: String(localized: "Show app data directory in Finder")
             )
         }
     }
@@ -205,9 +205,9 @@ struct AboutMenuView: View {
         private var linkContent: some View {
             HStack(spacing: 4) {
                 Image(systemName: icon)
-                    .font(.system(size: 12))
+                    .font(AppFonts.captionLarge)
                 Text(title)
-                    .font(.system(size: 12))
+                    .font(AppFonts.captionLarge)
             }
             .foregroundColor(isHovered ? .accentColor : .secondary)
             .underline(isHovered)
@@ -222,7 +222,7 @@ struct AboutMenuView: View {
 #Preview {
     ScrollView {
         AboutMenuView()
-            .padding(24)
+            .padding(DesignTokens.Spacing.xxl)
     }
     .frame(width: 600, height: 500)
 }

@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 31/10/25.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Artists tab view displaying all artists in a grid layout
 struct ArtistsTabView: View {
@@ -22,7 +22,8 @@ struct ArtistsTabView: View {
     @State private var hasLoadedOnce = false
     @AppStorage("artistsSortOptionId") private var sortOptionId: String = "name"
     @AppStorage("artistsSortAscending") private var sortAscending: Bool = true
-    @State private var selectedSort = SortOption(id: "name", title: "Name", type: .alphabetical, ascending: true)
+    @State private var selectedSort = SortOption(
+        id: "name", title: "Name", type: .alphabetical, ascending: true)
     @State private var selectedFilter: FilterOption?
 
     init(selectedEntity: Binding<EntityType?>, isVisible: Bool = true) {
@@ -56,14 +57,19 @@ struct ArtistsTabView: View {
                 if artists.isEmpty {
                     emptyStateView(icon: "person.2", message: "No artists in library")
                 } else {
-                    emptyStateView(icon: "line.3.horizontal.decrease.circle", message: "No artists match your filter")
+                    emptyStateView(
+                        icon: "line.3.horizontal.decrease.circle",
+                        message: "No artists match your filter")
                 }
             } else {
                 ScrollView {
-                    LazyVGrid(columns: [
-                        GridItem(.adaptive(minimum: 160, maximum: 200), spacing: 20)
-                    ], spacing: 20) {
-                        ForEach(Array(filteredArtists.enumerated()), id: \.element.id) { index, artist in
+                    LazyVGrid(
+                        columns: [
+                            GridItem(.adaptive(minimum: 160, maximum: 200), spacing: 20)
+                        ], spacing: 20
+                    ) {
+                        ForEach(Array(filteredArtists.enumerated()), id: \.element.id) {
+                            index, artist in
                             ArtistCard(artist: artist) {
                                 withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                                     selectedEntity = .artist(artist)
@@ -75,7 +81,7 @@ struct ArtistsTabView: View {
                             }
                         }
                     }
-                    .padding(20)
+                    .padding(DesignTokens.Spacing.xl)
                 }
             }
         }
@@ -131,8 +137,8 @@ struct ArtistsTabView: View {
                     .scaleEffect(1.2)
                     .tint(theme.currentTheme.primaryColor)
 
-                Text("Loading artists...")
-                    .font(.system(size: 14))
+            Text("Loading artists...")
+                .font(AppFonts.bodySmall)
                     .foregroundColor(.secondary)
             }
 
@@ -147,7 +153,7 @@ struct ArtistsTabView: View {
         HStack(spacing: 16) {
             // Count label
             Text("\(filteredArtists.count) artists")
-                .font(.system(size: 13, weight: .medium))
+                .font(AppFonts.labelMedium)
                 .foregroundColor(.secondary)
 
             Spacer()
@@ -162,9 +168,9 @@ struct ArtistsTabView: View {
             .frame(width: 32)
 
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
-        .frame(height: 46)
+        .padding(.horizontal, DesignTokens.Spacing.xl)
+        .padding(.vertical, DesignTokens.Spacing.md)
+        .frame(height: DesignTokens.ControlHeight.xl)
         .background(Color(nsColor: .windowBackgroundColor))
     }
 
@@ -329,10 +335,10 @@ private struct ArtistOptionsDropdown: View {
         } label: {
             HStack(spacing: 6) {
                 Image(systemName: "line.3.horizontal.decrease.circle")
-                    .font(.system(size: 16, weight: .medium))
+                    .font(AppFonts.labelLarge)
                 if selectedFilter != nil {
                     Image(systemName: "circle.fill")
-                        .font(.system(size: 6))
+                        .font(AppFonts.captionSmall)
                         .foregroundColor(theme.currentTheme.primaryColor)
                 }
             }
@@ -340,7 +346,9 @@ private struct ArtistOptionsDropdown: View {
             .frame(width: 32, height: 32)
             .background(
                 Circle()
-                    .fill(selectedFilter != nil ? theme.currentTheme.primaryColor.opacity(0.15) : Color.clear)
+                    .fill(
+                        selectedFilter != nil
+                            ? theme.currentTheme.primaryColor.opacity(0.15) : Color.clear)
             )
         }
         .menuStyle(.borderlessButton)

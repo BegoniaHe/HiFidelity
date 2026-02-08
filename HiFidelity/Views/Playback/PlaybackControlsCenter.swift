@@ -4,8 +4,8 @@
 //
 //  Created by Varun Rathod
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Central playback controls with play/pause, previous/next, shuffle, and repeat
 struct PlaybackControlsCenter: View {
@@ -84,7 +84,7 @@ struct PlaybackControlsCenter: View {
     private var timeLabels: some View {
         HStack(spacing: 8) {
             Text(playback.formattedCurrentTime)
-                .font(AppFonts.playbackTime)
+                .font(AppFonts.captionMedium)
                 .foregroundColor(.secondary)
                 .monospacedDigit()
 
@@ -92,7 +92,7 @@ struct PlaybackControlsCenter: View {
                 .foregroundColor(.secondary.opacity(0.5))
 
             Text(playback.formattedDuration)
-                .font(AppFonts.playbackTime)
+                .font(AppFonts.captionMedium)
                 .foregroundColor(.secondary)
                 .monospacedDigit()
         }
@@ -109,12 +109,12 @@ private struct ControlButton: View {
     let isDisabled: Bool
     let action: () -> Void
 
-        @Bindable var theme = AppTheme.shared
+    @Bindable var theme = AppTheme.shared
 
     var body: some View {
         Button(action: action) {
             Image(systemName: icon)
-                .font(.system(size: size, weight: .medium))
+                .font(AppFonts.placeholder(size: size, weight: .medium))
                 .foregroundColor(foregroundColor)
                 .frame(width: size < 18 ? 28 : 32, height: size < 18 ? 28 : 32)
                 .contentShape(Rectangle())
@@ -137,15 +137,19 @@ private struct PlayPauseButton: View {
     let isDisabled: Bool
     let action: () -> Void
 
-        @Bindable var theme = AppTheme.shared
-        @Bindable var playback = PlaybackController.shared
+    @Bindable var theme = AppTheme.shared
+    @Bindable var playback = PlaybackController.shared
     @State private var modifierFlags: NSEvent.ModifierFlags = []
 
     var body: some View {
         Button(action: buttonAction) {
             Image(systemName: buttonIcon)
-                .font(.system(size: 44))
-                .foregroundColor(isDisabled ? .secondary.opacity(0.3) : (isStopMode ? .red : theme.currentTheme.primaryColor))
+                .font(AppFonts.displayLarge)
+                .foregroundColor(
+                    isDisabled
+                        ? .secondary.opacity(0.3)
+                        : (isStopMode ? .red : theme.currentTheme.primaryColor)
+                )
                 .contentShape(Rectangle())
         }
         .buttonStyle(PlainScaleButtonStyle())

@@ -47,8 +47,7 @@ struct SettingsView: View {
     private var header: some View {
         HStack {
             Text("Settings")
-                .font(.title2)
-                .fontWeight(.bold)
+                .font(AppFonts.heading2)
 
             Spacer()
 
@@ -56,14 +55,14 @@ struct SettingsView: View {
                 dismiss()
             } label: {
                 Image(systemName: "xmark.circle.fill")
-                    .font(.system(size: 20))
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(.secondary)
             }
             .buttonStyle(.plain)
         }
         .frame(height: 32)
-        .padding(.horizontal, 24)
-        .padding(.vertical, 16)
+        .padding(.horizontal, DesignTokens.Spacing.xxl)
+        .padding(.vertical, DesignTokens.Spacing.lg)
     }
 
     // MARK: - Sidebar
@@ -82,7 +81,7 @@ struct SettingsView: View {
 
             Spacer()
         }
-        .padding(12)
+        .padding(DesignTokens.Spacing.md)
     }
 
     // MARK: - Content
@@ -94,24 +93,24 @@ struct SettingsView: View {
             case .appearance:
                 ScrollView {
                     AppearanceSettings(theme: theme)
-                        .padding(24)
+                        .padding(DesignTokens.Spacing.xxl)
                 }
             case .audio:
                 ScrollView {
                     AudioSettingsView()
-                        .padding(24)
+                        .padding(DesignTokens.Spacing.xxl)
                 }
             case .library:
                     LibrarySettings()
             case .advanced:
                 ScrollView {
                     AdvancedSettings()
-                        .padding(24)
+                        .padding(DesignTokens.Spacing.xxl)
                 }
             case .about:
                 ScrollView {
                     AboutMenuView()
-                        .padding(24)
+                        .padding(DesignTokens.Spacing.xxl)
                 }
             }
         }
@@ -164,20 +163,20 @@ private struct SettingsSidebarButton: View {
         Button(action: action) {
             HStack(spacing: 12) {
                 Image(systemName: tab.icon)
-                    .font(.system(size: 16, weight: isSelected ? .semibold : .medium))
+                    .font(isSelected ? AppFonts.heading4 : AppFonts.labelLarge)
                     .foregroundColor(iconColor)
                     .frame(width: 24)
 
                 Text(tab.title)
-                    .font(.system(size: 14, weight: isSelected ? .semibold : .regular))
+                    .font(isSelected ? AppFonts.heading5 : AppFonts.bodySmall)
                     .foregroundColor(textColor)
 
                 Spacer()
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
+            .padding(.horizontal, DesignTokens.Spacing.md)
+            .padding(.vertical, DesignTokens.Spacing.sm)
             .background(backgroundColor)
-            .cornerRadius(8)
+            .cornerRadius(DesignTokens.CornerRadius.sm)
         }
         .buttonStyle(.plain)
         .onHover { hovering in

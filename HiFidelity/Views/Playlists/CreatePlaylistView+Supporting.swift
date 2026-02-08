@@ -27,8 +27,8 @@ struct ColorSchemeButton: View {
                         }
                     }
 
-                Text(scheme.displayName)
-                    .font(.system(size: 11))
+            Text(scheme.displayName)
+                .font(AppFonts.captionMedium)
                     .foregroundColor(isSelected ? .primary : .secondary)
             }
         }

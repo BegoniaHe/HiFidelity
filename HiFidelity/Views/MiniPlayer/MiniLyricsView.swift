@@ -54,7 +54,7 @@ struct MiniLyricsView: View {
     private var header: some View {
         HStack {
             Text("Lyrics")
-                .font(.system(size: 14, weight: .semibold))
+                .font(AppFonts.heading5)
                 .foregroundColor(.primary)
 
             Spacer()
@@ -62,13 +62,13 @@ struct MiniLyricsView: View {
             // Close button
             Button(action: onClose) {
                 Image(systemName: "chevron.down.circle.fill")
-                    .font(.system(size: 16))
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(.secondary)
             }
             .buttonStyle(.plain)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
+        .padding(.horizontal, DesignTokens.Spacing.md)
+        .padding(.vertical, DesignTokens.Spacing.sm)
     }
 
     // MARK: - Lyrics Content
@@ -92,7 +92,7 @@ struct MiniLyricsView: View {
                                     isPast: isPast
                                 )
                                 .id(line.id)
-                                .padding(.vertical, 6)
+                                .padding(.vertical, DesignTokens.Spacing.sm)
                                 .onChange(of: isCurrent) { _, newValue in
                                     if newValue {
                                         withAnimation(.easeInOut(duration: 0.3)) {
@@ -115,7 +115,7 @@ struct MiniLyricsView: View {
 
     private func lyricLine(text: String, isCurrent: Bool, isPast: Bool) -> some View {
         Text(text)
-            .font(isCurrent ? .system(size: 14, weight: .semibold) : .system(size: 12))
+            .font(isCurrent ? AppFonts.heading5 : AppFonts.captionLarge)
             .foregroundColor(
                 isCurrent ? theme.currentTheme.primaryColor :
                 isPast ? .secondary :
@@ -123,18 +123,18 @@ struct MiniLyricsView: View {
             )
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)
-            .padding(.horizontal, 12)
+            .padding(.horizontal, DesignTokens.Spacing.md)
             .animation(.easeInOut(duration: 0.25), value: isCurrent)
     }
 
     private var noLyricsView: some View {
         VStack(spacing: 12) {
             Image(systemName: "text.quote")
-                .font(.system(size: 32))
+                .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.3))
 
             Text("No lyrics available")
-                .font(.system(size: 12))
+                .font(AppFonts.captionLarge)
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -146,11 +146,11 @@ struct MiniLyricsView: View {
     private var emptyState: some View {
         VStack(spacing: 12) {
             Image(systemName: "text.quote")
-                .font(.system(size: 32))
+                .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.3))
 
             Text("Play a song to see lyrics")
-                .font(.system(size: 12))
+                .font(AppFonts.captionLarge)
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

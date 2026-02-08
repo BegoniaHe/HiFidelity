@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 31/10/25.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Main content view with tabs for Tracks, Albums, Artists, and Genres
 struct HomeView: View {
@@ -52,9 +52,9 @@ struct HomeView: View {
 
             Spacer()
         }
-        .padding(.horizontal, 24)
-        .padding(.vertical, 16)
-        .frame(height: 52)
+        .padding(.horizontal, DesignTokens.Spacing.xxl)
+        .padding(.vertical, DesignTokens.Spacing.lg)
+        .frame(height: DesignTokens.ControlHeight.xl)
         .background(
             Color(nsColor: .windowBackgroundColor)
                 .overlay(
@@ -80,9 +80,11 @@ struct HomeView: View {
                 .opacity(selectedLibraryTab == .albums ? 1 : 0)
                 .zIndex(selectedLibraryTab == .albums ? 1 : 0)
 
-            ArtistsTabView(selectedEntity: $selectedEntity, isVisible: selectedLibraryTab == .artists)
-                .opacity(selectedLibraryTab == .artists ? 1 : 0)
-                .zIndex(selectedLibraryTab == .artists ? 1 : 0)
+            ArtistsTabView(
+                selectedEntity: $selectedEntity, isVisible: selectedLibraryTab == .artists
+            )
+            .opacity(selectedLibraryTab == .artists ? 1 : 0)
+            .zIndex(selectedLibraryTab == .artists ? 1 : 0)
 
             GenresTabView(selectedEntity: $selectedEntity, isVisible: selectedLibraryTab == .genres)
                 .opacity(selectedLibraryTab == .genres ? 1 : 0)

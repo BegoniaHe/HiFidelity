@@ -69,7 +69,7 @@ struct GenresTabView: View {
                             }
                         }
                     }
-                    .padding(20)
+                    .padding(DesignTokens.Spacing.xl)
                 }
             }
         }
@@ -125,8 +125,8 @@ struct GenresTabView: View {
                     .scaleEffect(1.2)
                     .tint(theme.currentTheme.primaryColor)
 
-                Text("Loading genres...")
-                    .font(.system(size: 14))
+            Text("Loading genres...")
+                .font(AppFonts.bodySmall)
                     .foregroundColor(.secondary)
             }
 
@@ -141,7 +141,7 @@ struct GenresTabView: View {
         HStack(spacing: 16) {
             // Count label
             Text("\(filteredGenres.count) genres")
-                .font(.system(size: 13, weight: .medium))
+                .font(AppFonts.labelMedium)
                 .foregroundColor(.secondary)
 
             Spacer()
@@ -155,9 +155,9 @@ struct GenresTabView: View {
             )
             .frame(width: 32)
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
-        .frame(height: 46)
+        .padding(.horizontal, DesignTokens.Spacing.xl)
+        .padding(.vertical, DesignTokens.Spacing.md)
+        .frame(height: DesignTokens.ControlHeight.xl)
         .background(Color(nsColor: .windowBackgroundColor))
     }
 
@@ -294,10 +294,10 @@ private struct GenreOptionsDropdown: View {
         } label: {
             HStack(spacing: 6) {
                 Image(systemName: "line.3.horizontal.decrease.circle")
-                    .font(.system(size: 16, weight: .medium))
+                    .font(AppFonts.labelLarge)
                 if selectedFilter != nil {
                     Image(systemName: "circle.fill")
-                        .font(.system(size: 6))
+                        .font(AppFonts.captionSmall)
                         .foregroundColor(theme.currentTheme.primaryColor)
                 }
             }

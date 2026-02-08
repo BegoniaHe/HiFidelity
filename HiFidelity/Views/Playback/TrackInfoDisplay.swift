@@ -4,8 +4,8 @@
 //
 //  Created by Varun Rathod
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Display current playing track information with artwork and favorite button
 struct TrackInfoDisplay: View {
@@ -48,7 +48,7 @@ struct TrackInfoDisplay: View {
                     MiniPlayerWindowController.show()
                 }) {
                     Image(systemName: "pip.enter")
-                        .font(.system(size: 16))
+                        .font(AppFonts.bodyLarge)
                         .foregroundColor(.secondary)
                         .frame(width: 28, height: 28)
                         .contentShape(Rectangle())
@@ -78,7 +78,7 @@ struct TrackInfoDisplay: View {
     private var artworkView: some View {
         if let track = currentTrack {
             TrackArtworkView(track: track, size: 56, cornerRadius: 6)
-                .shadow(color: .black.opacity(0.15), radius: 6, y: 3)
+                .tokenShadow(DesignTokens.Shadow.level1)
         } else {
             placeholderArtwork
         }
@@ -88,13 +88,13 @@ struct TrackInfoDisplay: View {
         ZStack {
             RoundedRectangle(cornerRadius: 6)
                 .fill(Color(nsColor: .controlBackgroundColor))
-            Image(systemName: "music.note")
-                .font(.system(size: 20, weight: .light))
+                Image(systemName: "music.note")
+                    .font(AppFonts.heading2)
                 .symbolRenderingMode(.hierarchical)
                 .foregroundColor(.secondary.opacity(0.4))
         }
         .frame(width: 56, height: 56)
-        .shadow(color: .black.opacity(0.08), radius: 4, y: 2)
+        .tokenShadow(DesignTokens.Shadow.level1)
     }
 
     // MARK: - Track Details
@@ -102,19 +102,19 @@ struct TrackInfoDisplay: View {
     private func trackDetails(for track: Track) -> some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(track.title)
-                .font(.system(size: 12, weight: .semibold))
+                .font(AppFonts.heading2)
                 .lineLimit(1)
                 .foregroundColor(.primary)
 
             Text(track.artist)
-                .font(.system(size: 12, weight: .medium))
+                .font(AppFonts.bodyLarge)
                 .lineLimit(1)
                 .foregroundColor(.secondary.opacity(0.85))
 
             // Audio quality info from BASS - uses cached string for performance
             if !cachedAudioQuality.isEmpty {
                 Text(cachedAudioQuality)
-                    .font(.system(size: 10, weight: .medium))
+                    .font(AppFonts.captionSmall)
                     .foregroundColor(.secondary.opacity(0.7))
                     .monospacedDigit()
             }
@@ -124,11 +124,11 @@ struct TrackInfoDisplay: View {
     private var placeholderDetails: some View {
         VStack(alignment: .leading, spacing: 5) {
             Text("Not Playing")
-                .font(.system(size: 14, weight: .semibold))
+                .font(AppFonts.heading5)
                 .foregroundColor(.secondary.opacity(0.7))
 
             Text("Select a track to play")
-                .font(.system(size: 13))
+                .font(AppFonts.bodySmall)
                 .foregroundColor(.secondary.opacity(0.6))
         }
     }
@@ -146,25 +146,36 @@ struct TrackInfoDisplay: View {
 
         var body: some View {
             Button(action: { playback.toggleFavorite() }) {
-                Image(systemName: (playback.currentTrack?.isFavorite ?? false) ? "heart.fill" : "heart")
-                    .font(.system(size: 16, weight: .semibold))
-                    .symbolRenderingMode(.hierarchical)
-                    .foregroundColor((playback.currentTrack?.isFavorite ?? false) ? theme.currentTheme.primaryColor : .secondary)
-                    .frame(width: 32, height: 32)
-                    .background(
-                        Circle()
-                            .fill(isHovered ? Color.primary.opacity(0.06) : Color.clear)
-                    )
-                    .scaleEffect(isHovered ? 1.1 : 1.0)
-                    .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
-                    .animation(.spring(response: 0.2, dampingFraction: 0.8), value: playback.currentTrack?.isFavorite)
-                    .contentShape(Circle())
+                Image(
+                    systemName: (playback.currentTrack?.isFavorite ?? false)
+                        ? "heart.fill" : "heart"
+                )
+                .font(AppFonts.bodyLarge)
+                .symbolRenderingMode(.hierarchical)
+                .foregroundColor(
+                    (playback.currentTrack?.isFavorite ?? false)
+                        ? theme.currentTheme.primaryColor : .secondary
+                )
+                .frame(width: 32, height: 32)
+                .background(
+                    Circle()
+                        .fill(isHovered ? Color.primary.opacity(0.06) : Color.clear)
+                )
+                .scaleEffect(isHovered ? 1.1 : 1.0)
+                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
+                .animation(
+                    .spring(response: 0.2, dampingFraction: 0.8),
+                    value: playback.currentTrack?.isFavorite
+                )
+                .contentShape(Circle())
             }
             .buttonStyle(.plain)
             .onHover { hovering in
                 isHovered = hovering
             }
-            .help((playback.currentTrack?.isFavorite ?? false) ? "Remove from Favorites" : "Add to Favorites")
+            .help(
+                (playback.currentTrack?.isFavorite ?? false)
+                    ? "Remove from Favorites" : "Add to Favorites")
         }
     }
 
@@ -178,7 +189,8 @@ struct TrackInfoDisplay: View {
 
         // Format: "24/96kHz 2304kbps Stereo" or "44.1kHz 1411kbps Stereo" for 16-bit
         if info.bitDepth > 0 {
-            return "\(bitrateKbps)kbps \(channels)\n\(info.bitDepth)/\(String(format: "%.1f", sampleRateKHz))kHz "
+            return
+                "\(bitrateKbps)kbps \(channels)\n\(info.bitDepth)/\(String(format: "%.1f", sampleRateKHz))kHz "
         } else {
             return "\(bitrateKbps)kbps \(channels)\n\(String(format: "%.1f", sampleRateKHz))kHz"
         }

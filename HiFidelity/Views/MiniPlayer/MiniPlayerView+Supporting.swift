@@ -45,7 +45,7 @@ struct VolumePopoverView: View {
         VStack(spacing: 8) {
             // Volume percentage
             Text("\(Int(playback.volume * 100))%")
-                .font(.system(size: 11, weight: .medium))
+                .font(AppFonts.labelSmall)
                 .foregroundColor(.secondary)
                 .monospacedDigit()
 
@@ -81,13 +81,13 @@ struct VolumePopoverView: View {
                 playback.toggleMute()
             }) {
                 Image(systemName: volumeIconForPopover)
-                    .font(.system(size: 14))
+                    .font(AppFonts.labelLarge)
                     .foregroundColor(.secondary)
                     .frame(width: 24, height: 24)
             }
             .buttonStyle(.plain)
         }
-        .padding(12)
+        .padding(DesignTokens.Spacing.md)
         .background(VisualEffectView(material: .menu, blendingMode: .behindWindow))
     }
 
