@@ -68,7 +68,7 @@ struct TrackInfoPanel: View {
         HStack {
             Text("Track Info")
                 .font(AppFonts.heading4)
-                .frame(height: 28)
+                .frame(height: DesignTokens.ControlHeight.xs)
                 .foregroundColor(.primary)
 
             Spacer()
@@ -114,14 +114,14 @@ struct TrackInfoPanel: View {
 
     private func trackDetails(track: Track) -> some View {
             ScrollView {
-                VStack(spacing: 24) {
+                VStack(spacing: DesignTokens.Spacing.xxl) {
                     // Large album artwork
-                    TrackArtworkView(track: track, size: 280, cornerRadius: 12)
+                    TrackArtworkView(track: track, size: 280, cornerRadius: DesignTokens.CornerRadius.lg)
                     .tokenShadow(DesignTokens.Shadow.level3)
                         .padding(.top, DesignTokens.Spacing.xxxl)
 
                     // Track info
-                    VStack(spacing: 8) {
+                    VStack(spacing: DesignTokens.Spacing.sm) {
                         Text(track.title)
                             .font(AppFonts.heading2)
                             .foregroundColor(.primary)
@@ -142,7 +142,7 @@ struct TrackInfoPanel: View {
                     .padding(.horizontal, DesignTokens.Spacing.xxl)
 
                     // Track details
-                    VStack(spacing: 12) {
+                    VStack(spacing: DesignTokens.Spacing.md) {
                         // Basic info
                         DetailRow(icon: "clock", label: "Duration", value: track.formattedDuration)
 
@@ -215,7 +215,7 @@ struct TrackInfoPanel: View {
 
                     // Bottom spacer for playback bar clearance
                     Spacer()
-                        .frame(height: 110)
+                        .frame(height: DesignTokens.Size.Playback.bottomSpacerHeight)
                 }
                 .textSelection(.enabled)
         }
@@ -224,7 +224,7 @@ struct TrackInfoPanel: View {
     // MARK: - Empty State
 
     private var emptyState: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: DesignTokens.Spacing.xl) {
             Image(systemName: "info.circle")
                 .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.2))
@@ -276,7 +276,7 @@ struct DetailRow: View {
             Image(systemName: icon)
                 .font(AppFonts.captionLarge)
                 .foregroundColor(.secondary)
-                .frame(width: 20)
+                .frame(width: DesignTokens.Size.Icon.xs)
 
             Text(label)
                 .font(AppFonts.bodySmall)
@@ -291,7 +291,7 @@ struct DetailRow: View {
         .padding(.horizontal, DesignTokens.Spacing.lg)
         .padding(.vertical, DesignTokens.Spacing.sm)
         .background(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm)
                 .fill(Color(nsColor: .controlBackgroundColor).opacity(0.5))
         )
     }

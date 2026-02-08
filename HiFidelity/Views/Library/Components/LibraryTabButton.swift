@@ -20,11 +20,11 @@ struct LibraryTabButton: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 7) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
                 Image(systemName: icon)
                     .font(isSelected ? AppFonts.heading5 : AppFonts.labelLarge)
                     .fixedSize()
-                    .frame(width: 16, height: 16)
+                    .frame(width: DesignTokens.Size.Icon.xxs, height: DesignTokens.Size.Icon.xxs)
 
                 Text(title)
                     .font(isSelected ? AppFonts.heading5 : AppFonts.labelLarge)
@@ -33,9 +33,9 @@ struct LibraryTabButton: View {
             .foregroundStyle(isSelected ? Color.white : Color.primary)
             .padding(.horizontal, DesignTokens.Spacing.lg)
             .padding(.vertical, DesignTokens.Spacing.md)
-            .frame(height: 36)
+            .frame(height: DesignTokens.ControlHeight.md)
             .background(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm)
                     .fill(
                         isSelected
                             ? theme.currentTheme.primaryColor.opacity(0.80)

@@ -430,6 +430,9 @@
         }
       }
     },
+    "About" : {
+
+    },
     "About HiFidelity" : {
       "localizations" : {
         "de" : {
@@ -526,6 +529,9 @@
         }
       }
     },
+    "Add spatial depth and ambience to audio" : {
+
+    },
     "Add to Favorites" : {
       "localizations" : {
         "de" : {
@@ -590,6 +596,9 @@
         }
       }
     },
+    "Advanced" : {
+
+    },
     "Album '%@'" : {
       "localizations" : {
         "de" : {
@@ -606,6 +615,9 @@
         }
       }
     },
+    "Amount of reverb effect to apply" : {
+
+    },
     "Analyzing: %@" : {
       "localizations" : {
         "de" : {
@@ -621,6 +633,25 @@
           }
         }
       }
+    },
+    "App Data" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App-Daten"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "应用数据"
+          }
+        }
+      }
+    },
+    "Appearance" : {
+
     },
     "Are you sure you want to delete '%@'? This action cannot be undone." : {
       "localizations" : {
@@ -702,6 +733,12 @@
         }
       }
     },
+    "Audio" : {
+
+    },
+    "Audio Buffer" : {
+
+    },
     "Audio Effects & Equalizer" : {
       "localizations" : {
         "de" : {
@@ -766,6 +803,9 @@
         }
       }
     },
+    "Automatically normalize volume across tracks" : {
+
+    },
     "Autoplay" : {
       "localizations" : {
         "de" : {
@@ -813,6 +853,9 @@
           }
         }
       }
+    },
+    "Blue" : {
+
     },
     "Cancel" : {
       "localizations" : {
@@ -1054,6 +1097,9 @@
         }
       }
     },
+    "Cyan" : {
+
+    },
     "Danger Zone" : {
       "localizations" : {
         "de" : {
@@ -1293,6 +1339,9 @@
           }
         }
       }
+    },
+    "Enable ReplayGain" : {
+
     },
     "Enable the equalizer to adjust frequency response" : {
       "localizations" : {
@@ -1566,6 +1615,25 @@
         }
       }
     },
+    "Green" : {
+
+    },
+    "Help" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hilfe"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "帮助"
+          }
+        }
+      }
+    },
     "Hide Artwork" : {
       "localizations" : {
         "de" : {
@@ -1694,6 +1762,9 @@
         }
       }
     },
+    "Indigo" : {
+
+    },
     "Instrumental" : {
       "localizations" : {
         "de" : {
@@ -1726,6 +1797,12 @@
         }
       }
     },
+    "Larger buffer = more stable, but higher latency" : {
+
+    },
+    "Library" : {
+
+    },
     "Library Statistics" : {
       "localizations" : {
         "de" : {
@@ -1738,6 +1815,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "库统计信息"
+          }
+        }
+      }
+    },
+    "License" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lizenz"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "许可证"
           }
         }
       }
@@ -1997,6 +2090,12 @@
           }
         }
       }
+    },
+    "Mint" : {
+
+    },
+    "Mode" : {
+
     },
     "Music Folders" : {
       "localizations" : {
@@ -2446,6 +2545,9 @@
         }
       }
     },
+    "Orange" : {
+
+    },
     "Pause" : {
       "localizations" : {
         "de" : {
@@ -2493,6 +2595,9 @@
           }
         }
       }
+    },
+    "Pink" : {
+
     },
     "Plain" : {
       "localizations" : {
@@ -2740,6 +2845,9 @@
         }
       }
     },
+    "Purple" : {
+
+    },
     "Queue" : {
       "localizations" : {
         "de" : {
@@ -2784,6 +2892,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "队列为空。播放点什么开始吧。"
+          }
+        }
+      }
+    },
+    "Queue Persistence Status:\n- Active: %@\n- Unsaved Changes: %@\n- Last Save: %@\n- Queue Count: %lld\n- Current Index: %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Queue Persistence Status:\n- Active: %1$@\n- Unsaved Changes: %2$@\n- Last Save: %3$@\n- Queue Count: %4$lld\n- Current Index: %5$lld"
           }
         }
       }
@@ -2851,6 +2969,12 @@
           }
         }
       }
+    },
+    "Recently played tracks" : {
+
+    },
+    "Red" : {
+
     },
     "Refresh Library" : {
       "localizations" : {
@@ -3155,6 +3279,12 @@
           }
         }
       }
+    },
+    "Reverb" : {
+
+    },
+    "Reverb Mix" : {
+
     },
     "Right-click any track and select 'Get Info' to see detailed information." : {
       "localizations" : {
@@ -3524,6 +3654,22 @@
         }
       }
     },
+    "Show app data directory in Finder" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App-Datenordner im Finder anzeigen"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在访达中显示应用数据目录"
+          }
+        }
+      }
+    },
     "Show Artwork" : {
       "localizations" : {
         "de" : {
@@ -3620,6 +3766,9 @@
         }
       }
     },
+    "Source" : {
+
+    },
     "Synced" : {
       "localizations" : {
         "de" : {
@@ -3635,6 +3784,9 @@
           }
         }
       }
+    },
+    "Teal" : {
+
     },
     "Theme" : {
       "localizations" : {
@@ -3908,6 +4060,22 @@
         }
       }
     },
+    "View license" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lizenz anzeigen"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看许可证"
+          }
+        }
+      }
+    },
     "View on GitHub" : {
       "localizations" : {
         "de" : {
@@ -3924,18 +4092,34 @@
         }
       }
     },
-    "View license" : {
+    "Visit Help Wiki" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lizenz anzeigen"
+            "value" : "Hilfe-Wiki besuchen"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "查看许可证"
+            "value" : "帮助维基"
+          }
+        }
+      }
+    },
+    "Visit project website" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Projekt-Website besuchen"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "访问项目网站"
           }
         }
       }
@@ -3994,102 +4178,6 @@
         }
       }
     },
-    "Visit Help Wiki" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hilfe-Wiki besuchen"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "帮助维基"
-          }
-        }
-      }
-    },
-    "Visit project website" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Projekt-Website besuchen"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "访问项目网站"
-          }
-        }
-      }
-    },
-    "App Data" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "App-Daten"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "应用数据"
-          }
-        }
-      }
-    },
-    "Help" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hilfe"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "帮助"
-          }
-        }
-      }
-    },
-    "License" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lizenz"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "许可证"
-          }
-        }
-      }
-    },
-    "Show app data directory in Finder" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "App-Datenordner im Finder anzeigen"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在访达中显示应用数据目录"
-          }
-        }
-      }
-    },
     "Website" : {
       "localizations" : {
         "de" : {
@@ -4121,6 +4209,15 @@
           }
         }
       }
+    },
+    "Yellow" : {
+
+    },
+    "Your favorite tracks" : {
+
+    },
+    "Your most played tracks" : {
+
     }
   },
   "version" : "1.1"

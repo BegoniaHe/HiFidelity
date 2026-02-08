@@ -385,7 +385,7 @@ extension LyricsPanel {
 
             // Results list
             if searchResults.isEmpty {
-                VStack(spacing: 16) {
+                VStack(spacing: DesignTokens.Spacing.lg) {
                     Image(systemName: "magnifyingglass")
                         .font(AppFonts.displayLarge)
                         .foregroundColor(.secondary.opacity(0.3))
@@ -406,7 +406,10 @@ extension LyricsPanel {
                 }
             }
         }
-        .frame(width: 500, height: 600)
+        .frame(
+            width: DesignTokens.Size.Window.lyricsSearchWidth,
+            height: DesignTokens.Size.Window.lyricsSearchHeight
+        )
         .background(Color(nsColor: .windowBackgroundColor))
     }
 
@@ -414,9 +417,9 @@ extension LyricsPanel {
         Button(action: {
             importSearchResult(result)
         }) {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 HStack {
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                         Text(result.trackName)
                             .font(AppFonts.heading5)
                             .foregroundColor(.primary)
@@ -434,9 +437,9 @@ extension LyricsPanel {
 
                     Spacer()
 
-                    VStack(alignment: .trailing, spacing: 4) {
+                    VStack(alignment: .trailing, spacing: DesignTokens.Spacing.xs) {
                         if result.hasSyncedLyrics {
-                            HStack(spacing: 4) {
+                            HStack(spacing: DesignTokens.Spacing.xs) {
                                 Image(systemName: "waveform")
                                     .font(AppFonts.captionSmall)
                                 Text("Synced")
@@ -468,7 +471,7 @@ extension LyricsPanel {
                 }
 
                 if result.instrumental {
-                    HStack(spacing: 4) {
+                    HStack(spacing: DesignTokens.Spacing.xs) {
                         Image(systemName: "music.note")
                             .font(AppFonts.captionSmall)
                         Text("Instrumental")
@@ -485,7 +488,7 @@ extension LyricsPanel {
         .overlay(
             Rectangle()
                 .fill(Color.secondary.opacity(0.1))
-                .frame(height: 1),
+                .frame(height: DesignTokens.Spacing.hairline),
             alignment: .bottom
         )
     }

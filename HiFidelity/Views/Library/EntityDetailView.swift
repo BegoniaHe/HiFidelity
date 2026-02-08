@@ -77,14 +77,14 @@ struct EntityDetailView: View {
                 onShuffle: shuffleAll
             )
             .overlay(alignment: .bottomTrailing) {
-                HStack(spacing: 12) {
+                HStack(spacing: DesignTokens.Spacing.md) {
                     TrackTableOptionsDropdown(
                         sortOrder: $sortOrder,
                         selectedFilter: $selectedFilter
                     )
-                    .frame(width: 32)
+                    .frame(width: DesignTokens.ControlHeight.sm)
                 }
-                .padding([.bottom, .trailing], 12)
+                .padding([.bottom, .trailing], DesignTokens.Spacing.md)
             }
 
             // Tracks list
@@ -137,7 +137,7 @@ struct EntityDetailView: View {
         VStack {
             Spacer()
 
-            VStack(spacing: 16) {
+            VStack(spacing: DesignTokens.Spacing.lg) {
                 ProgressView()
                     .scaleEffect(1.5)
                     .tint(theme.currentTheme.primaryColor)
@@ -155,7 +155,7 @@ struct EntityDetailView: View {
     // MARK: - Empty State
 
     private var emptyStateView: some View {
-        VStack(spacing: 18) {
+        VStack(spacing: DesignTokens.Spacing.lg) {
             Image(systemName: entity.icon)
                 .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.3))
@@ -517,10 +517,10 @@ struct EntityHeader: View {
                 }
 
                 // Action buttons
-                HStack(spacing: 12) {
+                HStack(spacing: DesignTokens.Spacing.md) {
                     // Play button
                     Button(action: onPlay) {
-                        HStack(spacing: 8) {
+                        HStack(spacing: DesignTokens.Spacing.sm) {
                             Image(systemName: "play.fill")
                                 .font(AppFonts.labelLarge)
 
@@ -531,7 +531,7 @@ struct EntityHeader: View {
                         .padding(.horizontal, DesignTokens.Spacing.lg)
                         .padding(.vertical, DesignTokens.Spacing.sm)
                         .background(
-                            RoundedRectangle(cornerRadius: 24)
+                            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xxl)
                                 .fill(isPlayHovered ? theme.currentTheme.primaryColor.opacity(0.9) : theme.currentTheme.primaryColor)
                         )
                         .scaleEffect(isPlayHovered ? 1.02 : 1.0)
@@ -544,7 +544,7 @@ struct EntityHeader: View {
 
                     // Shuffle button
                     Button(action: onShuffle) {
-                        HStack(spacing: 8) {
+                        HStack(spacing: DesignTokens.Spacing.sm) {
                             Image(systemName: "shuffle")
                                 .font(AppFonts.labelLarge)
                             Text("Shuffle")
@@ -554,7 +554,7 @@ struct EntityHeader: View {
                         .padding(.horizontal, DesignTokens.Spacing.lg)
                         .padding(.vertical, DesignTokens.Spacing.sm)
                         .background(
-                            RoundedRectangle(cornerRadius: 24)
+                            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xxl)
                                 .fill(isShuffleHovered ? Color(nsColor: .controlBackgroundColor).opacity(0.8) : Color(nsColor: .controlBackgroundColor))
                         )
                         .scaleEffect(isShuffleHovered ? 1.02 : 1.0)
@@ -585,14 +585,14 @@ struct EntityHeader: View {
                 Image(nsImage: nsImage)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: 160, height: 160)
-                    .cornerRadius(entity.isArtist ? 100 : DesignTokens.CornerRadius.lg)
+                    .frame(width: DesignTokens.Size.Artwork.xl, height: DesignTokens.Size.Artwork.xl)
+                    .cornerRadius(entity.isArtist ? DesignTokens.Size.Artwork.xl / 2 : DesignTokens.CornerRadius.lg)
                     .tokenShadow(DesignTokens.Shadow.level3)
             } else if entity.isArtist, let artistId = entity.entityId {
-                ArtistArtworkView(artistId: artistId, size: 160)
+                ArtistArtworkView(artistId: artistId, size: DesignTokens.Size.Artwork.xl)
                     .tokenShadow(DesignTokens.Shadow.level3)
             } else if entity.isAlbum, let albumId = entity.entityId {
-                AlbumArtworkView(albumId: albumId, size: 160, cornerRadius: 12)
+                AlbumArtworkView(albumId: albumId, size: DesignTokens.Size.Artwork.xl, cornerRadius: DesignTokens.CornerRadius.lg)
                     .tokenShadow(DesignTokens.Shadow.level3)
             } else {
                 placeholderArtwork
@@ -606,7 +606,7 @@ struct EntityHeader: View {
             if entity.isArtist {
                 Circle()
                     .fill(entityGradient)
-                    .frame(width: 160, height: 160)
+                    .frame(width: DesignTokens.Size.Artwork.xl, height: DesignTokens.Size.Artwork.xl)
                     .overlay {
                         Image(systemName: entity.icon)
                             .font(AppFonts.displayLarge)
@@ -614,9 +614,9 @@ struct EntityHeader: View {
                     }
                     .tokenShadow(DesignTokens.Shadow.level3)
             } else {
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.lg)
                     .fill(entityGradient)
-                    .frame(width: 160, height: 160)
+                    .frame(width: DesignTokens.Size.Artwork.xl, height: DesignTokens.Size.Artwork.xl)
                     .overlay {
                         Image(systemName: entity.icon)
                             .font(AppFonts.displayLarge)

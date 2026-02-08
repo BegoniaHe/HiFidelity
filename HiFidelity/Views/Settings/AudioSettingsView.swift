@@ -15,7 +15,7 @@ struct AudioSettingsView: View {
     @Bindable var r128Scanner = R128LoudnessScanner.shared
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
 
             // Output Device// Output Device
             settingsSection(title: "Output Device", icon: "speaker.wave.3") {
@@ -61,11 +61,11 @@ struct AudioSettingsView: View {
     // MARK: - Settings Sections
 
     private var effectsSettings: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             // Reverb Toggle
             settingRow(
-                label: "Reverb",
-                description: "Add spatial depth and ambience to audio"
+                label: String(localized: "Reverb"),
+                description: String(localized: "Add spatial depth and ambience to audio")
             ) {
                 Toggle("", isOn: Binding(
                     get: { effectsManager.isReverbEnabled },
@@ -76,20 +76,20 @@ struct AudioSettingsView: View {
 
             // Reverb Mix
             if effectsManager.isReverbEnabled {
-            settingRow(
-                    label: "Reverb Mix",
-                    description: "Amount of reverb effect to apply"
-            ) {
-                HStack(spacing: 8) {
+                settingRow(
+                    label: String(localized: "Reverb Mix"),
+                    description: String(localized: "Amount of reverb effect to apply")
+                ) {
+                    HStack(spacing: DesignTokens.Spacing.sm) {
                         Slider(value: Binding(
                             get: { Double(effectsManager.reverbMix) },
                             set: { effectsManager.setReverbMix(Float($0)) }
                         ), in: -96...0, step: 1)
-                        .frame(width: 150)
+                        .frame(width: DesignTokens.Size.Form.fieldWidth)
 
                         Text("\(Int(effectsManager.reverbMix)) dB")
-                            .frame(width: 60, alignment: .trailing)
-                        .foregroundColor(.secondary)
+                            .frame(width: DesignTokens.Size.Form.valueWidth, alignment: .trailing)
+                            .foregroundColor(.secondary)
                             .monospacedDigit()
                     }
                 }
@@ -98,11 +98,11 @@ struct AudioSettingsView: View {
     }
 
     private var replayGainSettingsView: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             // ReplayGain Toggle
             settingRow(
-                label: "Enable ReplayGain",
-                description: "Automatically normalize volume across tracks"
+                label: String(localized: "Enable ReplayGain"),
+                description: String(localized: "Automatically normalize volume across tracks")
             ) {
                 Toggle("", isOn: $replayGainSettings.isEnabled)
                     .toggleStyle(.switch)
@@ -111,7 +111,7 @@ struct AudioSettingsView: View {
             // Mode & Source Pickers
             if replayGainSettings.isEnabled {
                 settingRow(
-                    label: "Mode",
+                    label: String(localized: "Mode"),
                     description: replayGainSettings.mode.description
                 ) {
                     Picker("", selection: $replayGainSettings.mode) {
@@ -119,11 +119,11 @@ struct AudioSettingsView: View {
                             Text(mode.displayName).tag(mode)
                         }
                     }
-                    .frame(width: 150)
+                    .frame(width: DesignTokens.Size.Form.fieldWidth)
                 }
 
                 settingRow(
-                    label: "Source",
+                    label: String(localized: "Source"),
                     description: replayGainSettings.source.description
                 ) {
                     Picker("", selection: $replayGainSettings.source) {
@@ -131,16 +131,16 @@ struct AudioSettingsView: View {
                             Text(source.displayName).tag(source)
                         }
                     }
-                    .frame(width: 220)
+                    .frame(width: DesignTokens.Size.Form.pickerWidth)
                 }
 
                 // R128 Loudness Analysis
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Loudness Analysis")
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                            Text(String(localized: "Loudness Analysis"))
                                 .font(AppFonts.labelMedium)
-                            Text("Scan your library to calculate EBU R128 loudness for accurate normalization")
+                            Text(String(localized: "Scan your library to calculate EBU R128 loudness for accurate normalization"))
                                 .font(AppFonts.captionMedium)
                                 .foregroundColor(.secondary)
                         }
@@ -148,12 +148,12 @@ struct AudioSettingsView: View {
                         Spacer()
 
                         if r128Scanner.isScanning {
-                            Button("Cancel") {
+                            Button(String(localized: "Cancel")) {
                                 r128Scanner.cancelScan()
                             }
                             .buttonStyle(.bordered)
                         } else {
-                            Button("Scan Library") {
+                            Button(String(localized: "Scan Library")) {
                                 r128Scanner.scanLibrary()
                             }
                             .buttonStyle(.borderedProminent)
@@ -162,7 +162,7 @@ struct AudioSettingsView: View {
 
                     // Progress indicator
                     if r128Scanner.isScanning {
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                             HStack {
                                 ProgressView(value: r128Scanner.progress)
                                     .frame(maxWidth: .infinity)
@@ -188,21 +188,21 @@ struct AudioSettingsView: View {
     }
 
     private var qualitySettings: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             // Buffer Length
             settingRow(
-                label: "Audio Buffer",
-                description: "Larger buffer = more stable, but higher latency"
+                label: String(localized: "Audio Buffer"),
+                description: String(localized: "Larger buffer = more stable, but higher latency")
             ) {
-                HStack(spacing: 8) {
+                HStack(spacing: DesignTokens.Spacing.sm) {
                     Slider(value: Binding(
                         get: { Double(settings.bufferLength) },
                         set: { settings.bufferLength = Int($0) }
                     ), in: 100...2000, step: 100)
-                    .frame(width: 150)
+                    .frame(width: DesignTokens.Size.Form.fieldWidth)
 
                     Text("\(settings.bufferLength) ms")
-                        .frame(width: 70, alignment: .trailing)
+                        .frame(width: DesignTokens.Size.Form.valueWideWidth, alignment: .trailing)
                         .foregroundColor(.secondary)
                 }
             }
@@ -210,7 +210,7 @@ struct AudioSettingsView: View {
     }
 
     private var deviceSettings: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             // Synchronize Sample Rate
             settingRow(
                 label: "Synchronize Sample Rate with Music Player (Hog mode)",
@@ -222,10 +222,10 @@ struct AudioSettingsView: View {
 
             // Info text when enabled
             if settings.synchronizeSampleRate {
-                HStack(spacing: 8) {
-            Image(systemName: "info.circle")
-                .foregroundColor(.secondary)
-                .font(AppFonts.captionLarge)
+                HStack(spacing: DesignTokens.Spacing.sm) {
+                    Image(systemName: "info.circle")
+                        .foregroundColor(.secondary)
+                        .font(AppFonts.captionLarge)
 
                     Text(
                         "When enabled, the app takes exclusive control (hog mode) of your audio device and " +
@@ -249,14 +249,14 @@ struct AudioSettingsView: View {
         icon: String,
         @ViewBuilder content: () -> Content
     ) -> some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(AppFonts.bodyLarge)
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                Image(systemName: icon)
+                    .font(AppFonts.bodyLarge)
                     .foregroundColor(.accentColor)
 
                 Text(title)
-                    .font(.headline)
+                    .font(AppFonts.heading4)
             }
 
             content()
@@ -288,5 +288,5 @@ struct AudioSettingsView: View {
 
 #Preview {
     AudioSettingsView()
-        .frame(width: 700, height: 600)
+        .frame(width: DesignTokens.Size.Preview.audioSettingsWidth, height: DesignTokens.Size.Preview.audioSettingsHeight)
 }

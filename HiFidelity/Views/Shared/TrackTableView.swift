@@ -42,5 +42,5 @@ struct TrackTableView: View {
         isCurrentTrack: { _ in false }
     )
     .environment(DatabaseManager.shared)
-    .frame(width: 800, height: 600)
+    .frame(width: DesignTokens.Size.Preview.trackTableWidth, height: DesignTokens.Size.Preview.trackTableHeight)
 }

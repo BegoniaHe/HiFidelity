@@ -22,7 +22,7 @@ struct AudioDeviceSelector: View {
             Image(systemName: "hifispeaker")
                 .font(AppFonts.bodyLarge)
                 .foregroundColor(.secondary)
-                .frame(width: 28, height: 28)
+                .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
                 .contentShape(Rectangle())
         }
         .buttonStyle(PlainHoverButtonStyle())
@@ -63,13 +63,13 @@ struct AudioDeviceSelector: View {
                     }
                 }
             }
-            .frame(maxHeight: 300)
+            .frame(maxHeight: DesignTokens.Size.Menu.audioDeviceMaxHeight)
 
             Divider()
 
             // Footer info
             if let currentDevice = dacManager.currentDevice {
-                HStack(spacing: 4) {
+                HStack(spacing: DesignTokens.Spacing.xs) {
                     Image(systemName: "info.circle")
                         .font(AppFonts.captionMedium)
                     Text(
@@ -88,7 +88,7 @@ struct AudioDeviceSelector: View {
                 .padding(.vertical, DesignTokens.Spacing.sm)
             }
         }
-        .frame(width: 300)
+        .frame(width: DesignTokens.Size.Menu.audioDeviceWidth)
         .background(Color(nsColor: .windowBackgroundColor))
     }
 
@@ -98,7 +98,7 @@ struct AudioDeviceSelector: View {
         Button(action: {
             selectDevice(device)
         }) {
-            HStack(spacing: 12) {
+            HStack(spacing: DesignTokens.Spacing.md) {
                 // Selection indicator
                 Image(systemName: isCurrentDevice(device) ? "checkmark.circle.fill" : "circle")
                     .font(AppFonts.labelLarge)
@@ -106,14 +106,14 @@ struct AudioDeviceSelector: View {
                         isCurrentDevice(device)
                             ? theme.currentTheme.primaryColor : .secondary.opacity(0.3)
                     )
-                    .frame(width: 20)
+                    .frame(width: DesignTokens.Size.Icon.xs)
 
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xxs) {
                     Text(device.name)
                         .font(AppFonts.bodySmall)
                         .foregroundColor(.primary)
 
-                    HStack(spacing: 6) {
+                    HStack(spacing: DesignTokens.Spacing.xsPlus) {
                         Text("\(Int(device.sampleRate)) Hz")
                             .font(AppFonts.captionMedium)
                             .foregroundColor(.secondary)
@@ -180,5 +180,5 @@ struct AudioDeviceSelector: View {
 #Preview {
     AudioDeviceSelector()
         .padding()
-        .frame(width: 400, height: 200)
+        .frame(width: DesignTokens.Size.Preview.audioDeviceWidth, height: DesignTokens.Size.Preview.audioDeviceHeight)
 }

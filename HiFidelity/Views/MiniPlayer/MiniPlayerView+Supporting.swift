@@ -42,7 +42,7 @@ struct VolumePopoverView: View {
     @Bindable var theme = AppTheme.shared
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: DesignTokens.Spacing.sm) {
             // Volume percentage
             Text("\(Int(playback.volume * 100))%")
                 .font(AppFonts.labelSmall)
@@ -55,12 +55,12 @@ struct VolumePopoverView: View {
                     // Track background
                     Capsule()
                         .fill(Color.primary.opacity(0.15))
-                        .frame(width: 4)
+                        .frame(width: DesignTokens.Spacing.xs)
 
                     // Volume fill
                     Capsule()
                         .fill(theme.currentTheme.primaryColor)
-                        .frame(width: 4, height: geometry.size.height * playback.volume)
+                        .frame(width: DesignTokens.Spacing.xs, height: geometry.size.height * playback.volume)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .gesture(
@@ -83,7 +83,7 @@ struct VolumePopoverView: View {
                 Image(systemName: volumeIconForPopover)
                     .font(AppFonts.labelLarge)
                     .foregroundColor(.secondary)
-                    .frame(width: 24, height: 24)
+                    .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
             }
             .buttonStyle(.plain)
         }

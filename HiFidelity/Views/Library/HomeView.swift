@@ -37,7 +37,7 @@ struct HomeView: View {
     // MARK: - Library Tabs Header
 
     private var libraryTabsHeader: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: DesignTokens.Spacing.xs) {
             ForEach(LibraryTab.allCases) { tab in
                 LibraryTabButton(
                     title: tab.title,
@@ -60,7 +60,7 @@ struct HomeView: View {
                 .overlay(
                     Rectangle()
                         .fill(Color.primary.opacity(0.04))
-                        .frame(height: 1),
+                        .frame(height: DesignTokens.Spacing.hairline),
                     alignment: .bottom
                 )
         )
@@ -120,5 +120,8 @@ enum LibraryTab: String, CaseIterable, Identifiable {
 #Preview {
     HomeView()
         .environment(DatabaseManager.shared)
-        .frame(width: 600, height: 800)
+        .frame(
+            width: DesignTokens.Size.Preview.homeWidth,
+            height: DesignTokens.Size.Preview.homeHeight
+        )
 }

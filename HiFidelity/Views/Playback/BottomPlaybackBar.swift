@@ -25,7 +25,7 @@ struct BottomPlaybackBar: View {
                 PlaybackControlsCenter()
 
                 // Left and right sections
-                HStack(spacing: 8) {
+                HStack(spacing: DesignTokens.Spacing.sm) {
                     // Left: Track Info
                     TrackInfoDisplay()
 
@@ -57,7 +57,7 @@ struct BottomPlaybackBar: View {
             .overlay(
                 Rectangle()
                     .fill(Color.primary.opacity(0.08))
-                    .frame(height: 1),
+                    .frame(height: DesignTokens.Spacing.hairline),
                 alignment: .top
             )
     }
@@ -80,7 +80,7 @@ struct BottomPlaybackBar: View {
                     showLeftSidebar: $showLeftSidebar
                 )
     }
-            .frame(width: 900, height: 300)
+            .frame(width: DesignTokens.Size.Preview.playbackWidth, height: DesignTokens.Size.Preview.playbackHeight)
         }
     }
 

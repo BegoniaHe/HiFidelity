@@ -20,7 +20,7 @@ struct LibraryHeader: View {
     @Bindable var theme = AppTheme.shared
 
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: DesignTokens.Spacing.lg) {
             // Count label
             Text(title)
                 .font(AppFonts.labelMedium)
@@ -40,7 +40,7 @@ struct LibraryHeader: View {
                 Image(systemName: selectedSort.ascending ? "arrow.up" : "arrow.down")
                     .font(AppFonts.labelLarge)
                     .foregroundColor(.secondary)
-                    .frame(width: 32, height: 32)
+                    .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
                     .background(
                         Circle()
                             .fill(Color.clear)
@@ -66,7 +66,7 @@ struct LibraryHeader: View {
                 Image(systemName: "arrow.up.arrow.down")
                     .font(AppFonts.labelLarge)
                     .foregroundColor(.secondary)
-                    .frame(width: 32, height: 32)
+                    .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
                     .background(
                         Circle()
                             .fill(Color.clear)
@@ -98,7 +98,7 @@ struct LibraryHeader: View {
                         }
                     }
                 } label: {
-                    HStack(spacing: 6) {
+                    HStack(spacing: DesignTokens.Spacing.xs) {
                         Image(systemName: "line.3.horizontal.decrease.circle")
                             .font(AppFonts.labelLarge)
                         if selectedFilter != nil {
@@ -110,7 +110,7 @@ struct LibraryHeader: View {
                     .foregroundColor(
                         selectedFilter != nil ? theme.currentTheme.primaryColor : .secondary
                     )
-                    .frame(width: 32, height: 32)
+                    .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
                     .background(
                         Circle()
                             .fill(
@@ -183,7 +183,7 @@ struct FilterOption: Identifiable, Equatable {
                 selectedSort: $selectedSort,
                 selectedFilter: $selectedFilter
             )
-            .frame(width: 800)
+            .frame(width: DesignTokens.Size.Preview.mainContentWidth)
         }
     }
 

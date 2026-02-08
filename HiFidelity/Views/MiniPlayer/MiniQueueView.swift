@@ -51,7 +51,7 @@ struct MiniQueueView: View {
 
             // Autoplay toggle
             if !playback.queue.isEmpty {
-                HStack(spacing: 4) {
+                HStack(spacing: DesignTokens.Spacing.xs) {
                     Image(systemName: playback.isAutoplayEnabled ? "infinity.circle.fill" : "infinity.circle")
                         .font(AppFonts.labelLarge)
                         .foregroundColor(playback.isAutoplayEnabled ? theme.currentTheme.primaryColor : .secondary)
@@ -63,7 +63,7 @@ struct MiniQueueView: View {
                 .padding(.horizontal, DesignTokens.Spacing.sm)
                 .padding(.vertical, DesignTokens.Spacing.xs)
                 .background(
-                    RoundedRectangle(cornerRadius: 4)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xxs)
                         .fill(playback.isAutoplayEnabled ? theme.currentTheme.primaryColor.opacity(0.15) : Color.clear)
                 )
                 .onTapGesture {
@@ -79,6 +79,7 @@ struct MiniQueueView: View {
                     Image(systemName: "xmark.circle.fill")
                         .font(AppFonts.bodyLarge)
                         .foregroundColor(.secondary)
+                        .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
                 }
                 .buttonStyle(.plain)
             }
@@ -88,6 +89,7 @@ struct MiniQueueView: View {
                 Image(systemName: "chevron.down.circle.fill")
                     .font(AppFonts.bodyLarge)
                     .foregroundColor(.secondary)
+                    .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
             }
             .buttonStyle(.plain)
         }
@@ -129,21 +131,29 @@ struct MiniQueueView: View {
     }
 
     private func currentTrackRow(track: Track) -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: DesignTokens.Spacing.sm) {
             // Playing indicator
             ZStack {
-                TrackArtworkView(track: track, size: 40, cornerRadius: 4)
+                TrackArtworkView(
+                    track: track,
+                    size: DesignTokens.Size.Artwork.xs,
+                    cornerRadius: DesignTokens.CornerRadius.xxs
+                )
 
                 // Animated playing indicator overlay
                 if playback.isPlaying {
                     Color.black.opacity(0.5)
                         .cornerRadius(DesignTokens.CornerRadius.xxs)
 
-                    HStack(spacing: 2) {
+                    HStack(spacing: DesignTokens.Spacing.xxs) {
                         ForEach(0..<3) { index in
-                            RoundedRectangle(cornerRadius: 1)
+                            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.hairline)
                                 .fill(theme.currentTheme.primaryColor)
-                                .frame(width: 2, height: CGFloat.random(in: 6...14))
+                                .frame(
+                                    width: DesignTokens.Size.MiniPlayer.eqBarWidth,
+                                    height: CGFloat.random(
+                                        in: DesignTokens.Size.MiniPlayer.eqBarMinHeight...DesignTokens.Size.MiniPlayer.eqBarMaxHeight                                    )
+                                )
                                 .animation(
                                     .easeInOut(duration: 0.5)
                                     .repeatForever(autoreverses: true)
@@ -154,11 +164,11 @@ struct MiniQueueView: View {
                     }
                 }
             }
-            .frame(width: 40, height: 40)
+            .frame(width: DesignTokens.Size.Artwork.xs, height: DesignTokens.Size.Artwork.xs)
 
             // Track info
-            VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: 4) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                HStack(spacing: DesignTokens.Spacing.xs) {
                     Image(systemName: "waveform")
                         .font(AppFonts.captionSmall)
                         .foregroundColor(theme.currentTheme.primaryColor)
@@ -175,7 +185,7 @@ struct MiniQueueView: View {
                     .lineLimit(1)
             }
 
-            Spacer(minLength: 4)
+            Spacer(minLength: DesignTokens.Spacing.xs)
 
             // Duration
             Text(track.formattedDuration)
@@ -189,18 +199,18 @@ struct MiniQueueView: View {
     }
 
     private func queueItem(track: Track, index: Int) -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: DesignTokens.Spacing.sm) {
             // Position number
             Text("\(index + 1)")
                 .font(AppFonts.labelSmall)
                 .foregroundColor(.secondary.opacity(0.6))
-                .frame(width: 20)
+                .frame(width: DesignTokens.ControlHeight.xs)
 
             // Album artwork
-            TrackArtworkView(track: track, size: 40, cornerRadius: 3)
+            TrackArtworkView(track: track, size: 40, cornerRadius: DesignTokens.CornerRadius.xxs)
 
             // Track info
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                 Text(track.title)
                     .font(AppFonts.captionLarge)
                     .foregroundColor(.primary)
@@ -212,7 +222,7 @@ struct MiniQueueView: View {
                     .lineLimit(1)
             }
 
-            Spacer(minLength: 4)
+            Spacer(minLength: DesignTokens.Spacing.xs)
 
             // Actions on hover
             if hoveredIndex == index {
@@ -222,6 +232,7 @@ struct MiniQueueView: View {
                     Image(systemName: "minus.circle.fill")
                         .font(AppFonts.bodyLarge)
                         .foregroundColor(.red.opacity(0.8))
+                        .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
                 }
                 .buttonStyle(.plain)
             } else {
@@ -251,7 +262,7 @@ struct MiniQueueView: View {
     // MARK: - Empty State
 
     private var emptyState: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: DesignTokens.Spacing.md) {
             Image(systemName: "music.note.list")
                 .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.3))
@@ -268,5 +279,5 @@ struct MiniQueueView: View {
 
 #Preview {
     MiniQueueView(onClose: {})
-        .frame(width: 550, height: 300)
+    .frame(width: DesignTokens.Size.Preview.miniPanelWidth, height: DesignTokens.Size.Preview.miniPanelHeight)
 }

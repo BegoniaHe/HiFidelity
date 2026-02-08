@@ -68,8 +68,8 @@ struct AlbumsTabView: View {
                 ScrollView {
                     LazyVGrid(
                         columns: [
-                            GridItem(.adaptive(minimum: 160, maximum: 200), spacing: 20)
-                        ], spacing: 20
+                            GridItem(.adaptive(minimum: 160, maximum: 200), spacing: DesignTokens.Spacing.xl)
+                        ], spacing: DesignTokens.Spacing.xl
                     ) {
                         ForEach(Array(filteredAlbums.enumerated()), id: \.element.id) {
                             index, album in
@@ -135,7 +135,7 @@ struct AlbumsTabView: View {
         VStack {
             Spacer()
 
-            VStack(spacing: 16) {
+            VStack(spacing: DesignTokens.Spacing.lg) {
                 ProgressView()
                     .scaleEffect(1.2)
                     .tint(theme.currentTheme.primaryColor)
@@ -153,7 +153,7 @@ struct AlbumsTabView: View {
     // MARK: - Toolbar
 
     private var toolbar: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: DesignTokens.Spacing.lg) {
             // Count label
             Text("\(filteredAlbums.count) albums")
                 .font(AppFonts.labelMedium)
@@ -168,7 +168,7 @@ struct AlbumsTabView: View {
                 sortOptions: sortOptions,
                 filterOptions: filterOptions
             )
-            .frame(width: 32)
+            .frame(width: DesignTokens.ControlHeight.sm)
         }
         .padding(.horizontal, DesignTokens.Spacing.xl)
         .padding(.vertical, DesignTokens.Spacing.md)
@@ -365,7 +365,7 @@ private struct AlbumOptionsDropdown: View {
                 }
             }
         } label: {
-            HStack(spacing: 6) {
+            HStack(spacing: DesignTokens.Spacing.xsPlus) {
                 Image(systemName: "line.3.horizontal.decrease.circle")
                     .font(AppFonts.labelLarge)
                 if selectedFilter != nil {
@@ -375,7 +375,7 @@ private struct AlbumOptionsDropdown: View {
                 }
             }
             .foregroundColor(selectedFilter != nil ? theme.currentTheme.primaryColor : .secondary)
-            .frame(width: 32, height: 32)
+            .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
             .background(
                 Circle()
                     .fill(

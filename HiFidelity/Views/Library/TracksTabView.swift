@@ -99,7 +99,7 @@ struct TracksTabView: View {
     // MARK: - Toolbar
 
     private var toolbar: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: DesignTokens.Spacing.lg) {
             // Track count
             Text("\(sortedTracks.count) tracks")
                 .font(AppFonts.labelMedium)
@@ -112,7 +112,7 @@ struct TracksTabView: View {
                 sortOrder: $sortOrder,
                 selectedFilter: $selectedFilter
             )
-            .frame(width: 32)
+            .frame(width: DesignTokens.ControlHeight.sm)
 
             viewToggle
         }
@@ -132,7 +132,7 @@ struct TracksTabView: View {
                 Image(systemName: "list.bullet")
                     .font(AppFonts.labelSmall)
                     .foregroundColor(viewType == .list ? .white : .primary)
-                    .frame(width: 32, height: 28)
+                    .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.xs)
                     .background(
                         viewType == .list ? theme.currentTheme.primaryColor : Color.clear
                     )
@@ -147,7 +147,7 @@ struct TracksTabView: View {
                 Image(systemName: "square.grid.2x2")
                     .font(AppFonts.labelSmall)
                     .foregroundColor(viewType == .grid ? .white : .primary)
-                    .frame(width: 32, height: 28)
+                    .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.xs)
                     .background(
                         viewType == .grid ? theme.currentTheme.primaryColor : Color.clear
                     )
@@ -156,10 +156,10 @@ struct TracksTabView: View {
             .buttonStyle(.plain)
         }
         .background(
-            RoundedRectangle(cornerRadius: 6)
+            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xs)
                 .fill(Color(nsColor: .controlBackgroundColor))
         )
-        .clipShape(RoundedRectangle(cornerRadius: 6))
+        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xs))
     }
 
     // MARK: - Track Content
@@ -191,8 +191,8 @@ struct TracksTabView: View {
         ScrollView {
             LazyVGrid(
                 columns: [
-                    GridItem(.adaptive(minimum: 140, maximum: 180), spacing: 16)
-                ], spacing: 16
+                    GridItem(.adaptive(minimum: 140, maximum: 180), spacing: DesignTokens.Spacing.lg)
+                ], spacing: DesignTokens.Spacing.lg
             ) {
                 ForEach(sortedTracks.isEmpty ? tracks : sortedTracks) { track in
                     TrackGridCard(track: track) {
@@ -210,7 +210,7 @@ struct TracksTabView: View {
         VStack {
             Spacer()
 
-            VStack(spacing: 18) {
+            VStack(spacing: DesignTokens.Spacing.lg) {
                 Image(systemName: "music.note")
                     .font(AppFonts.displayLarge)
                     .foregroundColor(.secondary.opacity(0.3))
@@ -236,7 +236,7 @@ struct TracksTabView: View {
         VStack {
             Spacer()
 
-            VStack(spacing: 16) {
+            VStack(spacing: DesignTokens.Spacing.lg) {
                 ProgressView()
                     .scaleEffect(1.2)
                     .tint(theme.currentTheme.primaryColor)
@@ -589,7 +589,7 @@ struct TrackTableOptionsDropdown: View {
                 }
             }
         } label: {
-            HStack(spacing: 6) {
+            HStack(spacing: DesignTokens.Spacing.xsPlus) {
                 Image(systemName: "line.3.horizontal.decrease.circle")
                     .font(AppFonts.labelLarge)
                 if selectedFilter != nil {
@@ -599,7 +599,7 @@ struct TrackTableOptionsDropdown: View {
                 }
             }
             .foregroundColor(selectedFilter != nil ? theme.currentTheme.primaryColor : .secondary)
-            .frame(width: 32, height: 32)
+            .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
             .background(
                 Circle()
                     .fill(

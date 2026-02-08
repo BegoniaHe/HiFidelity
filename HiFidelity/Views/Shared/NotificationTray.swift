@@ -163,7 +163,7 @@ struct NotificationTray: View {
                 Image(systemName: notificationIcon)
                     .font(AppFonts.bodyLarge)
                     .foregroundColor(.secondary)
-                    .frame(width: 36, height: 36)
+                    .frame(width: DesignTokens.Size.Icon.md, height: DesignTokens.Size.Icon.md)
                     .background(
                         Circle()
                             .fill(Color.clear)
@@ -174,12 +174,12 @@ struct NotificationTray: View {
                     Text("\(manager.unreadCount)")
                         .font(AppFonts.captionSmall)
                         .foregroundColor(.white)
-                        .frame(minWidth: 14, minHeight: 14)
+                        .frame(minWidth: DesignTokens.Size.Badge.minSize, minHeight: DesignTokens.Size.Badge.minSize)
                         .background(
                             Circle()
                                 .fill(Color.red)
                         )
-                        .offset(x: 4, y: -4)
+                        .offset(x: DesignTokens.Spacing.xs, y: -DesignTokens.Spacing.xs)
                         .transition(.scale.combined(with: .opacity))
                 }
             }
@@ -248,8 +248,8 @@ struct NotificationPopover: View {
                 messagesList
             }
         }
-        .frame(width: 350)
-        .frame(maxHeight: 400)
+        .frame(width: DesignTokens.Size.Popover.notificationWidth)
+        .frame(maxHeight: DesignTokens.Size.Popover.notificationMaxHeight)
         .onAppear {
             // Mark as read when popover appears
             manager.markAllAsRead()
@@ -258,7 +258,7 @@ struct NotificationPopover: View {
 
     @ViewBuilder
     private var emptyState: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: DesignTokens.Spacing.sm) {
             Image(systemName: "bell.slash")
                 .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary)
@@ -317,11 +317,11 @@ struct NotificationRow: View {
     }
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
             Image(systemName: message.type.icon)
                 .font(AppFonts.labelLarge)
                 .foregroundColor(message.type.color)
-                .frame(width: 20)
+                .frame(width: DesignTokens.Size.Icon.xs)
 
             VStack(alignment: .leading, spacing: 4) {
             Text(message.title)

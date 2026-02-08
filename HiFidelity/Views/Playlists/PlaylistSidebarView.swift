@@ -128,7 +128,7 @@ extension PlaylistSidebarView {
     // MARK: - Header
 
     private var playlistsHeader: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DesignTokens.Spacing.md) {
             if isSelectionMode {
                 // Selection mode UI
                 Button {
@@ -228,7 +228,7 @@ extension PlaylistSidebarView {
                 Image(systemName: "line.3.horizontal.decrease.circle")
                     .font(AppFonts.labelLarge)
                     .foregroundColor(isHovered ? theme.currentTheme.primaryColor : .secondary)
-                    .frame(width: 32, height: 32)
+                    .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
                     .background(
                         Circle()
                             .fill(
@@ -238,7 +238,7 @@ extension PlaylistSidebarView {
                     .scaleEffect(isHovered ? 1.08 : 1.0)
                     .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
             }
-            .frame(width: 32)
+            .frame(width: DesignTokens.ControlHeight.sm)
             .menuStyle(.borderlessButton)
             .onHover { hovering in
                 isHovered = hovering
@@ -257,7 +257,7 @@ extension PlaylistSidebarView {
                 Image(systemName: "plus")
                     .font(AppFonts.heading4)
                     .foregroundColor(isHovered ? .white : theme.currentTheme.primaryColor)
-                    .frame(width: 32, height: 32)
+                    .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
                     .background(
                         Circle()
                             .fill(
@@ -286,7 +286,7 @@ extension PlaylistSidebarView {
                 Image(systemName: "checkmark.circle")
                     .font(AppFonts.labelLarge)
                     .foregroundColor(isHovered ? theme.currentTheme.primaryColor : .secondary)
-                    .frame(width: 32, height: 32)
+                    .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
                     .background(
                         Circle()
                             .fill(
@@ -308,7 +308,7 @@ extension PlaylistSidebarView {
     // MARK: - Search Bar
 
     private var searchBar: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: DesignTokens.Spacing.sm) {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.secondary)
                 .font(AppFonts.labelLarge)
@@ -337,7 +337,7 @@ extension PlaylistSidebarView {
         .padding(.horizontal, DesignTokens.Spacing.md)
         .padding(.vertical, DesignTokens.Spacing.sm)
         .background(
-            RoundedRectangle(cornerRadius: 6)
+            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xs)
                 .fill(Color(nsColor: .controlBackgroundColor).opacity(0.5))
         )
         .padding(.horizontal, DesignTokens.Spacing.lg)
@@ -366,7 +366,7 @@ extension PlaylistSidebarView {
         let isSelected = selectedPlaylistIds.contains(playlist.id)
         let canBeDeleted = if case .user = playlist.type { true } else { false }
 
-        return HStack(spacing: 12) {
+        return HStack(spacing: DesignTokens.Spacing.md) {
             // Selection checkbox (only for user playlists in selection mode)
             if isSelectionMode && canBeDeleted {
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
@@ -377,13 +377,13 @@ extension PlaylistSidebarView {
             // Artwork
             artworkView(for: playlist)
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                 Text(playlist.name)
                     .font(AppFonts.labelLarge)
                     .foregroundColor(.primary)
                     .lineLimit(1)
 
-                HStack(spacing: 4) {
+                HStack(spacing: DesignTokens.Spacing.xs) {
                     if playlist.isPinned {
                         Image(systemName: "pin.fill")
                             .font(AppFonts.captionSmall)
@@ -411,7 +411,7 @@ extension PlaylistSidebarView {
         .padding(.horizontal, DesignTokens.Spacing.sm)
         .padding(.vertical, DesignTokens.Spacing.sm)
         .background(
-            RoundedRectangle(cornerRadius: 6)
+            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xs)
                 .fill(
                     isPlaylistSelected(playlist)
                         ? theme.currentTheme.primaryColor.opacity(0.1) : Color.clear)
@@ -447,10 +447,10 @@ extension PlaylistSidebarView {
                 Image(nsImage: nsImage)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: 56, height: 56)
+                    .frame(width: DesignTokens.Size.Artwork.md, height: DesignTokens.Size.Artwork.md)
                     .cornerRadius(DesignTokens.CornerRadius.xxs)
             } else {
-                RoundedRectangle(cornerRadius: 4)
+                RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xxs)
                     .fill(
                         LinearGradient(
                             colors: [
@@ -461,7 +461,7 @@ extension PlaylistSidebarView {
                             endPoint: .bottomTrailing
                         )
                     )
-                    .frame(width: 56, height: 56)
+                    .frame(width: DesignTokens.Size.Artwork.md, height: DesignTokens.Size.Artwork.md)
                     .overlay {
                         Image(systemName: playlist.icon)
                             .font(AppFonts.bodyLarge)
@@ -606,7 +606,7 @@ extension PlaylistSidebarView {
     // MARK: - Empty State
 
     private var emptyStateView: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: DesignTokens.Spacing.md) {
             Image(systemName: "music.note.list")
                 .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.5))
@@ -636,7 +636,10 @@ extension PlaylistSidebarView {
                 selectedEntity: $selectedEntity
             )
             .environment(DatabaseManager.shared)
-            .frame(width: 280, height: 800)
+            .frame(
+                width: DesignTokens.Size.Layout.sidebarMinWidth,
+                height: DesignTokens.Size.Preview.mainLayoutHeight
+            )
         }
     }
 

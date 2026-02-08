@@ -18,7 +18,7 @@ struct TrackInfoDisplay: View {
     @State private var cachedAudioQuality: String = ""
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: DesignTokens.Spacing.sm) {
             // Album artwork
             artworkView
 
@@ -30,12 +30,12 @@ struct TrackInfoDisplay: View {
             }
 
             // Buttons stack (vertical)
-            VStack(spacing: 2) {
+            VStack(spacing: DesignTokens.Spacing.xs) {
                 // Favorite button on top
                 if let track = currentTrack {
                     favoriteButton(for: track)
                 } else {
-                    Color.clear.frame(width: 28, height: 28)
+                    Color.clear.frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
                 }
 
                 // Mini Player button on bottom
@@ -50,14 +50,18 @@ struct TrackInfoDisplay: View {
                     Image(systemName: "pip.enter")
                         .font(AppFonts.bodyLarge)
                         .foregroundColor(.secondary)
-                        .frame(width: 28, height: 28)
+                        .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainHoverButtonStyle())
                 .help("Mini Player")
             }
         }
-        .frame(minWidth: 200, maxWidth: 280, alignment: .leading)
+        .frame(
+            minWidth: DesignTokens.Size.Playback.trackInfoMinWidth,
+            maxWidth: DesignTokens.Size.Playback.trackInfoMaxWidth,
+            alignment: .leading
+        )
         .onChange(of: playback.currentTrack) { _, track in
             currentTrack = track
             updateCachedAudioQuality()
@@ -77,7 +81,11 @@ struct TrackInfoDisplay: View {
     @ViewBuilder
     private var artworkView: some View {
         if let track = currentTrack {
-            TrackArtworkView(track: track, size: 56, cornerRadius: 6)
+            TrackArtworkView(
+                track: track,
+                size: DesignTokens.Size.Artwork.md,
+                cornerRadius: DesignTokens.CornerRadius.xs
+            )
                 .tokenShadow(DesignTokens.Shadow.level1)
         } else {
             placeholderArtwork
@@ -86,21 +94,21 @@ struct TrackInfoDisplay: View {
 
     private var placeholderArtwork: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 6)
+            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xs)
                 .fill(Color(nsColor: .controlBackgroundColor))
                 Image(systemName: "music.note")
                     .font(AppFonts.heading2)
                 .symbolRenderingMode(.hierarchical)
                 .foregroundColor(.secondary.opacity(0.4))
         }
-        .frame(width: 56, height: 56)
+        .frame(width: DesignTokens.Size.Artwork.md, height: DesignTokens.Size.Artwork.md)
         .tokenShadow(DesignTokens.Shadow.level1)
     }
 
     // MARK: - Track Details
 
     private func trackDetails(for track: Track) -> some View {
-        VStack(alignment: .leading, spacing: 3) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(track.title)
                 .font(AppFonts.heading2)
                 .lineLimit(1)
@@ -122,7 +130,7 @@ struct TrackInfoDisplay: View {
     }
 
     private var placeholderDetails: some View {
-        VStack(alignment: .leading, spacing: 5) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text("Not Playing")
                 .font(AppFonts.heading5)
                 .foregroundColor(.secondary.opacity(0.7))
@@ -156,7 +164,7 @@ struct TrackInfoDisplay: View {
                     (playback.currentTrack?.isFavorite ?? false)
                         ? theme.currentTheme.primaryColor : .secondary
                 )
-                .frame(width: 32, height: 32)
+                .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
                 .background(
                     Circle()
                         .fill(isHovered ? Color.primary.opacity(0.06) : Color.clear)
@@ -221,6 +229,6 @@ struct TrackInfoDisplay: View {
 
 #Preview {
     TrackInfoDisplay()
-        .frame(width: 320, height: 80)
+    .frame(width: DesignTokens.Size.Preview.trackInfoWidth, height: DesignTokens.Size.Preview.trackInfoHeight)
         .padding()
 }

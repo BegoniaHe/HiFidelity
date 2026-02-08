@@ -116,12 +116,12 @@ struct LibrarySettings: View {
     // MARK: - Import Progress Section
 
     private var importProgressSection: some View {
-        VStack(spacing: 10) {
-            HStack(spacing: 12) {
+        VStack(spacing: DesignTokens.Spacing.md) {
+            HStack(spacing: DesignTokens.Spacing.md) {
                 // Icon
                 ProgressView()
                     .scaleEffect(0.8)
-                    .frame(width: 24)
+                    .frame(width: DesignTokens.ControlHeight.xs)
 
                 // Info
                 VStack(alignment: .leading, spacing: 4) {
@@ -156,21 +156,21 @@ struct LibrarySettings: View {
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     // Background
-                    RoundedRectangle(cornerRadius: 2)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xxs)
                         .fill(Color.gray.opacity(0.2))
-                        .frame(height: 4)
+                        .frame(height: DesignTokens.Size.ProgressBar.heightCollapsed)
 
                     // Progress
-                    RoundedRectangle(cornerRadius: 2)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xxs)
                         .fill(theme.currentTheme.primaryColor)
                         .frame(
                             width: max(0, geometry.size.width * databaseManager.importProgress),
-                            height: 4
+                            height: DesignTokens.Size.ProgressBar.heightCollapsed
                         )
                         .animation(.easeInOut, value: databaseManager.importProgress)
                 }
             }
-            .frame(height: 4)
+            .frame(height: DesignTokens.Size.ProgressBar.heightCollapsed)
         }
         .padding(.horizontal, DesignTokens.Spacing.lg)
         .padding(.vertical, DesignTokens.Spacing.md)
@@ -180,14 +180,14 @@ struct LibrarySettings: View {
     // MARK: - Folder Monitoring Section
 
     private var folderMonitoringSection: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DesignTokens.Spacing.md) {
             // Icon
             Image(systemName: folderWatcher.isWatching ? "eye.fill" : "eye.slash.fill")
                 .font(AppFonts.labelLarge)
                 .foregroundColor(
                     folderWatcher.isWatching ? theme.currentTheme.primaryColor : .secondary
                 )
-                .frame(width: 24)
+                .frame(width: DesignTokens.ControlHeight.xs)
 
             // Info
             VStack(alignment: .leading, spacing: 2) {
@@ -232,7 +232,7 @@ struct LibrarySettings: View {
             Button {
                 databaseManager.addFolder()
             } label: {
-                HStack(spacing: 6) {
+                HStack(spacing: DesignTokens.Spacing.xs) {
                     Image(systemName: "plus")
                         .font(AppFonts.buttonSmall)
                     Text("Add Folder")
@@ -242,7 +242,7 @@ struct LibrarySettings: View {
                 .padding(.horizontal, DesignTokens.Spacing.lg)
                 .padding(.vertical, DesignTokens.Spacing.sm)
                 .background(
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xl)
                         .fill(
                             databaseManager.isImporting
                                 ? Color.gray : theme.currentTheme.primaryColor)
@@ -259,14 +259,14 @@ struct LibrarySettings: View {
     // MARK: - Action Buttons
 
     private var actionButtons: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DesignTokens.Spacing.md) {
             // Scan All button
             Button {
                 Task {
                     await scanAllFolders()
                 }
             } label: {
-                HStack(spacing: 6) {
+                HStack(spacing: DesignTokens.Spacing.xs) {
                     Image(systemName: "arrow.clockwise")
                         .font(AppFonts.labelMedium)
                     Text("Scan All")
@@ -278,7 +278,7 @@ struct LibrarySettings: View {
                 .padding(.horizontal, DesignTokens.Spacing.lg)
                 .padding(.vertical, DesignTokens.Spacing.sm)
                 .background(
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xl)
                         .fill(
                             databaseManager.isImporting
                                 ? Color.gray.opacity(0.15)
@@ -293,7 +293,7 @@ struct LibrarySettings: View {
             Button {
                 showRemoveAllConfirmation = true
             } label: {
-                HStack(spacing: 6) {
+                HStack(spacing: DesignTokens.Spacing.xs) {
                     Image(systemName: "trash")
                         .font(AppFonts.labelMedium)
                     Text("Delete All")
@@ -303,7 +303,7 @@ struct LibrarySettings: View {
                 .padding(.horizontal, DesignTokens.Spacing.lg)
                 .padding(.vertical, DesignTokens.Spacing.sm)
                 .background(
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xl)
                         .fill(
                             databaseManager.isImporting
                                 ? Color.gray.opacity(0.15) : Color.red.opacity(0.15))
@@ -322,7 +322,7 @@ struct LibrarySettings: View {
     // MARK: - Empty State
 
     private var emptyStateView: some View {
-        VStack(spacing: 18) {
+        VStack(spacing: DesignTokens.Spacing.lg) {
             Image(systemName: "folder.badge.plus")
                 .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.3))
@@ -339,7 +339,7 @@ struct LibrarySettings: View {
             Button {
                 databaseManager.addFolder()
             } label: {
-                HStack(spacing: 8) {
+                HStack(spacing: DesignTokens.Spacing.sm) {
                     Image(systemName: "plus")
                         .font(AppFonts.buttonSmall)
                     Text("Add Your First Folder")
@@ -349,7 +349,7 @@ struct LibrarySettings: View {
                 .padding(.horizontal, DesignTokens.Spacing.xl)
                 .padding(.vertical, DesignTokens.Spacing.sm)
                 .background(
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xl)
                         .fill(
                             databaseManager.isImporting
                                 ? Color.gray : theme.currentTheme.primaryColor)
@@ -365,7 +365,7 @@ struct LibrarySettings: View {
     // MARK: - Loading View
 
     private var loadingView: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: DesignTokens.Spacing.lg) {
             ProgressView()
                 .scaleEffect(1.5)
                 .tint(theme.currentTheme.primaryColor)
@@ -506,12 +506,12 @@ struct FolderRow: View {
     }
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DesignTokens.Spacing.md) {
             // Folder icon
             Image(systemName: "folder.fill")
                 .font(AppFonts.displayLarge)
                 .foregroundColor(theme.currentTheme.primaryColor)
-                .frame(width: 40)
+                .frame(width: DesignTokens.Size.Artwork.xs)
 
             // Folder path (left column)
             HStack {
@@ -528,10 +528,10 @@ struct FolderRow: View {
             .help(folder.url.path)
 
             // Status (right column)
-            HStack(spacing: 8) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
 
                 // Action buttons (shown on hover)
-                HStack(spacing: 6) {
+                HStack(spacing: DesignTokens.Spacing.xs) {
                     // Relocate button
                     Button {
                         relocateFolder()
@@ -539,7 +539,7 @@ struct FolderRow: View {
                     Image(systemName: "arrow.triangle.swap")
                         .font(AppFonts.captionLarge)
                             .foregroundColor(isImporting ? .gray : .orange)
-                            .frame(width: 24, height: 24)
+                            .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
                             .background(
                                 Circle()
                                     .fill(
@@ -559,7 +559,7 @@ struct FolderRow: View {
                     Image(systemName: "arrow.clockwise")
                         .font(AppFonts.captionLarge)
                             .foregroundColor(isImporting ? .gray : theme.currentTheme.primaryColor)
-                            .frame(width: 24, height: 24)
+                            .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
                             .background(
                                 Circle()
                                     .fill(
@@ -580,7 +580,7 @@ struct FolderRow: View {
                     Image(systemName: "trash")
                         .font(AppFonts.captionLarge)
                             .foregroundColor(isImporting ? .gray : .red)
-                            .frame(width: 24, height: 24)
+                            .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
                             .background(
                                 Circle()
                                     .fill(
@@ -616,5 +616,8 @@ struct FolderRow: View {
 #Preview {
     LibrarySettings()
         .environment(DatabaseManager.shared)
-        .frame(width: 700, height: 600)
+        .frame(
+            width: DesignTokens.Size.Preview.librarySettingsWidth,
+            height: DesignTokens.Size.Preview.librarySettingsHeight
+        )
 }

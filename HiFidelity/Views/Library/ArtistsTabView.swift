@@ -65,8 +65,8 @@ struct ArtistsTabView: View {
                 ScrollView {
                     LazyVGrid(
                         columns: [
-                            GridItem(.adaptive(minimum: 160, maximum: 200), spacing: 20)
-                        ], spacing: 20
+                            GridItem(.adaptive(minimum: 160, maximum: 200), spacing: DesignTokens.Spacing.xl)
+                        ], spacing: DesignTokens.Spacing.xl
                     ) {
                         ForEach(Array(filteredArtists.enumerated()), id: \.element.id) {
                             index, artist in
@@ -132,7 +132,7 @@ struct ArtistsTabView: View {
         VStack {
             Spacer()
 
-            VStack(spacing: 16) {
+            VStack(spacing: DesignTokens.Spacing.lg) {
                 ProgressView()
                     .scaleEffect(1.2)
                     .tint(theme.currentTheme.primaryColor)
@@ -150,7 +150,7 @@ struct ArtistsTabView: View {
     // MARK: - Toolbar
 
     private var toolbar: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: DesignTokens.Spacing.lg) {
             // Count label
             Text("\(filteredArtists.count) artists")
                 .font(AppFonts.labelMedium)
@@ -165,7 +165,7 @@ struct ArtistsTabView: View {
                 sortOptions: sortOptions,
                 filterOptions: filterOptions
             )
-            .frame(width: 32)
+            .frame(width: DesignTokens.ControlHeight.sm)
 
         }
         .padding(.horizontal, DesignTokens.Spacing.xl)
@@ -333,7 +333,7 @@ private struct ArtistOptionsDropdown: View {
                 }
             }
         } label: {
-            HStack(spacing: 6) {
+            HStack(spacing: DesignTokens.Spacing.xsPlus) {
                 Image(systemName: "line.3.horizontal.decrease.circle")
                     .font(AppFonts.labelLarge)
                 if selectedFilter != nil {
@@ -343,7 +343,7 @@ private struct ArtistOptionsDropdown: View {
                 }
             }
             .foregroundColor(selectedFilter != nil ? theme.currentTheme.primaryColor : .secondary)
-            .frame(width: 32, height: 32)
+            .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
             .background(
                 Circle()
                     .fill(

@@ -34,15 +34,19 @@ struct MiniPlayerView: View {
                 switch panel {
                 case .queue:
                     MiniQueueView(onClose: { expandedPanel = nil })
-                        .frame(height: 300)
+                        .frame(height: DesignTokens.Size.Window.miniPanelHeight)
 
                 case .lyrics:
                     MiniLyricsView(onClose: { expandedPanel = nil })
-                        .frame(height: 300)
+                        .frame(height: DesignTokens.Size.Window.miniPanelHeight)
                 }
             }
         }
-        .frame(width: showArtwork ? 440 : 360)
+        .frame(
+            width: showArtwork
+            ? DesignTokens.Size.Window.miniPlayerWidthArtwork
+            : DesignTokens.Size.Window.miniPlayerWidthCompact
+        )
         .background(
             Group {
                 if isTransparent {
@@ -52,7 +56,7 @@ struct MiniPlayerView: View {
                 }
             }
         )
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.lg))
         .padding(DesignTokens.Spacing.sm)
         .onChange(of: expandedPanel) { _, newPanel in
             updateWindowSize(expanded: newPanel != nil)
@@ -75,11 +79,15 @@ extension MiniPlayerView {
         guard let window = NSApplication.shared.windows.first(where: { $0.title == "Mini Player" })
         else { return }
 
-        let padding: CGFloat = 16  // 8px on each side
-        let baseHeight: CGFloat = 140 + padding  // 140 (content height) + padding
-        let expandedHeight: CGFloat = 300
+        let padding: CGFloat = DesignTokens.Spacing.md * 2
+        let baseHeight: CGFloat = DesignTokens.Size.Window.miniPlayerHeight + padding
+        let expandedHeight: CGFloat = DesignTokens.Size.Window.miniPanelHeight
         let targetHeight = expanded ? baseHeight + expandedHeight : baseHeight
-        let targetWidth: CGFloat = (self.showArtwork ? 440 : 360) + padding
+        let targetWidth: CGFloat = (
+            self.showArtwork
+            ? DesignTokens.Size.Window.miniPlayerWidthArtwork
+            : DesignTokens.Size.Window.miniPlayerWidthCompact
+        ) + padding
 
         // Update min/max size constraints immediately to prevent wobble
         window.minSize = NSSize(width: targetWidth, height: targetHeight)
@@ -103,8 +111,12 @@ extension MiniPlayerView {
         guard let window = NSApplication.shared.windows.first(where: { $0.title == "Mini Player" })
         else { return }
 
-        let padding: CGFloat = 16  // 8px on each side
-        let targetWidth: CGFloat = (self.showArtwork ? 440 : 360) + padding
+        let padding: CGFloat = DesignTokens.Spacing.md * 2
+        let targetWidth: CGFloat = (
+            self.showArtwork
+            ? DesignTokens.Size.Window.miniPlayerWidthArtwork
+            : DesignTokens.Size.Window.miniPlayerWidthCompact
+        ) + padding
         let currentHeight = window.frame.size.height
 
         // Update min/max size constraints immediately
@@ -154,20 +166,20 @@ extension MiniPlayerView {
             // Right: Controls
             controlsSection(track: track)
         }
-        .frame(height: 140)
+        .frame(height: DesignTokens.Size.Window.miniPlayerHeight)
     }
 
     // MARK: - Track Info Header
 
     private func trackInfoHeader(track: Track) -> some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DesignTokens.Spacing.md) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(track.title)
                     .font(AppFonts.heading5)
                     .foregroundColor(.primary)
                     .lineLimit(1)
 
-                HStack(spacing: 4) {
+                HStack(spacing: DesignTokens.Spacing.xs) {
                     Text(track.artist)
                         .font(AppFonts.captionMedium)
                         .foregroundColor(.secondary)
@@ -210,7 +222,7 @@ extension MiniPlayerView {
                 Image(systemName: "xmark.circle.fill")
                     .font(AppFonts.bodyLarge)
                     .foregroundColor(.secondary)
-                    .frame(width: 24, height: 24)
+                    .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
             }
             .buttonStyle(.plain)
             .help("Close Mini Player")
@@ -224,7 +236,7 @@ extension MiniPlayerView {
 
     private func artworkSection(track: Track) -> some View {
         ZStack {
-            TrackArtworkView(track: track, size: 140, cornerRadius: 0)
+            TrackArtworkView(track: track, size: DesignTokens.Size.Artwork.lg, cornerRadius: 0)
 
             // Play/Pause overlay on hover
             if isHoveringArtwork {
@@ -243,7 +255,7 @@ extension MiniPlayerView {
                 .transition(.scale.combined(with: .opacity))
             }
         }
-        .frame(width: 140, height: 140)
+        .frame(width: DesignTokens.Size.Artwork.lg, height: DesignTokens.Size.Artwork.lg)
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.2)) {
                 isHoveringArtwork = hovering
@@ -254,7 +266,7 @@ extension MiniPlayerView {
     // MARK: - Controls Section
 
     private func controlsSection(track: Track) -> some View {
-        VStack(spacing: 12) {
+        VStack(spacing: DesignTokens.Spacing.md) {
             // Track info header
             trackInfoHeader(track: track)
 
@@ -290,12 +302,15 @@ extension MiniPlayerView {
                 // Track background
                 Rectangle()
                     .fill(Color.white.opacity(0.2))
-                    .frame(height: 4)
+                    .frame(height: DesignTokens.Size.ProgressBar.heightCollapsed)
 
                 // Progress fill
                 Rectangle()
                     .fill(Color.white.opacity(0.6))
-                    .frame(width: geometry.size.width * playback.progress, height: 4)
+                    .frame(
+                        width: geometry.size.width * playback.progress,
+                        height: DesignTokens.Size.ProgressBar.heightCollapsed
+                    )
             }
             .gesture(
                 DragGesture(minimumDistance: 0)
@@ -305,7 +320,7 @@ extension MiniPlayerView {
                     }
             )
         }
-        .frame(height: 4)
+        .frame(height: DesignTokens.Size.ProgressBar.heightCollapsed)
         .padding(.horizontal, DesignTokens.Spacing.lg)
         .padding(.top, DesignTokens.Spacing.md)
     }
@@ -313,19 +328,22 @@ extension MiniPlayerView {
     // MARK: - Volume Section
 
     private var volumeSection: some View {
-        HStack(spacing: 8) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
             Button(action: {
                 showVolumePopover.toggle()
             }) {
                 Image(systemName: volumeIcon)
                     .font(AppFonts.bodyLarge)
                     .foregroundColor(.secondary)
-                    .frame(width: 24, height: 24)
+                    .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
             }
             .buttonStyle(.plain)
             .popover(isPresented: $showVolumePopover, arrowEdge: .bottom) {
                 VolumePopoverView()
-                    .frame(width: 50, height: 140)
+                    .frame(
+                        width: DesignTokens.Size.MiniPlayer.volumePopoverWidth,
+                        height: DesignTokens.Size.MiniPlayer.volumePopoverHeight
+                    )
             }
 
             // More options menu
@@ -413,7 +431,7 @@ extension MiniPlayerView {
                 Image(systemName: "ellipsis")
                     .font(AppFonts.bodyLarge)
                     .foregroundColor(.secondary)
-                    .frame(width: 32, height: 32)
+                    .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
                     .contentShape(Rectangle())
             }
             .menuStyle(ButtonMenuStyle())
@@ -424,7 +442,7 @@ extension MiniPlayerView {
     // MARK: - Playback Buttons
 
     private var playbackButtons: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: DesignTokens.Spacing.lg) {
             // Previous
             Button(action: {
                 playback.previous()
@@ -432,7 +450,7 @@ extension MiniPlayerView {
                 Image(systemName: "backward.fill")
                     .font(AppFonts.bodyLarge)
                     .foregroundColor(.primary)
-                    .frame(width: 32, height: 32)
+                    .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
             }
             .buttonStyle(.plain)
             .disabled(playback.currentTrack == nil)
@@ -444,7 +462,7 @@ extension MiniPlayerView {
                 Image(systemName: playback.isPlaying ? "pause.fill" : "play.fill")
                     .font(AppFonts.bodyLarge)
                     .foregroundColor(.primary)
-                    .frame(width: 32, height: 32)
+                    .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
             }
             .buttonStyle(.plain)
             .disabled(playback.currentTrack == nil)
@@ -456,7 +474,7 @@ extension MiniPlayerView {
                 Image(systemName: "forward.fill")
                     .font(AppFonts.bodyLarge)
                     .foregroundColor(.primary)
-                    .frame(width: 32, height: 32)
+                    .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
             }
             .buttonStyle(.plain)
             .disabled(playback.currentTrack == nil)
@@ -466,7 +484,7 @@ extension MiniPlayerView {
     // MARK: - Action Buttons
 
     private var actionButtons: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: DesignTokens.Spacing.sm) {
             // Lyrics button
             Button(action: {
                 expandedPanel = expandedPanel == .lyrics ? nil : .lyrics
@@ -476,9 +494,9 @@ extension MiniPlayerView {
                     .foregroundColor(
                         expandedPanel == .lyrics ? theme.currentTheme.primaryColor : .secondary
                     )
-                    .frame(width: 32, height: 32)
+                    .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
                     .background(
-                        RoundedRectangle(cornerRadius: 6)
+                        RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xs)
                             .fill(
                                 expandedPanel == .lyrics
                                     ? theme.currentTheme.primaryColor.opacity(0.15) : Color.clear)
@@ -497,9 +515,9 @@ extension MiniPlayerView {
                         .foregroundColor(
                             expandedPanel == .queue ? theme.currentTheme.primaryColor : .secondary
                         )
-                        .frame(width: 32, height: 32)
+                        .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
                         .background(
-                            RoundedRectangle(cornerRadius: 6)
+                            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xs)
                                 .fill(
                                     expandedPanel == .queue
                                         ? theme.currentTheme.primaryColor.opacity(0.15)
@@ -514,7 +532,7 @@ extension MiniPlayerView {
                             .padding(.horizontal, DesignTokens.Spacing.xs)
                             .padding(.vertical, DesignTokens.Spacing.xs)
                             .background(Circle().fill(Color.red))
-                            .offset(x: 4, y: -4)
+                            .offset(x: DesignTokens.Spacing.xs, y: -DesignTokens.Spacing.xs)
                     }
                 }
             }
@@ -551,7 +569,7 @@ extension MiniPlayerView {
                     Image(systemName: "xmark.circle.fill")
                         .font(AppFonts.bodyLarge)
                         .foregroundColor(.secondary)
-                        .frame(width: 24, height: 24)
+                        .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
                 }
                 .buttonStyle(.plain)
                 .help("Close Mini Player")
@@ -574,13 +592,13 @@ extension MiniPlayerView {
                             .font(AppFonts.displayLarge)
                             .foregroundColor(.secondary.opacity(0.3))
                     }
-                    .frame(width: 140, height: 140)
+                            .frame(width: DesignTokens.Size.Artwork.lg, height: DesignTokens.Size.Artwork.lg)
 
                     Divider()
                 }
 
                 HStack {
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                         Text("Play a song to get started")
                             .font(AppFonts.captionLarge)
                             .foregroundColor(.secondary.opacity(0.8))
@@ -591,7 +609,7 @@ extension MiniPlayerView {
                 }
                 .frame(maxWidth: .infinity)
             }
-            .frame(height: 140)
+            .frame(height: DesignTokens.Size.Window.miniPlayerHeight)
         }
     }
 
@@ -627,5 +645,8 @@ extension MiniPlayerView {
 
 #Preview {
     MiniPlayerView()
-        .frame(width: 566, height: 208)
+        .frame(
+            width: DesignTokens.Size.Preview.miniPlayerWidth,
+            height: DesignTokens.Size.Preview.miniPlayerHeight
+        )
 }

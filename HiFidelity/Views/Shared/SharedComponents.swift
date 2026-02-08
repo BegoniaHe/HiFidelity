@@ -24,10 +24,10 @@ struct ViewModeButton: View {
                 .font(AppFonts.labelLarge)
                 .symbolRenderingMode(.hierarchical)
                 .foregroundColor(isSelected ? theme.currentTheme.primaryColor : .secondary)
-                .frame(width: 32, height: 32)
+                .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
                 .contentShape(Rectangle())
                 .background(
-                    RoundedRectangle(cornerRadius: 7)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.smPlus)
                         .fill(
                             isSelected
                                 ? theme.currentTheme.primaryColor.opacity(0.12)
@@ -61,7 +61,7 @@ struct PlainHoverButtonStyle: ButtonStyle {
         configuration.label
             .scaleEffect(configuration.isPressed ? 0.94 : (isHovered ? 1.02 : 1.0))
             .background(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm)
                     .fill(isHovered ? Color.primary.opacity(0.06) : Color.clear)
             )
             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)

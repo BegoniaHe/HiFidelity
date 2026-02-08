@@ -64,6 +64,7 @@ struct MiniLyricsView: View {
                 Image(systemName: "chevron.down.circle.fill")
                     .font(AppFonts.bodyLarge)
                     .foregroundColor(.secondary)
+                    .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
             }
             .buttonStyle(.plain)
         }
@@ -80,7 +81,7 @@ struct MiniLyricsView: View {
                     ScrollView {
                         VStack(spacing: 0) {
                             // Spacer at top for better scrolling
-                            Color.clear.frame(height: 30)
+                            Color.clear.frame(height: DesignTokens.ControlHeight.sm)
 
                             ForEach(Array(lyrics.lines.enumerated()), id: \.element.id) { index, line in
                                 let isCurrent = currentLineIndex == index
@@ -103,7 +104,7 @@ struct MiniLyricsView: View {
                             }
 
                             // Spacer at bottom
-                            Color.clear.frame(height: 30)
+                            Color.clear.frame(height: DesignTokens.ControlHeight.sm)
                         }
                     }
                 }
@@ -128,7 +129,7 @@ struct MiniLyricsView: View {
     }
 
     private var noLyricsView: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: DesignTokens.Spacing.md) {
             Image(systemName: "text.quote")
                 .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.3))
@@ -144,7 +145,7 @@ struct MiniLyricsView: View {
     // MARK: - Empty State
 
     private var emptyState: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: DesignTokens.Spacing.md) {
             Image(systemName: "text.quote")
                 .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.3))
@@ -204,5 +205,5 @@ struct MiniLyricsView: View {
 
 #Preview {
     MiniLyricsView(onClose: {})
-        .frame(width: 550, height: 300)
+    .frame(width: DesignTokens.Size.Preview.miniPanelWidth, height: DesignTokens.Size.Preview.miniPanelHeight)
 }

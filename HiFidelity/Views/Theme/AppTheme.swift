@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 31/10/25.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Theme manager for the application
 @MainActor
@@ -19,7 +19,7 @@ class AppTheme {
     private init() {
         // Load saved theme from UserDefaults
         if let savedTheme = UserDefaults.standard.string(forKey: "selectedTheme"),
-           let theme = Theme(rawValue: savedTheme) {
+            let theme = Theme(rawValue: savedTheme) {
             currentTheme = theme
         }
     }
@@ -52,7 +52,19 @@ enum Theme: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 
     var name: String {
-        rawValue.capitalized
+        switch self {
+        case .blue: return String(localized: "Blue")
+        case .purple: return String(localized: "Purple")
+        case .pink: return String(localized: "Pink")
+        case .red: return String(localized: "Red")
+        case .orange: return String(localized: "Orange")
+        case .yellow: return String(localized: "Yellow")
+        case .green: return String(localized: "Green")
+        case .mint: return String(localized: "Mint")
+        case .teal: return String(localized: "Teal")
+        case .cyan: return String(localized: "Cyan")
+        case .indigo: return String(localized: "Indigo")
+        }
     }
 
     var primaryColor: Color {
@@ -76,7 +88,7 @@ enum Theme: String, CaseIterable, Identifiable {
     }
 
     var appearance: NSAppearance? {
-        return nil // Let system handle dark/light mode
+        return nil  // Let system handle dark/light mode
     }
 }
 

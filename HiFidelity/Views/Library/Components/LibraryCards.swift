@@ -11,7 +11,7 @@ import SwiftUI
 // MARK: - Shared Empty State View
 
 func emptyStateView(icon: String, message: String) -> some View {
-    VStack(spacing: 20) {
+    VStack(spacing: DesignTokens.Spacing.xl) {
         Image(systemName: icon)
             .font(AppFonts.displayLarge)
             .foregroundColor(.secondary.opacity(0.35))
@@ -34,19 +34,24 @@ struct AlbumCard: View {
 
     var body: some View {
         Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 // Artwork
                 ZStack {
                     if let albumId = album.id {
                         AlbumArtworkView(
-                            albumId: albumId, size: 160, cornerRadius: DesignTokens.CornerRadius.sm
+                            albumId: albumId,
+                            size: DesignTokens.Size.Artwork.xl,
+                            cornerRadius: DesignTokens.CornerRadius.sm
                         )
                         .tokenShadow(
                             isHovered ? DesignTokens.Shadow.level2 : DesignTokens.Shadow.level1)
                     } else {
                         RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.md)
                             .fill(theme.currentTheme.primaryColor.opacity(0.3))
-                            .frame(width: 160, height: 160)
+                            .frame(
+                                width: DesignTokens.Size.Artwork.xl,
+                                height: DesignTokens.Size.Artwork.xl
+                            )
                             .tokenShadow(DesignTokens.Shadow.level1)
                     }
 
@@ -54,7 +59,10 @@ struct AlbumCard: View {
                         Button(action: playAlbum) {
                             Circle()
                                 .fill(theme.currentTheme.primaryColor)
-                                .frame(width: 54, height: 54)
+                                .frame(
+                                    width: DesignTokens.Size.Button.playOverlayLarge,
+                                    height: DesignTokens.Size.Button.playOverlayLarge
+                                )
                                 .overlay(
                                     Image(systemName: "play.fill")
                                         .font(AppFonts.heading4)
@@ -69,12 +77,12 @@ struct AlbumCard: View {
                         .transition(.scale(scale: 0.8).combined(with: .opacity))
                     }
                 }
-                .frame(width: 160, height: 160)
+                .frame(width: DesignTokens.Size.Artwork.xl, height: DesignTokens.Size.Artwork.xl)
                 .scaleEffect(isHovered ? 1.02 : 1.0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
 
                 // Info
-                VStack(alignment: .leading, spacing: 5) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     Text(album.title)
                         .font(AppFonts.heading5)
                         .foregroundColor(.primary)
@@ -97,7 +105,7 @@ struct AlbumCard: View {
                 }
                 .textSelection(.enabled)
             }
-            .frame(width: 160, alignment: .leading)
+            .frame(width: DesignTokens.Size.Artwork.xl, alignment: .leading)
         }
         .padding(DesignTokens.Spacing.sm)
         .buttonStyle(.plain)
@@ -150,17 +158,20 @@ struct ArtistCard: View {
 
     var body: some View {
         Button(action: onTap) {
-            VStack(alignment: .center, spacing: 10) {
+            VStack(alignment: .center, spacing: DesignTokens.Spacing.md) {
                 // Artwork (circular)
                 ZStack {
                     if let artistId = artist.id {
-                        ArtistArtworkView(artistId: artistId, size: 160)
+                        ArtistArtworkView(artistId: artistId, size: DesignTokens.Size.Artwork.xl)
                             .tokenShadow(
                                 isHovered ? DesignTokens.Shadow.level2 : DesignTokens.Shadow.level1)
                     } else {
                         Circle()
                             .fill(theme.currentTheme.primaryColor.opacity(0.3))
-                            .frame(width: 160, height: 160)
+                            .frame(
+                                width: DesignTokens.Size.Artwork.xl,
+                                height: DesignTokens.Size.Artwork.xl
+                            )
                             .overlay(
                                 Image(systemName: "person.fill")
                                     .font(AppFonts.displayLarge)
@@ -173,7 +184,10 @@ struct ArtistCard: View {
                         Button(action: playArtist) {
                             Circle()
                                 .fill(theme.currentTheme.primaryColor)
-                                .frame(width: 54, height: 54)
+                                .frame(
+                                    width: DesignTokens.Size.Button.playOverlayLarge,
+                                    height: DesignTokens.Size.Button.playOverlayLarge
+                                )
                                 .overlay(
                                     Image(systemName: "play.fill")
                                         .font(AppFonts.heading4)
@@ -188,12 +202,12 @@ struct ArtistCard: View {
                         .transition(.scale(scale: 0.8).combined(with: .opacity))
                     }
                 }
-                .frame(width: 160, height: 160)
+                .frame(width: DesignTokens.Size.Artwork.xl, height: DesignTokens.Size.Artwork.xl)
                 .scaleEffect(isHovered ? 1.02 : 1.0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
 
                 // Info
-                VStack(spacing: 5) {
+                VStack(spacing: DesignTokens.Spacing.xs) {
                     Text(artist.name)
                         .font(AppFonts.heading5)
                         .foregroundColor(.primary)
@@ -207,7 +221,7 @@ struct ArtistCard: View {
                 }
                 .textSelection(.enabled)
             }
-            .frame(width: 160, alignment: .center)
+            .frame(width: DesignTokens.Size.Artwork.xl, alignment: .center)
         }
         .padding(DesignTokens.Spacing.sm)
         .buttonStyle(.plain)
@@ -264,10 +278,10 @@ struct GenreCard: View {
                 // Background gradient specific to genre
                 RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.lg)
                     .fill(genreGradient)
-                    .frame(height: 130)
+                    .frame(height: DesignTokens.Size.Library.genreCardHeight)
 
                 // Genre info
-                VStack(alignment: .leading, spacing: 7) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     Text(genre.name)
                         .font(AppFonts.heading2)
                         .foregroundColor(.white)
@@ -430,11 +444,13 @@ struct TrackGridCard: View {
     @State private var isHovered = false
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: DesignTokens.Spacing.sm) {
             // Artwork
             ZStack {
                 TrackArtworkView(
-                    track: track, size: 140, cornerRadius: DesignTokens.CornerRadius.md
+                    track: track,
+                    size: DesignTokens.Size.Artwork.lg,
+                    cornerRadius: DesignTokens.CornerRadius.md
                 )
                 .tokenShadow(isHovered ? DesignTokens.Shadow.level2 : DesignTokens.Shadow.level1)
 
@@ -443,7 +459,10 @@ struct TrackGridCard: View {
                     Button(action: onPlay) {
                         Circle()
                             .fill(theme.currentTheme.primaryColor)
-                            .frame(width: 50, height: 50)
+                            .frame(
+                                width: DesignTokens.Size.Button.playOverlaySmall,
+                                height: DesignTokens.Size.Button.playOverlaySmall
+                            )
                             .overlay(
                                 Image(systemName: "play.fill")
                                     .font(AppFonts.heading4)
@@ -458,12 +477,12 @@ struct TrackGridCard: View {
                     .transition(.scale(scale: 0.8).combined(with: .opacity))
                 }
             }
-            .frame(width: 140, height: 140)
+            .frame(width: DesignTokens.Size.Artwork.lg, height: DesignTokens.Size.Artwork.lg)
             .scaleEffect(isHovered ? 1.02 : 1.0)
             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
 
             // Track info
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                 Text(track.title)
                     .font(AppFonts.labelMedium)
                     .foregroundColor(.primary)
@@ -480,7 +499,7 @@ struct TrackGridCard: View {
         }
         .padding(DesignTokens.Spacing.sm)
         .background(
-            RoundedRectangle(cornerRadius: 10)
+            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.md)
                 .fill(isHovered ? Color.primary.opacity(0.04) : Color.clear)
         )
         .onHover { hovering in

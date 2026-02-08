@@ -26,10 +26,10 @@ struct ModernPlayerLayout: View {
     // Dynamic minimum width based on visible panels
     private var minimumWidth: CGFloat {
         switch (showLeftSidebar, showRightPanel) {
-        case (true, true):   return 1100  // Both panels open
-        case (true, false),
-             (false, true):  return 900   // One panel open
-        case (false, false): return 900   // No panels open (just main content)
+           case (true, true):   return DesignTokens.Size.Window.mainMinWidthBothPanels  // Both panels open
+           case (true, false),
+               (false, true):  return DesignTokens.Size.Window.mainMinWidthSinglePanel  // One panel open
+           case (false, false): return DesignTokens.Size.Window.mainMinWidthSinglePanel  // No panels open (just main content)
         }
     }
 
@@ -58,7 +58,12 @@ struct ModernPlayerLayout: View {
                 rightPanelTab: $rightPanelTab
             )
         }
-        .frame(minWidth: minimumWidth, idealWidth: 1400, minHeight: 680, idealHeight: 900)
+        .frame(
+            minWidth: minimumWidth,
+            idealWidth: DesignTokens.Size.Window.mainIdealWidth,
+            minHeight: DesignTokens.Size.Window.mainMinHeight,
+            idealHeight: DesignTokens.Size.Window.mainIdealHeight
+        )
         .background(Color(nsColor: .windowBackgroundColor))
         .sheet(isPresented: $showSettings) {
             SettingsView()
@@ -152,5 +157,5 @@ enum NavigationTab: String, CaseIterable, Identifiable {
 #Preview {
     ModernPlayerLayout()
         .environment(DatabaseManager.shared)
-        .frame(width: 1200, height: 800)
+        .frame(width: DesignTokens.Size.Preview.mainLayoutWidth, height: DesignTokens.Size.Preview.mainLayoutHeight)
 }

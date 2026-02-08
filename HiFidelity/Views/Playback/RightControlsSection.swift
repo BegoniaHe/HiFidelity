@@ -15,7 +15,7 @@ struct RightControlsSection: View {
     @Bindable var theme = AppTheme.shared
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: DesignTokens.Spacing.sm) {
             // Queue button
             PanelToggleButton(
                 icon: "list.bullet",
@@ -37,9 +37,9 @@ struct RightControlsSection: View {
             }
 
             Divider()
-                .frame(height: 24)
+                .frame(height: DesignTokens.Spacing.xxl)
 
-            HStack(spacing: 2) {
+            HStack(spacing: DesignTokens.Spacing.xs) {
                 // Equalizer
                 EqualizerButton()
 
@@ -53,7 +53,7 @@ struct RightControlsSection: View {
                 VolumeControlSection()
             }
         }
-        .frame(width: 420, alignment: .trailing)
+        .frame(width: DesignTokens.Size.Playback.rightControlsWidth, alignment: .trailing)
     }
 
     // MARK: - Actions
@@ -87,7 +87,7 @@ private struct PanelToggleButton: View {
             Image(systemName: icon)
                 .font(AppFonts.bodyLarge)
                 .foregroundColor(isActive ? theme.currentTheme.primaryColor : .secondary)
-                .frame(width: 28, height: 28)
+                .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
                 .contentShape(Rectangle())
         }
         .buttonStyle(PlainHoverButtonStyle())
@@ -112,7 +112,7 @@ struct EqualizerButton: View {
             Image(systemName: "slider.vertical.3")
                 .font(AppFonts.bodyLarge)
                 .foregroundColor(.secondary)
-                .frame(width: 28, height: 28)
+                .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
                 .contentShape(Rectangle())
         }
         .buttonStyle(PlainHoverButtonStyle())
@@ -136,7 +136,7 @@ struct SampleRateSyncButton: View {
                 .foregroundColor(
                     settings.synchronizeSampleRate ? theme.currentTheme.primaryColor : .secondary
                 )
-                .frame(width: 28, height: 28)
+                .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
                 .contentShape(Rectangle())
         }
         .buttonStyle(PlainHoverButtonStyle())
@@ -159,7 +159,10 @@ struct SampleRateSyncButton: View {
                 rightPanelTab: $rightPanelTab,
                 showRightPanel: $showRightPanel
             )
-            .frame(width: 340, height: 60)
+            .frame(
+                width: DesignTokens.Size.Preview.rightControlsWidth,
+                height: DesignTokens.Size.Preview.rightControlsHeight
+            )
             .padding()
         }
     }

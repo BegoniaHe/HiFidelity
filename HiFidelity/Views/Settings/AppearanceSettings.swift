@@ -13,7 +13,7 @@ struct AppearanceSettings: View {
     @AppStorage("accentOpacity") private var accentOpacity: Double = 1.0
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 32) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xxxl) {
             // Theme Selection
             themeSection
 
@@ -35,8 +35,8 @@ struct AppearanceSettings: View {
     // MARK: - Theme Section
 
     private var themeSection: some View {
-        VStack(spacing: 28) {
-            VStack(alignment: .leading, spacing: 16) {
+        VStack(spacing: DesignTokens.Spacing.xxl) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 Text("Theme")
                     .font(AppFonts.heading3)
 
@@ -45,8 +45,8 @@ struct AppearanceSettings: View {
                     .foregroundColor(.secondary)
 
                 LazyVGrid(columns: [
-                    GridItem(.adaptive(minimum: 100), spacing: 16)
-                ], spacing: 16) {
+                    GridItem(.adaptive(minimum: 100), spacing: DesignTokens.Spacing.lg)
+                ], spacing: DesignTokens.Spacing.lg) {
                     ForEach(Theme.allCases) { themeOption in
                         ThemeCard(
                             theme: theme,
@@ -58,7 +58,7 @@ struct AppearanceSettings: View {
             }
 
             // Accent opacity
-            VStack(spacing: 8) {
+            VStack(spacing: DesignTokens.Spacing.sm) {
                 HStack {
                     Text("Accent Color Intensity")
                         .font(AppFonts.heading4)
@@ -77,7 +77,7 @@ struct AppearanceSettings: View {
     // MARK: - Advanced Section
 
     private var advancedSection: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
             // Reset button
             Button {
                 resetToDefaults()
@@ -86,12 +86,12 @@ struct AppearanceSettings: View {
                     Image(systemName: "arrow.counterclockwise")
                     Text("Reset to Defaults")
                 }
-                .font(.subheadline)
+                .font(AppFonts.labelMedium)
                 .foregroundColor(theme.currentTheme.primaryColor)
                 .padding(.horizontal, DesignTokens.Spacing.lg)
                 .padding(.vertical, DesignTokens.Spacing.sm)
                 .background(
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm)
                         .stroke(theme.currentTheme.primaryColor, lineWidth: 1)
                 )
             }
@@ -122,9 +122,9 @@ private struct ThemeCard: View {
                 theme.setTheme(themeOption)
             }
         } label: {
-            VStack(spacing: 12) {
+            VStack(spacing: DesignTokens.Spacing.md) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.lg)
                         .fill(
                             LinearGradient(
                                 colors: themeOption.gradientColors.map { $0.opacity(opacity) },
@@ -132,12 +132,12 @@ private struct ThemeCard: View {
                                 endPoint: .bottomTrailing
                             )
                         )
-                        .frame(height: 80)
+                        .frame(height: DesignTokens.Size.Card.themeHeight)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 12)
+                            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.lg)
                                 .strokeBorder(
                                     theme.currentTheme == themeOption ? themeOption.primaryColor : Color.clear,
-                                    lineWidth: 3
+                                    lineWidth: DesignTokens.Border.selectedStroke
                                 )
                         )
                         .tokenShadow(
@@ -175,5 +175,8 @@ private struct ThemeCard: View {
         AppearanceSettings(theme: AppTheme.shared)
             .padding()
     }
-    .frame(width: 600, height: 800)
+    .frame(
+        width: DesignTokens.Size.Preview.appearanceSettingsWidth,
+        height: DesignTokens.Size.Preview.appearanceSettingsHeight
+    )
 }

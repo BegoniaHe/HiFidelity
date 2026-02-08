@@ -21,28 +21,28 @@ struct ProgressBarControl: View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
                 // Background track
-                RoundedRectangle(cornerRadius: isHovering ? 4 : 2)
+                RoundedRectangle(cornerRadius: isHovering ? DesignTokens.CornerRadius.xxs : DesignTokens.CornerRadius.xxxs)
                     .fill(Color.secondary.opacity(isHovering ? 0.3 : 0.2))
-                    .frame(height: isHovering ? 8 : 4)
+                    .frame(height: isHovering ? DesignTokens.Size.ProgressBar.heightHover : DesignTokens.Size.ProgressBar.heightCollapsed)
 
                 // Progress fill
-                RoundedRectangle(cornerRadius: isHovering ? 4 : 2)
+                RoundedRectangle(cornerRadius: isHovering ? DesignTokens.CornerRadius.xxs : DesignTokens.CornerRadius.xxxs)
                     .fill(progressGradient)
                     .frame(
                         width: geometry.size.width * currentProgress,
-                        height: isHovering ? 10 : 4
+                        height: isHovering ? DesignTokens.Size.ProgressBar.heightHoverFill : DesignTokens.Size.ProgressBar.heightCollapsed
                     )
 
                 // Scrubber handle
                 if isHovering || isDragging {
                     scrubberHandle
-                        .offset(x: geometry.size.width * currentProgress - 8)
+                        .offset(x: geometry.size.width * currentProgress - DesignTokens.Size.ProgressBar.handleOffset)
                         .transition(.scale.combined(with: .opacity))
                 }
 
                 if shouldShowPreview {
                     previewBubble(width: geometry.size.width)
-                        .offset(x: previewOffsetX(in: geometry.size.width), y: -24)
+                        .offset(x: previewOffsetX(in: geometry.size.width), y: -DesignTokens.Spacing.xxl)
                         .transition(.opacity.combined(with: .scale))
                 }
             }
@@ -77,7 +77,7 @@ struct ProgressBarControl: View {
                 }
             )
         }
-        .frame(height: isHovering ? 10 : 4)
+        .frame(height: isHovering ? DesignTokens.Size.ProgressBar.heightHoverFill : DesignTokens.Size.ProgressBar.heightCollapsed)
         .animation(.easeInOut(duration: 0.2), value: isHovering)
     }
 
@@ -98,12 +98,12 @@ struct ProgressBarControl: View {
         ZStack {
             Circle()
                 .fill(Color.white)
-                .frame(width: 16, height: 16)
+                .frame(width: DesignTokens.Size.ProgressBar.handleOuter, height: DesignTokens.Size.ProgressBar.handleOuter)
                 .tokenShadow(DesignTokens.Shadow.level1)
 
             Circle()
                 .fill(theme.currentTheme.primaryColor)
-                .frame(width: 12, height: 12)
+                .frame(width: DesignTokens.Size.ProgressBar.handleInner, height: DesignTokens.Size.ProgressBar.handleInner)
         }
         .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovering)
     }
@@ -134,7 +134,7 @@ struct ProgressBarControl: View {
     }
 
     private var previewBubbleWidth: CGFloat {
-        60
+        DesignTokens.Size.ProgressBar.previewBubbleWidth
     }
 
     private func previewOffsetX(in width: CGFloat) -> CGFloat {
@@ -154,9 +154,9 @@ struct ProgressBarControl: View {
             .background(
                 BlurEffectView(material: .hudWindow, blendingMode: .behindWindow)
             )
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm))
             .overlay(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm)
                     .stroke(Color.white.opacity(0.15), lineWidth: 1)
             )
     }
@@ -250,8 +250,8 @@ private struct HoverTrackingView: NSViewRepresentable {
 #Preview {
     VStack {
         ProgressBarControl()
-            .frame(height: 10)
+            .frame(height: DesignTokens.Size.ProgressBar.heightHoverFill)
             .padding()
     }
-    .frame(width: 600, height: 100)
+    .frame(width: DesignTokens.Size.Preview.progressWidth, height: DesignTokens.Size.Preview.progressHeight)
 }

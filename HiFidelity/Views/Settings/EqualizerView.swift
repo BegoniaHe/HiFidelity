@@ -50,7 +50,7 @@ struct EqualizerView: View {
                 disabledState
             }
         }
-        .frame(minWidth: 600, minHeight: 500)
+        .frame(minWidth: DesignTokens.Size.Window.equalizerMinWidth, minHeight: DesignTokens.Size.Window.equalizerMinHeight)
         .background(Color(nsColor: .windowBackgroundColor))
         .sheet(isPresented: $showSavePresetDialog) {
             savePresetDialog
@@ -80,7 +80,7 @@ struct EqualizerView: View {
     // MARK: - Save Preset Dialog
 
     private var savePresetDialog: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: DesignTokens.Spacing.xl) {
             Text("Save Custom Preset")
                 .font(.title2)
                 .fontWeight(.semibold)
@@ -91,9 +91,9 @@ struct EqualizerView: View {
 
             TextField("Preset Name", text: $newPresetName)
                 .textFieldStyle(.roundedBorder)
-                .frame(width: 300)
+                .frame(width: DesignTokens.Size.Equalizer.dialogInputWidth)
 
-            HStack(spacing: 12) {
+            HStack(spacing: DesignTokens.Spacing.md) {
                 Button("Cancel") {
                     showSavePresetDialog = false
                     newPresetName = ""
@@ -119,15 +119,15 @@ struct EqualizerView: View {
             }
         }
         .padding(DesignTokens.Spacing.xxxl)
-        .frame(width: 400)
+        .frame(width: DesignTokens.Size.Equalizer.dialogWidth)
     }
 
     // MARK: - Control Bar
 
     private var controlBar: some View {
-        HStack(spacing: 20) {
+        HStack(spacing: DesignTokens.Spacing.xl) {
             // Power switch
-            HStack(spacing: 8) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
                 Text("Power")
                     .font(AppFonts.labelMedium)
                     .foregroundColor(.secondary)
@@ -141,10 +141,10 @@ struct EqualizerView: View {
             }
 
             // Quick actions and status
-            HStack(spacing: 12) {
+            HStack(spacing: DesignTokens.Spacing.md) {
                 // Custom mode indicator
                 if isCustomMode && effectsManager.isEqualizerEnabled {
-                    HStack(spacing: 6) {
+                    HStack(spacing: DesignTokens.Spacing.xs) {
                         Image(systemName: "hand.draw.fill")
                             .font(AppFonts.captionMedium)
                         Text("Custom")
@@ -203,7 +203,7 @@ struct EqualizerView: View {
             Spacer()
 
             // Preset selector
-            HStack(spacing: 8) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
                 Text("Preset")
                     .font(AppFonts.labelMedium)
                     .foregroundColor(.secondary)
@@ -254,22 +254,22 @@ struct EqualizerView: View {
                         }
                     }
                 } label: {
-                    HStack(spacing: 6) {
+                    HStack(spacing: DesignTokens.Spacing.xs) {
                         Text(displayPresetName)
                             .font(AppFonts.labelMedium)
                         Image(systemName: "chevron.down.circle.fill")
                             .font(AppFonts.captionLarge)
                             .foregroundColor(.secondary)
                     }
-                    .frame(width: 180, alignment: .leading)
+                    .frame(width: DesignTokens.Size.Equalizer.presetMenuWidth, alignment: .leading)
                     .padding(.horizontal, DesignTokens.Spacing.md)
                     .padding(.vertical, DesignTokens.Spacing.xs)
                     .background(
-                        RoundedRectangle(cornerRadius: 6)
+                        RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xs)
                             .fill(Color(nsColor: .controlBackgroundColor))
                     )
                     .overlay(
-                        RoundedRectangle(cornerRadius: 6)
+                        RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xs)
                             .strokeBorder(Color(nsColor: .separatorColor), lineWidth: 0.5)
                     )
                 }
@@ -291,7 +291,7 @@ struct EqualizerView: View {
                     isPreamp: true,
                     accentColor: theme.currentTheme.primaryColor
                 )
-                .frame(width: 60)
+                .frame(width: DesignTokens.Size.Equalizer.preampWidth)
 
                 // Subtitle to indicate independence
                 Text("Master")
@@ -304,12 +304,12 @@ struct EqualizerView: View {
             // Separator
             Rectangle()
                 .fill(Color(nsColor: .separatorColor))
-                .frame(width: 1)
+                .frame(width: DesignTokens.Size.Equalizer.separatorWidth)
                 .padding(.vertical, DesignTokens.Spacing.xl)
                 .padding(.trailing, DesignTokens.Spacing.xxxl)
 
             // 10 frequency bands
-            HStack(alignment: .center, spacing: 16) {
+            HStack(alignment: .center, spacing: DesignTokens.Spacing.lg) {
                 ForEach(0..<10) { index in
                     ProfessionalEQSlider(
                         value: Binding(
@@ -323,7 +323,7 @@ struct EqualizerView: View {
                         isPreamp: false,
                         accentColor: theme.currentTheme.primaryColor
                     )
-                    .frame(width: 50)
+                    .frame(width: DesignTokens.Size.Equalizer.bandWidth)
                 }
             }
         }
@@ -333,7 +333,7 @@ struct EqualizerView: View {
     // MARK: - Disabled State
 
     private var disabledState: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: DesignTokens.Spacing.lg) {
             Image(systemName: "slider.horizontal.3")
                 .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.3))
@@ -388,16 +388,16 @@ struct ProfessionalEQSlider: View {
             Text(formattedValue)
                 .font(AppFonts.placeholder(size: isPreamp ? 14 : 12, weight: .semibold, design: .monospaced))
                 .foregroundColor(value != 0 ? accentColor : .secondary)
-                .frame(height: 20)
+                .frame(height: DesignTokens.Size.Equalizer.valueHeight)
                 .padding(.bottom, DesignTokens.Spacing.sm)
 
             // Slider
             GeometryReader { geometry in
                 ZStack(alignment: .center) {
                     // Track
-                    RoundedRectangle(cornerRadius: 3)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xxxsPlus)
                         .fill(Color(nsColor: .separatorColor).opacity(0.5))
-                        .frame(width: isPreamp ? 6 : 5)
+                        .frame(width: isPreamp ? DesignTokens.Size.Equalizer.sliderTrackPreamp : DesignTokens.Size.Equalizer.sliderTrack)
 
                     // Filled portion (from center to thumb)
                     let centerY = geometry.size.height / 2
@@ -406,20 +406,20 @@ struct ProfessionalEQSlider: View {
                     let fillY = min(thumbY, centerY)
 
                     if value != 0 {
-                        RoundedRectangle(cornerRadius: 3)
+                        RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xxxsPlus)
                             .fill(LinearGradient(
                                 colors: value > 0 ? [accentColor.opacity(0.7), accentColor] : [accentColor, accentColor.opacity(0.7)],
                                 startPoint: .top,
                                 endPoint: .bottom
                             ))
-                            .frame(width: isPreamp ? 6 : 5, height: fillHeight)
+                            .frame(width: isPreamp ? DesignTokens.Size.Equalizer.sliderTrackPreamp : DesignTokens.Size.Equalizer.sliderTrack, height: fillHeight)
                             .position(x: geometry.size.width / 2, y: fillY + fillHeight / 2)
                     }
 
                     // Zero line marker
                     Rectangle()
                         .fill(Color.secondary.opacity(0.6))
-                        .frame(width: 20, height: 2)
+                        .frame(width: DesignTokens.Size.Equalizer.zeroLineWidth, height: DesignTokens.Size.Equalizer.zeroLineHeight)
                         .position(x: geometry.size.width / 2, y: centerY)
 
                     // Scale marks
@@ -427,7 +427,7 @@ struct ProfessionalEQSlider: View {
                         let positionY = dbToPosition(db, height: geometry.size.height)
                         Rectangle()
                             .fill(Color.secondary.opacity(0.3))
-                            .frame(width: 8, height: 1)
+                            .frame(width: DesignTokens.Size.Equalizer.markWidth, height: DesignTokens.Size.Equalizer.markHeight)
                             .position(x: geometry.size.width / 2, y: positionY)
                     }
 
@@ -442,7 +442,7 @@ struct ProfessionalEQSlider: View {
                         DesignTokens.Shadow.level1,
                         color: Color.black.opacity(isDragging ? 0.3 : 0.2)
                     )
-                        .frame(width: 20, height: 20)
+                        .frame(width: DesignTokens.Size.Equalizer.thumb, height: DesignTokens.Size.Equalizer.thumb)
                         .scaleEffect(isDragging ? 1.1 : (isHovering ? 1.05 : 1.0))
                         .animation(.easeInOut(duration: 0.15), value: isDragging)
                         .animation(.easeInOut(duration: 0.15), value: isHovering)
@@ -464,7 +464,7 @@ struct ProfessionalEQSlider: View {
                 }
                 .frame(maxWidth: .infinity)
             }
-            .frame(height: 240)
+            .frame(height: DesignTokens.Size.Equalizer.sliderHeight)
             .onHover { hovering in
                 isHovering = hovering
             }
@@ -590,6 +590,9 @@ struct EqualizerToggleButton: View {
 
 #Preview {
     EqualizerView()
-        .frame(minWidth: 600, minHeight: 500)
+        .frame(
+            minWidth: DesignTokens.Size.Window.equalizerMinWidth,
+            minHeight: DesignTokens.Size.Window.equalizerMinHeight
+        )
 
 }

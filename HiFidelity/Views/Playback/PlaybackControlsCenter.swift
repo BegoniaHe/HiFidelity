@@ -14,7 +14,7 @@ struct PlaybackControlsCenter: View {
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: DesignTokens.Spacing.sm) {
             // Main control buttons
             controlButtons
 
@@ -27,7 +27,7 @@ struct PlaybackControlsCenter: View {
     // MARK: - Control Buttons
 
     private var controlButtons: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: DesignTokens.Spacing.lg) {
 
             // Shuffle
             ControlButton(
@@ -82,7 +82,7 @@ struct PlaybackControlsCenter: View {
     // MARK: - Time Labels
 
     private var timeLabels: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: DesignTokens.Spacing.sm) {
             Text(playback.formattedCurrentTime)
                 .font(AppFonts.captionMedium)
                 .foregroundColor(.secondary)
@@ -112,11 +112,14 @@ private struct ControlButton: View {
     @Bindable var theme = AppTheme.shared
 
     var body: some View {
+        let buttonSize: CGFloat = size < 18
+            ? DesignTokens.ControlHeight.xs
+            : DesignTokens.ControlHeight.sm
         Button(action: action) {
             Image(systemName: icon)
                 .font(AppFonts.placeholder(size: size, weight: .medium))
                 .foregroundColor(foregroundColor)
-                .frame(width: size < 18 ? 28 : 32, height: size < 18 ? 28 : 32)
+                .frame(width: buttonSize, height: buttonSize)
                 .contentShape(Rectangle())
         }
         .buttonStyle(PlainHoverButtonStyle())
@@ -202,6 +205,9 @@ struct PlainScaleButtonStyle: ButtonStyle {
 
 #Preview {
     PlaybackControlsCenter()
-        .frame(width: 300, height: 100)
+        .frame(
+            width: DesignTokens.Size.Preview.playbackControlsWidth,
+            height: DesignTokens.Size.Preview.playbackControlsHeight
+        )
         .padding()
 }

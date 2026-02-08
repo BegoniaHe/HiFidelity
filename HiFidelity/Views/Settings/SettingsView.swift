@@ -25,16 +25,16 @@ struct SettingsView: View {
             HStack {
                 // Sidebar
                 settingsSidebar
-                    .frame(minWidth: 200, maxWidth: 200)
+                    .frame(minWidth: DesignTokens.Size.Window.settingsSidebarWidth, maxWidth: DesignTokens.Size.Window.settingsSidebarWidth)
 
                 Divider()
 
                 // Content
                 settingsContent
-                    .frame(minWidth: 500)
+                    .frame(minWidth: DesignTokens.Size.Window.settingsContentMinWidth)
             }
         }
-        .frame(width: 800, height: 600)
+        .frame(width: DesignTokens.Size.Window.settingsWidth, height: DesignTokens.Size.Window.settingsHeight)
         .onReceive(NotificationCenter.default.publisher(for: .openSettings)) { notification in
             if let tab = notification.object as? SettingsTab {
                 selectedTab = tab
@@ -60,7 +60,7 @@ struct SettingsView: View {
             }
             .buttonStyle(.plain)
         }
-        .frame(height: 32)
+        .frame(height: DesignTokens.ControlHeight.sm)
         .padding(.horizontal, DesignTokens.Spacing.xxl)
         .padding(.vertical, DesignTokens.Spacing.lg)
     }
@@ -68,7 +68,7 @@ struct SettingsView: View {
     // MARK: - Sidebar
 
     private var settingsSidebar: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             ForEach(SettingsTab.allCases) { tab in
                 SettingsSidebarButton(
                     theme: theme,
@@ -130,11 +130,11 @@ enum SettingsTab: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .appearance: return "Appearance"
-        case .audio: return "Audio"
-        case .library: return "Library"
-        case .advanced: return "Advanced"
-        case .about: return "About"
+        case .appearance: return String(localized: "Appearance")
+        case .audio: return String(localized: "Audio")
+        case .library: return String(localized: "Library")
+        case .advanced: return String(localized: "Advanced")
+        case .about: return String(localized: "About")
         }
     }
 
@@ -161,11 +161,11 @@ private struct SettingsSidebarButton: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 12) {
+            HStack(spacing: DesignTokens.Spacing.md) {
                 Image(systemName: tab.icon)
                     .font(isSelected ? AppFonts.heading4 : AppFonts.labelLarge)
                     .foregroundColor(iconColor)
-                    .frame(width: 24)
+                    .frame(width: DesignTokens.ControlHeight.xs)
 
                 Text(tab.title)
                     .font(isSelected ? AppFonts.heading5 : AppFonts.bodySmall)

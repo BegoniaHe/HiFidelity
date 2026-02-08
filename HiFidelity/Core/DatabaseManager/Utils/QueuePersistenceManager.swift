@@ -97,7 +97,8 @@ final class QueuePersistenceManager {
                 let track = result.tracks[result.currentIndex]
                 playback.currentTrack = track
                 // Don't auto-play, just load the track
-                Logger.info("Restored queue with \(result.tracks.count) tracks, current: \(track.title)")
+                Logger.info(
+                    "Restored queue with \(result.tracks.count) tracks, current: \(track.title)")
             }
 
             lastSaveDate = Date()
@@ -113,7 +114,7 @@ final class QueuePersistenceManager {
     func saveQueue() async {
         // Prevent saving too frequently
         if let lastSave = lastSaveTime,
-           Date().timeIntervalSince(lastSave) < minimumSaveInterval {
+            Date().timeIntervalSince(lastSave) < minimumSaveInterval {
             Logger.debug("Skipping save - too soon since last save")
             return
         }
@@ -171,7 +172,10 @@ final class QueuePersistenceManager {
             guard let self else { return }
             var first = true
             for await _ in NotificationCenter.default.notifications(named: .playbackQueueDidChange) {
-                if first { first = false; continue }
+                if first {
+                    first = false
+                    continue
+                }
                 self.markDirty()
             }
         }
@@ -179,8 +183,12 @@ final class QueuePersistenceManager {
         indexObserverTask = Task { [weak self] in
             guard let self else { return }
             var first = true
-            for await _ in NotificationCenter.default.notifications(named: .playbackQueueIndexDidChange) {
-                if first { first = false; continue }
+            for await _ in NotificationCenter.default.notifications(
+                named: .playbackQueueIndexDidChange) {
+                if first {
+                    first = false
+                    continue
+                }
                 self.markDirty()
             }
         }
@@ -255,13 +263,15 @@ struct PersistenceStatus {
     let currentIndex: Int
 
     var description: String {
-        """
-        Queue Persistence Status:
-        - Active: \(isActive)
-        - Unsaved Changes: \(hasUnsavedChanges)
-        - Last Save: \(lastSaveDate?.formatted() ?? "Never")
-        - Queue Count: \(queueCount)
-        - Current Index: \(currentIndex)
-        """
+        String(
+            localized: """
+                Queue Persistence Status:
+                - Active: \(isActive)
+                - Unsaved Changes: \(hasUnsavedChanges)
+                - Last Save: \(lastSaveDate?.formatted() ?? "Never")
+                - Queue Count: \(queueCount)
+                - Current Index: \(currentIndex)
+                """
+        )
     }
 }

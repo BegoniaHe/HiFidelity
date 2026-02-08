@@ -15,7 +15,7 @@ struct AdvancedSettings: View {
     @State private var isOptimizing = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 32) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xxxl) {
             // Performance
             performanceSection
 
@@ -34,19 +34,18 @@ struct AdvancedSettings: View {
     }
 
     private var performanceSection: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
             Text("Performance")
-                .font(.title3)
-                .fontWeight(.semibold)
+            .font(AppFonts.heading3)
 
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 HStack {
                     Text("Artwork Cache Size")
                     Spacer()
                     Text("\(Int(cacheSize)) MB")
                         .foregroundColor(.secondary)
                 }
-                .font(.subheadline)
+                .font(AppFonts.bodySmall)
 
                 Slider(value: $cacheSize, in: 100...1000, step: 100)
                     .onChange(of: cacheSize) { _, newValue in
@@ -54,26 +53,25 @@ struct AdvancedSettings: View {
                     }
 
                 Text("Memory limit for caching album artwork. Larger cache = smoother scrolling.")
-                    .font(.caption)
+                    .font(AppFonts.captionMedium)
                     .foregroundColor(.secondary)
             }
         }
     }
 
     private var databaseSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             Text("Database")
-                .font(.title3)
-                .fontWeight(.semibold)
+            .font(AppFonts.heading3)
 
             // Database size and optimize
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Database Size")
-                        .font(.subheadline)
+                        .font(AppFonts.bodySmall)
                     if let size = databaseManager.getDatabaseSize() {
                         Text(ByteCountFormatter.string(fromByteCount: size, countStyle: .file))
-                            .font(.caption)
+                            .font(AppFonts.captionMedium)
                             .foregroundColor(.secondary)
                     }
                 }
@@ -89,14 +87,14 @@ struct AdvancedSettings: View {
                         }
                     }
                 } label: {
-                    HStack(spacing: 6) {
+                    HStack(spacing: DesignTokens.Spacing.xsPlus) {
                         if isOptimizing {
                             ProgressView()
                                 .scaleEffect(0.7)
-                                .frame(width: 12, height: 12)
+                                .frame(width: DesignTokens.Size.Icon.xxxs, height: DesignTokens.Size.Icon.xxxs)
                         }
                         Text(isOptimizing ? "Optimizing..." : "Optimize")
-                            .font(.subheadline)
+                            .font(AppFonts.labelMedium)
                     }
                 }
                 .disabled(isOptimizing)
@@ -106,9 +104,9 @@ struct AdvancedSettings: View {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Search Index")
-                        .font(.subheadline)
+                        .font(AppFonts.bodySmall)
                     Text("Rebuild full-text search tables for better results")
-                        .font(.caption)
+                        .font(AppFonts.captionMedium)
                         .foregroundColor(.secondary)
                 }
 
@@ -123,14 +121,14 @@ struct AdvancedSettings: View {
                         }
                     }
                 } label: {
-                    HStack(spacing: 6) {
+                    HStack(spacing: DesignTokens.Spacing.xsPlus) {
                         if isRebuildingFTS {
                             ProgressView()
                                 .scaleEffect(0.7)
-                                .frame(width: 12, height: 12)
+                                .frame(width: DesignTokens.Size.Icon.xxxs, height: DesignTokens.Size.Icon.xxxs)
                         }
                         Text(isRebuildingFTS ? "Rebuilding..." : "Rebuild FTS")
-                            .font(.subheadline)
+                            .font(AppFonts.labelMedium)
                     }
                 }
                 .disabled(isRebuildingFTS)
@@ -140,10 +138,9 @@ struct AdvancedSettings: View {
     }
 
     private var dangerZone: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             Text("Danger Zone")
-                .font(.title3)
-                .fontWeight(.semibold)
+            .font(AppFonts.heading3)
                 .foregroundColor(.red)
 
             Button {
@@ -153,12 +150,12 @@ struct AdvancedSettings: View {
                     Image(systemName: "trash.fill")
                     Text("Reset Database")
                 }
-                .font(.subheadline)
+                .font(AppFonts.labelMedium)
                 .foregroundColor(.white)
                 .padding(.horizontal, DesignTokens.Spacing.lg)
                 .padding(.vertical, DesignTokens.Spacing.sm)
                 .background(
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm)
                         .fill(Color.red)
                 )
             }
@@ -177,7 +174,7 @@ struct AdvancedSettings: View {
             Text(
                 "This will permanently delete all your library data including folders, tracks, and playlists."
             )
-            .font(.caption)
+            .font(AppFonts.captionMedium)
             .foregroundColor(.secondary)
         }
     }
@@ -193,5 +190,8 @@ struct AdvancedSettings: View {
 #Preview {
     AdvancedSettings()
         .environment(DatabaseManager.shared)
-        .frame(width: 600, height: 600)
+        .frame(
+            width: DesignTokens.Size.Preview.advancedSettingsWidth,
+            height: DesignTokens.Size.Preview.advancedSettingsHeight
+        )
 }

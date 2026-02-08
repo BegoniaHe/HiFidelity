@@ -87,14 +87,21 @@ struct ResponsiveMainLayout: View {
     private func calculateSidebarWidth(for size: CGSize) -> CGFloat {
         let windowWidth = size.width
 
-        if windowWidth < 1200 {
-            return 280
-        } else if windowWidth < 1600 {
-            let ratio = (windowWidth - 1200) / 400
-            return 280 + (ratio * 70)
+        if windowWidth < DesignTokens.Size.Layout.windowWidthCompact {
+            return DesignTokens.Size.Layout.sidebarMinWidth
+        } else if windowWidth < DesignTokens.Size.Layout.windowWidthExpanded {
+            let ratio = (windowWidth - DesignTokens.Size.Layout.windowWidthCompact)
+            / DesignTokens.Size.Layout.windowWidthRange
+            return DesignTokens.Size.Layout.sidebarMinWidth
+            + (ratio * DesignTokens.Size.Layout.sidebarCompactRange)
         } else {
-            let ratio = min((windowWidth - 1600) / 400, 1.0)
-            return 350 + (ratio * 30)
+            let ratio = min(
+                (windowWidth - DesignTokens.Size.Layout.windowWidthExpanded)
+                / DesignTokens.Size.Layout.windowWidthRange,
+                1.0
+            )
+            return DesignTokens.Size.Layout.sidebarMidWidth
+            + (ratio * DesignTokens.Size.Layout.sidebarExpandedRange)
         }
     }
 
@@ -102,14 +109,21 @@ struct ResponsiveMainLayout: View {
     private func calculateRightPanelWidth(for size: CGSize) -> CGFloat {
         let windowWidth = size.width
 
-        if windowWidth < 1200 {
-            return 320
-        } else if windowWidth < 1600 {
-            let ratio = (windowWidth - 1200) / 400
-            return 320 + (ratio * 60)
+        if windowWidth < DesignTokens.Size.Layout.windowWidthCompact {
+            return DesignTokens.Size.Layout.rightPanelMinWidth
+        } else if windowWidth < DesignTokens.Size.Layout.windowWidthExpanded {
+            let ratio = (windowWidth - DesignTokens.Size.Layout.windowWidthCompact)
+            / DesignTokens.Size.Layout.windowWidthRange
+            return DesignTokens.Size.Layout.rightPanelMinWidth
+            + (ratio * DesignTokens.Size.Layout.rightPanelCompactRange)
         } else {
-            let ratio = min((windowWidth - 1600) / 400, 1.0)
-            return 380 + (ratio * 40)
+            let ratio = min(
+                (windowWidth - DesignTokens.Size.Layout.windowWidthExpanded)
+                / DesignTokens.Size.Layout.windowWidthRange,
+                1.0
+            )
+            return DesignTokens.Size.Layout.rightPanelMidWidth
+            + (ratio * DesignTokens.Size.Layout.rightPanelExpandedRange)
         }
     }
 }
@@ -137,7 +151,7 @@ struct ResponsiveMainLayout: View {
                 rightPanelTab: $rightPanelTab
             )
             .environment(DatabaseManager.shared)
-            .frame(width: 1200, height: 800)
+            .frame(width: DesignTokens.Size.Preview.mainLayoutWidth, height: DesignTokens.Size.Preview.mainLayoutHeight)
         }
     }
 

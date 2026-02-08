@@ -100,7 +100,7 @@ extension LyricsPanel {
             Text("Lyrics")
                 .font(AppFonts.heading4)
                 .foregroundColor(.primary)
-                .frame(height: 28)
+            .frame(height: DesignTokens.ControlHeight.xs)
 
             Spacer()
 
@@ -133,10 +133,10 @@ extension LyricsPanel {
                     Image(systemName: "ellipsis.circle")
                         .font(AppFonts.bodyLarge)
                         .foregroundColor(.secondary)
-                        .frame(width: 28, height: 28)
+                        .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
                 }
                 .menuStyle(BorderlessButtonMenuStyle())
-                .frame(width: 28)
+                .frame(width: DesignTokens.ControlHeight.xs)
             }
         }
         .padding(.horizontal, DesignTokens.Spacing.xl)
@@ -168,12 +168,16 @@ extension LyricsPanel {
     }
 
     private func trackInfo(track: Track) -> some View {
-        VStack(spacing: 12) {
+        VStack(spacing: DesignTokens.Spacing.md) {
             // Album artwork
-            TrackArtworkView(track: track, size: 120, cornerRadius: 12)
+            TrackArtworkView(
+                track: track,
+                size: DesignTokens.Size.Artwork.mdPlus,
+                cornerRadius: DesignTokens.CornerRadius.lg
+            )
                 .tokenShadow(DesignTokens.Shadow.level1)
 
-            VStack(spacing: 4) {
+            VStack(spacing: DesignTokens.Spacing.xs) {
                 Text(track.title)
                     .font(AppFonts.heading3)
                     .foregroundColor(.primary)
@@ -202,9 +206,9 @@ extension LyricsPanel {
                 .padding(.vertical, DesignTokens.Spacing.md)
                 .background(
                     isCurrent ?
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm)
                         .fill(theme.currentTheme.primaryColor.opacity(0.1))
-                        .padding(.horizontal, -16)
+                        .padding(.horizontal, DesignTokens.Spacing.negativeLg)
                     : nil
                 )
                 .onChange(of: isCurrent) { _, newValue in
@@ -234,7 +238,7 @@ extension LyricsPanel {
     }
 
     private var noLyricsView: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: DesignTokens.Spacing.lg) {
             Image(systemName: "text.quote")
                 .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.2))
@@ -249,8 +253,8 @@ extension LyricsPanel {
                 if isLoadingSearch {
                     ProgressView()
                         .scaleEffect(0.8)
-                        .frame(minWidth: 140)
-                        .frame(height: 28)
+                        .frame(minWidth: DesignTokens.Size.Button.minWidth)
+                        .frame(height: DesignTokens.ControlHeight.xs)
                 } else {
                     Label("Search Online", systemImage: "magnifyingglass")
                         .font(AppFonts.buttonMedium)
@@ -260,7 +264,7 @@ extension LyricsPanel {
             .buttonStyle(.borderedProminent)
             .tint(theme.currentTheme.primaryColor)
             .disabled(isLoadingSearch)
-            .frame(minWidth: 140)
+            .frame(minWidth: DesignTokens.Size.Button.minWidth)
 
             Text("OR")
                 .font(AppFonts.bodyLarge)
@@ -272,7 +276,7 @@ extension LyricsPanel {
                     .padding(DesignTokens.Spacing.xs)
             }
             .buttonStyle(.bordered)
-            .frame(minWidth: 140)
+            .frame(minWidth: DesignTokens.Size.Button.minWidth)
 
             Text("or drag and drop an LRC file here")
                 .font(AppFonts.captionLarge)
@@ -293,7 +297,7 @@ extension LyricsPanel {
     // MARK: - Empty State
 
     private var emptyState: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: DesignTokens.Spacing.xl) {
             Image(systemName: "text.quote")
                 .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.2))

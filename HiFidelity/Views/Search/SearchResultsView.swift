@@ -56,8 +56,8 @@ struct SearchResultsView: View {
 
     private var searchHeader: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 8) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                HStack(spacing: DesignTokens.Spacing.sm) {
                     Text("Search Results")
                         .font(AppFonts.heading2)
 
@@ -82,7 +82,7 @@ struct SearchResultsView: View {
                 Text("Match Any").tag(DatabaseManager.SearchMode.or)
             }
             .pickerStyle(.segmented)
-            .frame(width: 200)
+            .frame(width: DesignTokens.Size.Form.searchModePickerWidth)
             .help(searchMode == .and ?
                   "Match ALL words (exact search)" :
                   "Match ANY word (broader results)")
@@ -111,7 +111,7 @@ struct SearchResultsView: View {
 
     private var categoryFilters: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
                 ForEach(SearchCategory.allCases) { category in
                     CategoryButton(
                         category: category,
@@ -133,7 +133,7 @@ struct SearchResultsView: View {
 
     private var resultsContent: some View {
         ScrollView {
-            LazyVStack(spacing: 24, pinnedViews: []) {
+            LazyVStack(spacing: DesignTokens.Spacing.xxl, pinnedViews: []) {
                 if selectedCategory == .all || selectedCategory == .tracks {
                     if !results.tracks.isEmpty {
                         resultSection(
@@ -208,8 +208,8 @@ struct SearchResultsView: View {
         count: Int,
         @ViewBuilder content: () -> Content
     ) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
                 Image(systemName: icon)
                     .font(AppFonts.heading4)
                     .foregroundColor(theme.currentTheme.primaryColor)
@@ -242,7 +242,7 @@ struct SearchResultsView: View {
             }
         }
         .background(
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.lg)
                 .fill(Color(nsColor: .controlBackgroundColor))
         )
     }
@@ -251,8 +251,8 @@ struct SearchResultsView: View {
         let albumsToShow = selectedCategory == .all ? Array(results.albums.prefix(8)) : results.albums
 
         return LazyVGrid(columns: [
-            GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)
-        ], spacing: 16) {
+            GridItem(.adaptive(minimum: 150, maximum: 200), spacing: DesignTokens.Spacing.lg)
+        ], spacing: DesignTokens.Spacing.lg) {
             ForEach(albumsToShow) { album in
                 AlbumCard(album: album) {
                     selectedEntity = .album(album)
@@ -265,8 +265,8 @@ struct SearchResultsView: View {
         let artistsToShow = selectedCategory == .all ? Array(results.artists.prefix(8)) : results.artists
 
         return LazyVGrid(columns: [
-            GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)
-        ], spacing: 16) {
+            GridItem(.adaptive(minimum: 150, maximum: 200), spacing: DesignTokens.Spacing.lg)
+        ], spacing: DesignTokens.Spacing.lg) {
             ForEach(artistsToShow) { artist in
                 ArtistCard(artist: artist) {
                     selectedEntity = .artist(artist)
@@ -279,8 +279,8 @@ struct SearchResultsView: View {
         let genresToShow = selectedCategory == .all ? Array(results.genres.prefix(8)) : results.genres
 
         return LazyVGrid(columns: [
-            GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)
-        ], spacing: 16) {
+            GridItem(.adaptive(minimum: 150, maximum: 200), spacing: DesignTokens.Spacing.lg)
+        ], spacing: DesignTokens.Spacing.lg) {
             ForEach(genresToShow) { genre in
                 GenreCard(genre: genre) {
                     selectedEntity = .genre(genre)
@@ -293,8 +293,8 @@ struct SearchResultsView: View {
         let playlistsToShow = selectedCategory == .all ? Array(results.playlists.prefix(8)) : results.playlists
 
         return LazyVGrid(columns: [
-            GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)
-        ], spacing: 16) {
+            GridItem(.adaptive(minimum: 150, maximum: 200), spacing: DesignTokens.Spacing.lg)
+        ], spacing: DesignTokens.Spacing.lg) {
             ForEach(playlistsToShow) { playlist in
                 PlaylistSearchCard(playlist: playlist) {
                     let playlistItem = PlaylistItem(
@@ -312,7 +312,7 @@ struct SearchResultsView: View {
     // MARK: - Loading View
 
     private var loadingView: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: DesignTokens.Spacing.lg) {
             ProgressView()
                 .scaleEffect(1.5)
                 .tint(theme.currentTheme.primaryColor)
@@ -327,7 +327,7 @@ struct SearchResultsView: View {
     // MARK: - Empty State
 
     private var emptyStateView: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: DesignTokens.Spacing.lg) {
             Image(systemName: "magnifyingglass")
                 .font(AppFonts.displayLarge)
                 .foregroundColor(.secondary.opacity(0.3))
@@ -394,12 +394,12 @@ struct TrackSearchRow: View {
     @State private var isHovered = false
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DesignTokens.Spacing.md) {
             // Artwork
-            TrackArtworkView(track: track, size: 48, cornerRadius: 6)
+            TrackArtworkView(track: track, size: 48, cornerRadius: DesignTokens.CornerRadius.xs)
 
             // Track info
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                 Text(track.title)
                     .font(AppFonts.labelLarge)
                     .lineLimit(1)
@@ -426,7 +426,7 @@ struct TrackSearchRow: View {
                     Image(systemName: "play.fill")
                         .font(AppFonts.labelLarge)
                         .foregroundColor(.white)
-                        .frame(width: 32, height: 32)
+                        .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
                         .background(
                             Circle()
                                 .fill(theme.currentTheme.primaryColor)
@@ -462,10 +462,10 @@ struct PlaylistSearchCard: View {
     @State private var isHovered = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             // Artwork placeholder
             ZStack {
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm)
                     .fill(
                         LinearGradient(
                             colors: [
@@ -483,7 +483,7 @@ struct PlaylistSearchCard: View {
             }
             .aspectRatio(1, contentMode: .fit)
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                 Text(playlist.name)
                     .font(AppFonts.heading5)
                     .lineLimit(1)
@@ -495,7 +495,7 @@ struct PlaylistSearchCard: View {
         }
         .padding(DesignTokens.Spacing.sm)
         .background(
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.lg)
                 .fill(isHovered ? Color(nsColor: .controlBackgroundColor) : Color.clear)
         )
         .onHover { hovering in
@@ -521,7 +521,7 @@ struct CategoryButton: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 6) {
+            HStack(spacing: DesignTokens.Spacing.xs) {
                 Text(category.title)
                     .font(AppFonts.labelMedium)
 

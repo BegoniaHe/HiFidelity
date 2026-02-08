@@ -14,7 +14,7 @@ struct AboutMenuView: View {
     private var automaticUpdatesEnabled = true
 
     var body: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: DesignTokens.Spacing.xxxl) {
             Spacer()
             appInfoSection
 
@@ -42,7 +42,7 @@ struct AboutMenuView: View {
     // MARK: - App Info Section
 
     private var appInfoSection: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: DesignTokens.Spacing.lg) {
             appIcon
             appDetails
         }
@@ -54,8 +54,8 @@ struct AboutMenuView: View {
                 Image(nsImage: appIcon)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 80, height: 80)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .frame(width: DesignTokens.Size.Icon.app, height: DesignTokens.Size.Icon.app)
+                    .clipShape(RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xl))
             } else {
                 Image(systemName: "drop.fill")
                     .font(AppFonts.displayLarge)
@@ -65,7 +65,7 @@ struct AboutMenuView: View {
     }
 
     private var appDetails: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: DesignTokens.Spacing.sm) {
             Text(About.appTitle)
                 .font(AppFonts.heading1)
 
@@ -87,7 +87,7 @@ struct AboutMenuView: View {
     // MARK: - Library Statistics Section
 
     private var libraryStatisticsSection: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: DesignTokens.Spacing.md) {
             Text("Library Statistics")
                 .font(AppFonts.heading4)
 
@@ -98,7 +98,7 @@ struct AboutMenuView: View {
     }
 
     private func statisticsRow(stats: LibraryStats) -> some View {
-        HStack(spacing: 30) {
+        HStack(spacing: DesignTokens.Spacing.xxxl) {
             statisticItem(
                 value: "\(stats.totalFolders)",
                 label: "Folders"
@@ -119,13 +119,13 @@ struct AboutMenuView: View {
                 label: "Total Storage"
             )
         }
-        .padding()
+        .padding(DesignTokens.Spacing.lg)
         .background(Color.secondary.opacity(0.08))
         .cornerRadius(DesignTokens.CornerRadius.lg)
     }
 
     private func statisticItem(value: String, label: LocalizedStringKey) -> some View {
-        VStack(spacing: 4) {
+        VStack(spacing: DesignTokens.Spacing.xs) {
             Text(value)
                 .font(AppFonts.heading2)
             Text(label)
@@ -137,7 +137,7 @@ struct AboutMenuView: View {
     // MARK: - Footer Section
 
     private var footerSection: some View {
-        HStack(spacing: 20) {
+        HStack(spacing: DesignTokens.Spacing.xl) {
             FooterLink(
                 icon: "globe",
                 title: String(localized: "Website"),
@@ -203,7 +203,7 @@ struct AboutMenuView: View {
         }
 
         private var linkContent: some View {
-            HStack(spacing: 4) {
+            HStack(spacing: DesignTokens.Spacing.xs) {
                 Image(systemName: icon)
                     .font(AppFonts.captionLarge)
                 Text(title)
@@ -224,5 +224,5 @@ struct AboutMenuView: View {
         AboutMenuView()
             .padding(DesignTokens.Spacing.xxl)
     }
-    .frame(width: 600, height: 500)
+    .frame(width: DesignTokens.Size.Preview.aboutWidth, height: DesignTokens.Size.Preview.aboutHeight)
 }

@@ -16,14 +16,14 @@ struct ColorSchemeButton: View {
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 6) {
+            VStack(spacing: DesignTokens.Spacing.xsPlus) {
                 Circle()
                     .fill(scheme.gradient)
-                    .frame(width: 40, height: 40)
+                    .frame(width: DesignTokens.Size.Artwork.xs, height: DesignTokens.Size.Artwork.xs)
                     .overlay {
                         if isSelected {
                             Circle()
-                                .stroke(Color.primary, lineWidth: 3)
+                                .stroke(Color.primary, lineWidth: DesignTokens.Border.selectedStroke)
                         }
                     }
 

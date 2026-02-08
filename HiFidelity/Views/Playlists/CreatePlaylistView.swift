@@ -37,7 +37,7 @@ struct CreatePlaylistView: View {
 
             // Content
             ScrollView {
-                VStack(spacing: 32) {
+                VStack(spacing: DesignTokens.Spacing.xxxl) {
                     // Artwork section
                     artworkSection
 
@@ -55,7 +55,10 @@ struct CreatePlaylistView: View {
             // Footer with buttons
             footer
         }
-        .frame(width: 600, height: 700)
+        .frame(
+            width: DesignTokens.Size.Window.createPlaylistWidth,
+            height: DesignTokens.Size.Window.createPlaylistHeight
+        )
         .background(Color(nsColor: .windowBackgroundColor))
         .alert("Error", isPresented: $showError) {
             Button("OK", role: .cancel) { }
@@ -84,11 +87,11 @@ extension CreatePlaylistView {
 
             Spacer()
 
-            HStack(spacing: 8) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
                 Button {
                     importFromM3U()
                 } label: {
-                    HStack(spacing: 6) {
+                    HStack(spacing: DesignTokens.Spacing.xs) {
                         Image(systemName: "square.and.arrow.down")
                             .font(AppFonts.labelLarge)
                         Text("Import M3U")
@@ -98,7 +101,7 @@ extension CreatePlaylistView {
                     .padding(.horizontal, DesignTokens.Spacing.md)
                     .padding(.vertical, DesignTokens.Spacing.sm)
                     .background(
-                        RoundedRectangle(cornerRadius: 6)
+                        RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xs)
                             .fill(theme.currentTheme.primaryColor.opacity(0.1))
                     )
                 }
@@ -108,7 +111,7 @@ extension CreatePlaylistView {
                 Button {
                     importFromFolder()
                 } label: {
-                    HStack(spacing: 6) {
+                    HStack(spacing: DesignTokens.Spacing.xs) {
                         Image(systemName: "folder.badge.plus")
                             .font(AppFonts.labelLarge)
                         Text("Import Folder")
@@ -118,7 +121,7 @@ extension CreatePlaylistView {
                     .padding(.horizontal, DesignTokens.Spacing.md)
                     .padding(.vertical, DesignTokens.Spacing.sm)
                     .background(
-                        RoundedRectangle(cornerRadius: 6)
+                        RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xs)
                             .fill(theme.currentTheme.primaryColor.opacity(0.1))
                     )
                 }
@@ -142,18 +145,18 @@ extension CreatePlaylistView {
     // MARK: - Artwork Section
 
     private var artworkSection: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: DesignTokens.Spacing.lg) {
             Text("Artwork")
                 .font(AppFonts.heading5)
                 .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-            HStack(spacing: 24) {
+            HStack(spacing: DesignTokens.Spacing.xxl) {
                 // Artwork preview
                 artworkPreview
 
                 // Artwork controls
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Add custom artwork to personalize your playlist")
                         .font(AppFonts.bodySmall)
                         .foregroundColor(.secondary)
@@ -161,7 +164,7 @@ extension CreatePlaylistView {
                     Button {
                         selectImage()
                     } label: {
-                        HStack(spacing: 8) {
+                        HStack(spacing: DesignTokens.Spacing.sm) {
                             Image(systemName: "photo")
                             Text(selectedImage == nil ? "Choose Image" : "Change Image")
                         }
@@ -179,7 +182,7 @@ extension CreatePlaylistView {
                             selectedImage = nil
                             compressedImageData = nil
                         } label: {
-                            HStack(spacing: 8) {
+                            HStack(spacing: DesignTokens.Spacing.sm) {
                                 Image(systemName: "trash")
                                 Text("Remove")
                             }
@@ -205,11 +208,11 @@ extension CreatePlaylistView {
                 Image(nsImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: 180, height: 180)
+                    .frame(width: DesignTokens.Size.Artwork.xxl, height: DesignTokens.Size.Artwork.xxl)
                     .cornerRadius(DesignTokens.CornerRadius.lg)
                     .tokenShadow(DesignTokens.Shadow.level1)
             } else {
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.lg)
                     .fill(
                         LinearGradient(
                             colors: [
@@ -220,7 +223,7 @@ extension CreatePlaylistView {
                             endPoint: .bottomTrailing
                         )
                     )
-                    .frame(width: 180, height: 180)
+                    .frame(width: DesignTokens.Size.Artwork.xxl, height: DesignTokens.Size.Artwork.xxl)
                     .overlay {
                         Image(systemName: "music.note.list")
                             .font(AppFonts.displayLarge)
@@ -234,9 +237,9 @@ extension CreatePlaylistView {
     // MARK: - Details Section
 
     private var detailsSection: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: DesignTokens.Spacing.xl) {
             // Playlist name
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 HStack {
                     Text("Name")
                         .font(AppFonts.heading5)
@@ -251,28 +254,28 @@ extension CreatePlaylistView {
                     .font(AppFonts.bodyLarge)
                     .padding(DesignTokens.Spacing.md)
                     .background(
-                        RoundedRectangle(cornerRadius: 8)
+                        RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm)
                             .fill(Color(nsColor: .controlBackgroundColor))
                     )
             }
 
             // Description
-            VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 Text("Description")
                     .font(AppFonts.heading5)
                     .foregroundColor(.secondary)
 
                 TextEditor(text: $description)
                     .font(AppFonts.bodySmall)
-                    .frame(height: 80)
+                    .frame(height: DesignTokens.Size.Form.textEditorHeight)
                     .padding(DesignTokens.Spacing.sm)
                     .background(
-                        RoundedRectangle(cornerRadius: 8)
+                        RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm)
                             .fill(Color(nsColor: .controlBackgroundColor))
                     )
                     .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
+                            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm)
+                        .stroke(Color.secondary.opacity(0.2), lineWidth: DesignTokens.Spacing.hairline)
                     )
             }
         }
@@ -281,7 +284,7 @@ extension CreatePlaylistView {
     // MARK: - Options Section
 
     private var optionsSection: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: DesignTokens.Spacing.xl) {
             Text("Options")
                 .font(AppFonts.heading5)
                 .foregroundColor(.secondary)
@@ -289,7 +292,7 @@ extension CreatePlaylistView {
 
             // Pin to top
             HStack {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                 Text("Pin to Top")
                     .font(AppFonts.labelLarge)
                 Text("Keep this playlist at the top of your library")
@@ -304,16 +307,16 @@ extension CreatePlaylistView {
             }
             .padding(DesignTokens.Spacing.lg)
             .background(
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.md)
                     .fill(Color(nsColor: .controlBackgroundColor).opacity(0.5))
             )
 
             // Color scheme
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Text("Color Scheme")
                 .font(AppFonts.labelLarge)
 
-                HStack(spacing: 12) {
+                HStack(spacing: DesignTokens.Spacing.md) {
                     ForEach(PlaylistColorScheme.allCases, id: \.self) { scheme in
                         ColorSchemeButton(
                             scheme: scheme,
@@ -326,7 +329,7 @@ extension CreatePlaylistView {
             }
             .padding(DesignTokens.Spacing.lg)
             .background(
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.md)
                     .fill(Color(nsColor: .controlBackgroundColor).opacity(0.5))
             )
         }
@@ -335,7 +338,7 @@ extension CreatePlaylistView {
     // MARK: - Footer
 
     private var footer: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DesignTokens.Spacing.md) {
             Button {
                 dismiss()
             } label: {
@@ -345,7 +348,7 @@ extension CreatePlaylistView {
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, DesignTokens.Spacing.md)
                     .background(
-                        RoundedRectangle(cornerRadius: 8)
+                        RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm)
                             .fill(Color(nsColor: .controlBackgroundColor))
                     )
             }
@@ -356,7 +359,7 @@ extension CreatePlaylistView {
                     await createPlaylist()
                 }
             } label: {
-                HStack(spacing: 8) {
+                HStack(spacing: DesignTokens.Spacing.sm) {
                     if isCreating {
                         ProgressView()
                             .scaleEffect(0.7)
@@ -369,7 +372,7 @@ extension CreatePlaylistView {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, DesignTokens.Spacing.md)
                 .background(
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm)
                         .fill(playlistName.isEmpty ? Color.gray : theme.currentTheme.primaryColor)
                 )
             }

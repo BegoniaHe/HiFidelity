@@ -43,14 +43,17 @@ struct AppHeader: View {
     // MARK: - Leading Section
 
     private var leadingSection: some View {
-        HStack(spacing: 2) {
+        HStack(spacing: DesignTokens.Spacing.xs) {
             // App logo
             Image("HiFidelity long Logo")
                 .renderingMode(.template)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .foregroundColor(theme.currentTheme.primaryColor)
-                .frame(width: 140, height: 64)
+                .frame(
+                    width: DesignTokens.Size.Header.logoWidth,
+                    height: DesignTokens.Size.Header.logoHeight
+                )
 
             // Left sidebar toggle
             ToggleButton(
@@ -67,7 +70,7 @@ struct AppHeader: View {
     // MARK: - Center Section
 
     private var centerSection: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DesignTokens.Spacing.md) {
             // Home button
             Button {
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
@@ -83,7 +86,7 @@ struct AppHeader: View {
                 Image(systemName: "house.fill")
                     .font(AppFonts.bodyLarge)
                     .foregroundColor(selectedTab == .home ? .white : .secondary)
-                    .frame(width: 40, height: 40)
+                    .frame(width: DesignTokens.ControlHeight.lg, height: DesignTokens.ControlHeight.lg)
                     .background(
                         Circle()
                             .fill(
@@ -112,7 +115,7 @@ struct AppHeader: View {
     // MARK: - Trailing Section
 
     private var trailingSection: some View {
-        HStack(spacing: 2) {
+        HStack(spacing: DesignTokens.Spacing.xs) {
             // Right sidebar toggle
             ToggleButton(
                 icon: "sidebar.right",
@@ -151,7 +154,7 @@ struct AppHeader: View {
                             endPoint: .trailing
                         )
                     )
-                    .frame(height: 1),
+                    .frame(height: DesignTokens.Spacing.hairline),
                 alignment: .bottom
             )
     }
@@ -183,7 +186,7 @@ private struct RefreshButton: View {
                 .font(AppFonts.bodyLarge)
                 .symbolRenderingMode(.hierarchical)
                 .foregroundColor(isRefreshing ? theme.currentTheme.primaryColor : .secondary)
-                .frame(width: 40, height: 40)
+                .frame(width: DesignTokens.ControlHeight.lg, height: DesignTokens.ControlHeight.lg)
                 .background(
                     Circle()
                         .fill(
@@ -241,7 +244,7 @@ private struct ToggleButton: View {
                 .font(AppFonts.bodyLarge)
                 .symbolRenderingMode(.hierarchical)
                 .foregroundColor(isActive ? theme.currentTheme.primaryColor : .secondary)
-                .frame(width: 40, height: 40)
+                .frame(width: DesignTokens.ControlHeight.lg, height: DesignTokens.ControlHeight.lg)
                 .background(
                     Circle()
                         .fill(
@@ -280,9 +283,9 @@ private struct GitHubButton: View {
                 .renderingMode(.template)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 17, height: 17)
+                .frame(width: DesignTokens.Size.Icon.xxsPlus, height: DesignTokens.Size.Icon.xxsPlus)
                 .foregroundColor(isHovered ? .white : theme.currentTheme.primaryColor)
-                .frame(width: 40, height: 40)
+                .frame(width: DesignTokens.ControlHeight.lg, height: DesignTokens.ControlHeight.lg)
                 .background(
                     Circle()
                         .fill(
@@ -317,7 +320,7 @@ private struct SettingsButton: View {
                 .font(AppFonts.bodyLarge)
                 .symbolRenderingMode(.hierarchical)
                 .foregroundColor(.secondary)
-                .frame(width: 40, height: 40)
+                .frame(width: DesignTokens.ControlHeight.lg, height: DesignTokens.ControlHeight.lg)
                 .background(
                     Circle()
                         .fill(isHovered ? Color.primary.opacity(0.06) : Color.clear)
@@ -340,7 +343,7 @@ private struct SearchBar: View {
     @FocusState private var isFocused: Bool
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DesignTokens.Spacing.md) {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(isFocused ? .primary : .secondary)
                 .font(AppFonts.labelLarge)
@@ -372,13 +375,16 @@ private struct SearchBar: View {
         }
         .padding(.horizontal, DesignTokens.Spacing.xl)
         .padding(.vertical, DesignTokens.Spacing.md)
-        .frame(maxWidth: 440)
+        .frame(maxWidth: DesignTokens.Size.Form.searchBarMaxWidth)
         .background(
-            RoundedRectangle(cornerRadius: 22)
+            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xl)
                 .fill(Color(nsColor: .controlBackgroundColor))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 22)
-                        .strokeBorder(Color.primary.opacity(isFocused ? 0.1 : 0), lineWidth: 1.5)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.xl)
+                        .strokeBorder(
+                            Color.primary.opacity(isFocused ? 0.1 : 0),
+                            lineWidth: DesignTokens.Border.focusedStroke
+                        )
                 )
                 .tokenShadow(
                     DesignTokens.Shadow.level1,
@@ -420,7 +426,7 @@ private struct SearchBar: View {
                 showRightPanel: $showRightPanel,
                 showSettings: $showSettings
             )
-            .frame(width: 1200, height: 60)
+            .frame(width: DesignTokens.Size.Preview.mainLayoutWidth, height: DesignTokens.Size.Preview.headerHeight)
         }
     }
 

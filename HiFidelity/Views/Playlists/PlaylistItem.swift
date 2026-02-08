@@ -113,11 +113,11 @@ enum SmartPlaylistType: String, CaseIterable {
     var description: String {
         switch self {
         case .favorites:
-            return "Your favorite tracks"
+            return String(localized: "Your favorite tracks")
         case .topPlayed:
-            return "Your most played tracks"
+            return String(localized: "Your most played tracks")
         case .recentlyPlayed:
-            return "Recently played tracks"
+            return String(localized: "Recently played tracks")
         }
     }
 }

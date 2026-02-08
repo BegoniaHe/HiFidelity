@@ -13,7 +13,7 @@ struct VolumeControlSection: View {
     @Bindable var theme = AppTheme.shared
 
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: DesignTokens.Spacing.md) {
             // Mute button
             VolumeButton(
                 icon: volumeIcon,
@@ -25,7 +25,7 @@ struct VolumeControlSection: View {
                 value: volumeBinding,
                 in: 0...1
             )
-            .frame(width: 100)
+            .frame(width: DesignTokens.Size.Slider.volumeWidth)
             .accentColor(theme.currentTheme.primaryColor)
         }
     }
@@ -42,7 +42,7 @@ struct VolumeControlSection: View {
                     .font(AppFonts.labelLarge)
                     .symbolRenderingMode(.hierarchical)
                     .foregroundColor(.secondary)
-                    .frame(width: 32, height: 32)
+                    .frame(width: DesignTokens.ControlHeight.sm, height: DesignTokens.ControlHeight.sm)
                     .background(
                         Circle()
                             .fill(isHovered ? Color.primary.opacity(0.06) : Color.clear)
@@ -89,6 +89,9 @@ struct VolumeControlSection: View {
 
 #Preview {
     VolumeControlSection()
-        .frame(width: 150, height: 40)
+        .frame(
+            width: DesignTokens.Size.Slider.volumePreviewWidth,
+            height: DesignTokens.Size.Slider.volumePreviewHeight
+        )
         .padding()
 }

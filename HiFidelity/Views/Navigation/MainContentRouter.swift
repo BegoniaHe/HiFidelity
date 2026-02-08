@@ -99,7 +99,7 @@ private struct EntityDetailWithNavigation: View {
                     onBack()
                 }
             } label: {
-                HStack(spacing: 8) {
+                HStack(spacing: DesignTokens.Spacing.sm) {
                     Image(systemName: "chevron.left")
                         .font(AppFonts.heading5)
                     Text("Back")
@@ -108,9 +108,9 @@ private struct EntityDetailWithNavigation: View {
                 .foregroundColor(theme.currentTheme.primaryColor)
                 .padding(.horizontal, DesignTokens.Spacing.md)
                 .padding(.vertical, DesignTokens.Spacing.sm)
-                .frame(height: 28)
+                .frame(height: DesignTokens.ControlHeight.xs)
                 .background(
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm)
                         .fill(theme.currentTheme.primaryColor.opacity(0.1))
                 )
             }
@@ -138,7 +138,10 @@ private struct EntityDetailWithNavigation: View {
                 isSearchActive: $isSearchActive
             )
             .environment(DatabaseManager.shared)
-            .frame(width: 800, height: 600)
+            .frame(
+                width: DesignTokens.Size.Preview.mainContentWidth,
+                height: DesignTokens.Size.Preview.mainContentHeight
+            )
         }
     }
 
