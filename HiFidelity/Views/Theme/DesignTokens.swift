@@ -263,6 +263,13 @@ struct DesignTokens {
             minColumns: 1
         )
 
+        static let album = Preset(
+            itemWidth: Size.Artwork.xxl,
+            spacing: Spacing.xxxl,
+            horizontalPadding: Spacing.xl,
+            minColumns: 1
+        )
+
         static let tracks = Preset(
             itemWidth: Size.Artwork.lg,
             spacing: Spacing.lg,

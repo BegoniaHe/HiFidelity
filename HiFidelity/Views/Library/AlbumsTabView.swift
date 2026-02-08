@@ -65,7 +65,7 @@ struct AlbumsTabView: View {
                         message: "No albums match your filter")
                 }
             } else {
-                LibraryGridScrollView(preset: DesignTokens.Grid.library) {
+                LibraryGridScrollView(preset: DesignTokens.Grid.album) {
                     ForEach(Array(filteredAlbums.enumerated()), id: \.element.id) {
                         index, album in
                         AlbumCard(album: album) {
