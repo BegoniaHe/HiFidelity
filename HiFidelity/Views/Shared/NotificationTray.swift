@@ -362,9 +362,9 @@ struct NotificationRow: View {
         // With notifications
         NotificationTray()
             .onAppear {
-                NotificationManager.shared.addMessage(.info, "2 folders refreshed for changes")
-                NotificationManager.shared.addMessage(.warning, "1 folder couldn't be accessed")
-                NotificationManager.shared.addMessage(.error, "Failed to scan Downloads folder")
+                NotificationManager.shared.addMessage(.info, String(localized: "2 folders refreshed for changes"))
+                NotificationManager.shared.addMessage(.warning, String(localized: "1 folder couldn't be accessed"))
+                NotificationManager.shared.addMessage(.error, String(localized: "Failed to scan Downloads folder"))
             }
     }
     .padding()

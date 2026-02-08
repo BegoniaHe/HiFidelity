@@ -215,7 +215,7 @@ private struct RefreshButton: View {
             // Notify views to reload
             await MainActor.run {
                 NotificationCenter.default.post(name: .refreshLibraryData, object: nil)
-                NotificationManager.shared.addMessage(.info, "Library refreshed")
+                NotificationManager.shared.addMessage(.info, String(localized: "Library refreshed"))
             }
 
             // Stop animation after reload

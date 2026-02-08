@@ -188,7 +188,7 @@ class R128LoudnessScanner {
         if scannedCount > 0 {
             NotificationManager.shared.addMessage(
                 .info,
-                "R128 scan completed: \(scannedCount) track\(scannedCount == 1 ? "" : "s") analyzed"
+                String(localized: "R128 scan completed: \(scannedCount) track\(scannedCount == 1 ? "" : "s") analyzed")
             )
         }
 

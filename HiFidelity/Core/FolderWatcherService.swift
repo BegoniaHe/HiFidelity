@@ -48,7 +48,7 @@ class FolderWatcherService {
         watchedFoldersCount = folders.count
 
         Logger.info("Started watching \(folders.count) folder(s)")
-        NotificationManager.shared.addMessage(.info, "Folder monitoring active")
+        NotificationManager.shared.addMessage(.info, String(localized: "Folder monitoring active"))
     }
 
     /// Stop watching all folders
@@ -75,7 +75,7 @@ class FolderWatcherService {
         watchedFoldersCount = 0
 
         Logger.info("Stopped folder monitoring")
-        NotificationManager.shared.addMessage(.info, "Folder monitoring stopped")
+        NotificationManager.shared.addMessage(.info, String(localized: "Folder monitoring stopped"))
     }
 
     /// Watch a specific folder
@@ -245,12 +245,18 @@ class FolderWatcherService {
             do {
                 try await databaseManager.rescanFolder(folder)
                 await MainActor.run {
-                    NotificationManager.shared.addMessage(.info, "Updated '\(folder.name)'")
+                    NotificationManager.shared.addMessage(
+                        .info,
+                        String(localized: "Updated '\(folder.name)'")
+                    )
                 }
             } catch {
                 Logger.error("Failed to auto-rescan folder \(folder.name): \(error)")
                 await MainActor.run {
-                    NotificationManager.shared.addMessage(.error, "Failed to update '\(folder.name)'")
+                    NotificationManager.shared.addMessage(
+                        .error,
+                        String(localized: "Failed to update '\(folder.name)'")
+                    )
                 }
             }
         }

@@ -42,15 +42,24 @@ class TrackContextMenuBuilder {
             do {
                 try await DatabaseManager.shared.addTrackToPlaylist(trackId: trackId, playlistId: playlistId)
                 await MainActor.run {
-                    NotificationManager.shared.addMessage(.info, "'\(track.title)' was added to '\(playlist.name)'")
+                    NotificationManager.shared.addMessage(
+                        .info,
+                        String(localized: "'\(track.title)' was added to '\(playlist.name)'")
+                    )
                 }
             } catch DatabaseError.duplicateTrackInPlaylist {
                 await MainActor.run {
-                    NotificationManager.shared.addMessage(.warning, "'\(track.title)' is already in '\(playlist.name)'")
+                    NotificationManager.shared.addMessage(
+                        .warning,
+                        String(localized: "'\(track.title)' is already in '\(playlist.name)'")
+                    )
                 }
             } catch {
                 await MainActor.run {
-                    NotificationManager.shared.addMessage(.error, "Failed to add track to playlist")
+                    NotificationManager.shared.addMessage(
+                        .error,
+                        String(localized: "Failed to add track to playlist")
+                    )
                 }
             }
         }
@@ -65,12 +74,18 @@ class TrackContextMenuBuilder {
             do {
                 try await DatabaseManager.shared.removeTrackFromPlaylist(trackId: trackId, playlistId: playlistId)
                 await MainActor.run {
-                    NotificationManager.shared.addMessage(.info, "'\(track.title)' was removed from '\(playlistItem.name)'")
+                    NotificationManager.shared.addMessage(
+                        .info,
+                        String(localized: "'\(track.title)' was removed from '\(playlistItem.name)'")
+                    )
                     onRemove()
                 }
             } catch {
                 await MainActor.run {
-                    NotificationManager.shared.addMessage(.error, "Failed to remove track from playlist")
+                    NotificationManager.shared.addMessage(
+                        .error,
+                        String(localized: "Failed to remove track from playlist")
+                    )
                 }
             }
         }
@@ -115,17 +130,26 @@ class TrackContextMenuBuilder {
 
     static func scanTrackR128(_ track: Track) {
         R128LoudnessScanner.shared.scanTracks([track])
-        NotificationManager.shared.addMessage(.info, "Scanning '\(track.title)' for R128 loudness...")
+        NotificationManager.shared.addMessage(
+            .info,
+            String(localized: "Scanning '\(track.title)' for R128 loudness...")
+        )
     }
 
     static func scanAlbumR128(_ track: Track) {
         R128LoudnessScanner.shared.scanAlbum(album: track.album, artist: track.artist)
-        NotificationManager.shared.addMessage(.info, "Scanning album '\(track.album)' for R128 loudness...")
+        NotificationManager.shared.addMessage(
+            .info,
+            String(localized: "Scanning album '\(track.album)' for R128 loudness...")
+        )
     }
 
     static func scanArtistR128(_ track: Track) {
         R128LoudnessScanner.shared.scanArtist(artist: track.artist)
-        NotificationManager.shared.addMessage(.info, "Scanning tracks by '\(track.artist)' for R128 loudness...")
+        NotificationManager.shared.addMessage(
+            .info,
+            String(localized: "Scanning tracks by '\(track.artist)' for R128 loudness...")
+        )
     }
 
     // MARK: - Navigation Actions
@@ -146,13 +170,19 @@ class TrackContextMenuBuilder {
                     }
                 } else {
                     await MainActor.run {
-                        NotificationManager.shared.addMessage(.warning, "Album '\(track.album)' not found")
+                        NotificationManager.shared.addMessage(
+                            .warning,
+                            String(localized: "Album '\(track.album)' not found")
+                        )
                     }
                 }
             } catch {
                 Logger.error("Failed to navigate to album: \(error)")
                 await MainActor.run {
-                    NotificationManager.shared.addMessage(.error, "Failed to navigate to album")
+                    NotificationManager.shared.addMessage(
+                        .error,
+                        String(localized: "Failed to navigate to album")
+                    )
                 }
             }
         }
@@ -174,13 +204,19 @@ class TrackContextMenuBuilder {
                     }
                 } else {
                     await MainActor.run {
-                        NotificationManager.shared.addMessage(.warning, "Artist '\(track.artist)' not found")
+                        NotificationManager.shared.addMessage(
+                            .warning,
+                            String(localized: "Artist '\(track.artist)' not found")
+                        )
                     }
                 }
             } catch {
                 Logger.error("Failed to navigate to artist: \(error)")
                 await MainActor.run {
-                    NotificationManager.shared.addMessage(.error, "Failed to navigate to artist")
+                    NotificationManager.shared.addMessage(
+                        .error,
+                        String(localized: "Failed to navigate to artist")
+                    )
                 }
             }
         }

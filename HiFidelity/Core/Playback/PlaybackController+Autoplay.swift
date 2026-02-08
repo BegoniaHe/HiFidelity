@@ -56,7 +56,10 @@ extension PlaybackController {
                 Logger.info("Added \(recommendations.count) autoplay recommendations to queue")
 
                 // Notify user
-                NotificationManager.shared.addMessage(.info, "Added \(recommendations.count) recommended tracks to queue")
+                NotificationManager.shared.addMessage(
+                    .info,
+                    String(localized: "Added \(recommendations.count) recommended tracks to queue")
+                )
             }
         } catch {
             Logger.error("Failed to get autoplay recommendations: \(error)")

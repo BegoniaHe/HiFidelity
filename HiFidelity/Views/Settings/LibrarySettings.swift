@@ -402,7 +402,7 @@ struct LibrarySettings: View {
         // Prevent scanning when import is already in progress
         guard !databaseManager.isImporting else {
             NotificationManager.shared.addMessage(
-                .warning, "Please wait for the current import to finish")
+                .warning, String(localized: "Please wait for the current import to finish"))
             return
         }
 
@@ -418,7 +418,7 @@ struct LibrarySettings: View {
         // Prevent scanning when import is already in progress
         guard !databaseManager.isImporting else {
             NotificationManager.shared.addMessage(
-                .warning, "Please wait for the current import to finish")
+                .warning, String(localized: "Please wait for the current import to finish"))
             return
         }
 
@@ -437,7 +437,7 @@ struct LibrarySettings: View {
         // Prevent removing folders when import is in progress
         guard !databaseManager.isImporting else {
             NotificationManager.shared.addMessage(
-                .warning, "Please wait for the current import to finish")
+                .warning, String(localized: "Please wait for the current import to finish"))
             return
         }
 
@@ -453,7 +453,7 @@ struct LibrarySettings: View {
         // Prevent removing folders when import is in progress
         guard !databaseManager.isImporting else {
             NotificationManager.shared.addMessage(
-                .warning, "Please wait for the current import to finish")
+                .warning, String(localized: "Please wait for the current import to finish"))
             return
         }
 

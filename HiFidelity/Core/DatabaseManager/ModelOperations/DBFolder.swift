@@ -93,8 +93,8 @@ extension DatabaseManager {
         // Notify UI
         await MainActor.run {
             let message = trackCount == 1
-                ? "Removed folder '\(folder.name)' with 1 track"
-                : "Removed folder '\(folder.name)' with \(trackCount) tracks"
+                ? String(localized: "Removed folder '\(folder.name)' with 1 track")
+                : String(localized: "Removed folder '\(folder.name)' with \(trackCount) tracks")
             NotificationManager.shared.addMessage(.info, message)
             NotificationCenter.default.post(name: .libraryDataDidChange, object: nil)
             NotificationCenter.default.post(name: .foldersDataDidChange, object: nil)
@@ -110,7 +110,7 @@ extension DatabaseManager {
         // Prevent adding folders while import is in progress
         if isImporting {
             Task { @MainActor in
-                NotificationManager.shared.addMessage(.warning, "Please wait for the current import to finish")
+                NotificationManager.shared.addMessage(.warning, String(localized: "Please wait for the current import to finish"))
             }
             return
         }
@@ -170,7 +170,7 @@ extension DatabaseManager {
                 await MainActor.run {
                     completion(.failure(error))
                     Logger.error("Failed to add folders: \(error)")
-                    NotificationManager.shared.addMessage(.error, "Failed to add folders")
+                    NotificationManager.shared.addMessage(.error, String(localized: "Failed to add folders"))
                 }
             }
         }
@@ -268,31 +268,43 @@ extension DatabaseManager {
 
         if totalFolders > 0 {
             await MainActor.run {
-                NotificationManager.shared.addMessage(.info, "Scanning \(totalFolders) folder\(totalFolders == 1 ? "" : "s")...")
+                NotificationManager.shared.addMessage(
+                    .info,
+                    String(localized: "Scanning \(totalFolders) folder\(totalFolders == 1 ? "" : "s")...")
+                )
             }
         }
 
         for folder in folders {
             do {
                 await MainActor.run {
-                    NotificationManager.shared.addMessage(.info, "Started scanning '\(folder.name)' folder.")
+                    NotificationManager.shared.addMessage(
+                        .info,
+                        String(localized: "Started scanning '\(folder.name)' folder.")
+                    )
                 }
 
                 try await scanSingleFolder(folder)
 
                 await MainActor.run {
-                    NotificationManager.shared.addMessage(.info, "Scanning completed for '\(folder.name)' folder.")
+                    NotificationManager.shared.addMessage(
+                        .info,
+                        String(localized: "Scanning completed for '\(folder.name)' folder.")
+                    )
                 }
             } catch {
                 Logger.error("Failed to scan folder \(folder.name): \(error)")
                 await MainActor.run {
-                    NotificationManager.shared.addMessage(.error, "Failed to scan folder '\(folder.name)'")
+                    NotificationManager.shared.addMessage(
+                        .error,
+                        String(localized: "Failed to scan folder '\(folder.name)'")
+                    )
                 }
             }
         }
 
         await MainActor.run {
-            NotificationManager.shared.addMessage(.info, "Scan complete")
+            NotificationManager.shared.addMessage(.info, String(localized: "Scan complete"))
         }
     }
 
@@ -429,11 +441,14 @@ extension DatabaseManager {
         // Notify about the cleanup
         await MainActor.run {
             if totalFiles == 0 {
-                NotificationManager.shared.addMessage(.info, "Folder '\(folder.name)' is now empty, removed \(removedCount) tracks")
+                NotificationManager.shared.addMessage(
+                    .info,
+                    String(localized: "Folder '\(folder.name)' is now empty, removed \(removedCount) tracks")
+                )
             } else {
                 let message = removedCount == 1
-                    ? "Removed 1 missing track from '\(folder.name)'"
-                    : "Removed \(removedCount) missing tracks from '\(folder.name)'"
+                    ? String(localized: "Removed 1 missing track from '\(folder.name)'")
+                    : String(localized: "Removed \(removedCount) missing tracks from '\(folder.name)'")
                 NotificationManager.shared.addMessage(.info, message)
             }
         }
@@ -466,7 +481,10 @@ extension DatabaseManager {
                 await MainActor.run {
                     importProgress = progress
                     importStatusMessage = "Processing: \(currentProcessed)/\(totalFiles) files in '\(folder.name)'"
-                    NotificationManager.shared.addMessage(.info, "Processing: \(currentProcessed)/\(totalFiles) files in \(folder.name)")
+                    NotificationManager.shared.addMessage(
+                        .info,
+                        String(localized: "Processing: \(currentProcessed)/\(totalFiles) files in \(folder.name)")
+                    )
                 }
 
                 // Notify UI every few batches to update track counts in real-time
@@ -508,8 +526,8 @@ extension DatabaseManager {
         if !failedFiles.isEmpty {
             await MainActor.run {
                 let message = failedFiles.count == 1
-                    ? "Failed to process 1 file in '\(folder.name)'"
-                    : "Failed to process \(failedFiles.count) files in '\(folder.name)'"
+                    ? String(localized: "Failed to process 1 file in '\(folder.name)'")
+                    : String(localized: "Failed to process \(failedFiles.count) files in '\(folder.name)'")
                 NotificationManager.shared.addMessage(.warning, message)
             }
         }
@@ -526,8 +544,8 @@ extension DatabaseManager {
 
             await MainActor.run {
                 let message = skippedFiles.count == 1
-                    ? "1 file skipped in '\(folder.name)' - unsupported format"
-                    : "\(skippedFiles.count) files skipped in '\(folder.name)' - unsupported formats: \(topExtensions)"
+                    ? String(localized: "1 file skipped in '\(folder.name)' - unsupported format")
+                    : String(localized: "\(skippedFiles.count) files skipped in '\(folder.name)' - unsupported formats: \(topExtensions)")
                 NotificationManager.shared.addMessage(.warning, message)
             }
         }
@@ -570,7 +588,10 @@ extension DatabaseManager {
                     importProgress = 0.0
                     importStatusMessage = "Refreshing '\(folder.name)'..."
                     currentImportingFolder = folder.name
-                    NotificationManager.shared.addMessage(.info, "Refreshing \(folder.name)...")
+                    NotificationManager.shared.addMessage(
+                        .info,
+                        String(localized: "Refreshing \(folder.name)...")
+                    )
                 }
 
                 // Log the current state
@@ -600,7 +621,10 @@ extension DatabaseManager {
                     currentImportingFolder = ""
                     completion(.failure(error))
                     Logger.error("Failed to refresh folder \(folder.name): \(error)")
-                    NotificationManager.shared.addMessage(.error, "Failed to refresh folder \(folder.name)")
+                    NotificationManager.shared.addMessage(
+                        .error,
+                        String(localized: "Failed to refresh folder \(folder.name)")
+                    )
                 }
             }
         }

@@ -15,6 +15,78 @@
             "state": "translated",
             "value": "-%@"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "-%@"
+          }
+        }
+      }
+    },
+    "'%@' is already in '%@'": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "'%1$@' is already in '%2$@'"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%1$@”已在“%2$@”中"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%1$@” ist bereits in “%2$@”"
+          }
+        }
+      }
+    },
+    "'%@' was added to '%@'": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "'%1$@' was added to '%2$@'"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已将“%1$@”添加到“%2$@”"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%1$@” wurde zu “%2$@” hinzugefügt"
+          }
+        }
+      }
+    },
+    "'%@' was removed from '%@'": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "'%1$@' was removed from '%2$@'"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已将“%1$@”从“%2$@”中移除"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%1$@” wurde aus “%2$@” entfernt"
+          }
         }
       }
     },
@@ -31,6 +103,12 @@
             "state": "translated",
             "value": "(%lld 新)"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "(%lld new)"
+          }
         }
       }
     },
@@ -43,6 +121,12 @@
           }
         },
         "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "(%lld)"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "(%lld)"
@@ -63,6 +147,12 @@
             "state": "translated",
             "value": "*"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "*"
+          }
         }
       }
     },
@@ -76,7 +166,7 @@
         },
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "%1$@ %2$@"
           }
         },
@@ -98,7 +188,7 @@
         },
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "%1$@ • %2$@"
           }
         },
@@ -120,7 +210,7 @@
         },
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "%1$@%2$@ %3$@"
           }
         },
@@ -145,6 +235,12 @@
             "state": "translated",
             "value": "%lld"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
         }
       }
     },
@@ -158,7 +254,7 @@
         },
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "%1$lld %2$@"
           }
         },
@@ -183,6 +279,12 @@
             "state": "translated",
             "value": "%lld 张专辑"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld albums"
+          }
         }
       }
     },
@@ -198,6 +300,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld 位艺术家"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld artists"
           }
         }
       }
@@ -215,6 +323,34 @@
             "state": "translated",
             "value": "%lld dB"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld dB"
+          }
+        }
+      }
+    },
+    "%lld files skipped in '%@' - unsupported formats: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld files skipped in '%2$@' - unsupported formats: %3$@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在“%2$@”中跳过 %1$lld 个文件 - 不支持的格式：%3$@"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld Dateien in “%2$@” übersprungen - nicht unterstützte Formate: %3$@"
+          }
         }
       }
     },
@@ -230,6 +366,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld 种流派"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld genres"
           }
         }
       }
@@ -247,6 +389,12 @@
             "state": "translated",
             "value": "%lld Hz"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Hz"
+          }
         }
       }
     },
@@ -260,7 +408,7 @@
         },
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "%1$lld Hz • %2$@"
           }
         },
@@ -285,6 +433,12 @@
             "state": "translated",
             "value": "%lld MB"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld MB"
+          }
         }
       }
     },
@@ -301,6 +455,12 @@
             "state": "translated",
             "value": "%lld 毫秒"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld ms"
+          }
         }
       }
     },
@@ -314,7 +474,7 @@
         },
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "%1$lld results for \"%2$@\""
           }
         },
@@ -339,6 +499,12 @@
             "state": "translated",
             "value": "已选择 %lld 项"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld selected"
+          }
         }
       }
     },
@@ -355,6 +521,12 @@
             "state": "translated",
             "value": "%lld 首曲目"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld tracks"
+          }
         }
       }
     },
@@ -368,7 +540,7 @@
         },
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "%1$lld/%2$lld"
           }
         },
@@ -393,6 +565,12 @@
             "state": "translated",
             "value": "%lld%%"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%%"
+          }
         }
       }
     },
@@ -405,6 +583,12 @@
           }
         },
         "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "•"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "•"
@@ -425,6 +609,34 @@
             "state": "translated",
             "value": "• 同步模式"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• Sync Mode"
+          }
+        }
+      }
+    },
+    "1 file skipped in '%@' - unsupported format": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 file skipped in '%@' - unsupported format"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 Datei übersprungen in '%@' - nicht unterstütztes Format"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在“%@”中跳过 1 个文件 - 不支持的格式"
+          }
         }
       }
     },
@@ -440,6 +652,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "关于"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About"
           }
         }
       }
@@ -457,6 +675,12 @@
             "state": "translated",
             "value": "关于 HiFidelity"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About HiFidelity"
+          }
         }
       }
     },
@@ -472,6 +696,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "强调色强度"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accent Color Intensity"
           }
         }
       }
@@ -489,6 +719,12 @@
             "state": "translated",
             "value": "添加自定义封面以个性化您的播放列表"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add custom artwork to personalize your playlist"
+          }
         }
       }
     },
@@ -504,6 +740,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "添加文件夹"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Folder"
           }
         }
       }
@@ -521,6 +763,12 @@
             "state": "translated",
             "value": "添加文件夹以构建您的音乐库"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add folders to build your music library"
+          }
         }
       }
     },
@@ -536,6 +784,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "添加音乐文件夹以在此处查看您的音乐库"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add music folders to see your library here"
           }
         }
       }
@@ -553,6 +807,12 @@
             "state": "translated",
             "value": "为音频添加空间深度和氛围感"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add spatial depth and ambience to audio"
+          }
         }
       }
     },
@@ -568,6 +828,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "添加到收藏"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add to Favorites"
           }
         }
       }
@@ -585,6 +851,12 @@
             "state": "translated",
             "value": "添加到播放列表"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add to Playlist"
+          }
         }
       }
     },
@@ -600,6 +872,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "添加到队列"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add to Queue"
           }
         }
       }
@@ -617,6 +895,34 @@
             "state": "translated",
             "value": "添加您的第一个文件夹"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Your First Folder"
+          }
+        }
+      }
+    },
+    "Added %lld recommended tracks to queue": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Added %lld recommended tracks to queue"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld empfohlene Titel zur Warteschlange hinzugefügt"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已向队列添加了 %lld 首推荐曲目"
+          }
         }
       }
     },
@@ -633,18 +939,30 @@
             "state": "translated",
             "value": "高级"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Advanced"
+          }
         }
       }
     },
     "Album": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Album"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "专辑"
           }
         },
-        "de": {
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Album"
@@ -665,6 +983,34 @@
             "state": "translated",
             "value": "专辑“%@”"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Album '%@'"
+          }
+        }
+      }
+    },
+    "Album '%@' not found": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Album '%@' not found"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Album '%@' nicht gefunden"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未找到专辑“%@”"
+          }
         }
       }
     },
@@ -680,6 +1026,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "要应用的混响效果量"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Amount of reverb effect to apply"
           }
         }
       }
@@ -697,6 +1049,12 @@
             "state": "translated",
             "value": "正在分析：%@ "
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Analyzing: %@"
+          }
         }
       }
     },
@@ -712,6 +1070,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "应用数据"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App Data"
           }
         }
       }
@@ -729,6 +1093,12 @@
             "state": "translated",
             "value": "外观"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appearance"
+          }
         }
       }
     },
@@ -745,21 +1115,33 @@
             "state": "translated",
             "value": "您确定要删除“%@”吗？此操作无法撤销。"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Are you sure you want to delete '%@'? This action cannot be undone."
+          }
         }
       }
     },
     "Artist": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Künstler"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "艺术家"
           }
         },
-        "de": {
+        "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Künstler"
+            "value": "Artist"
           }
         }
       }
@@ -777,6 +1159,34 @@
             "state": "translated",
             "value": "艺术家“%@”"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Artist '%@'"
+          }
+        }
+      }
+    },
+    "Artist '%@' not found": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Artist '%@' not found"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Künstler '%@' nicht gefunden"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未找到艺术家“%@”"
+          }
         }
       }
     },
@@ -792,6 +1202,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "封面"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Artwork"
           }
         }
       }
@@ -809,6 +1225,12 @@
             "state": "translated",
             "value": "封面缓存大小"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Artwork Cache Size"
+          }
         }
       }
     },
@@ -824,6 +1246,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "升序"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ascending"
           }
         }
       }
@@ -841,6 +1269,12 @@
             "state": "translated",
             "value": "音频"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio"
+          }
         }
       }
     },
@@ -856,6 +1290,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "音频缓冲"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio Buffer"
           }
         }
       }
@@ -873,6 +1313,12 @@
             "state": "translated",
             "value": "音频效果和均衡器"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio Effects & Equalizer"
+          }
         }
       }
     },
@@ -888,6 +1334,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "音频输出设备"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio Output Device"
           }
         }
       }
@@ -905,6 +1357,12 @@
             "state": "translated",
             "value": "自动文件夹监控"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatic Folder Monitoring"
+          }
         }
       }
     },
@@ -920,6 +1378,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "有可用更新时自动下载并安装"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatically download and install updates when available"
           }
         }
       }
@@ -937,6 +1401,12 @@
             "state": "translated",
             "value": "自动标准化曲目间的音量"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatically normalize volume across tracks"
+          }
         }
       }
     },
@@ -952,6 +1422,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "自动播放"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autoplay"
           }
         }
       }
@@ -969,6 +1445,12 @@
             "state": "translated",
             "value": "自动播放：在队列结束时自动添加推荐曲目"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autoplay: Automatically add recommended tracks when queue ends"
+          }
         }
       }
     },
@@ -984,6 +1466,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "返回"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back"
           }
         }
       }
@@ -1001,6 +1489,12 @@
             "state": "translated",
             "value": "蓝色"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blue"
+          }
         }
       }
     },
@@ -1016,6 +1510,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "取消"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
           }
         }
       }
@@ -1033,6 +1533,12 @@
             "state": "translated",
             "value": "更改图片"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Change Image"
+          }
         }
       }
     },
@@ -1048,6 +1554,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "自动检查更新"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check for updates automatically"
           }
         }
       }
@@ -1065,6 +1577,12 @@
             "state": "translated",
             "value": "检查更新..."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check for Updates..."
+          }
         }
       }
     },
@@ -1080,6 +1598,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "选择图片"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose Image"
           }
         }
       }
@@ -1097,6 +1621,12 @@
             "state": "translated",
             "value": "选择您偏好的颜色主题"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose your preferred color theme"
+          }
         }
       }
     },
@@ -1112,6 +1642,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "清除"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear"
           }
         }
       }
@@ -1129,6 +1665,12 @@
             "state": "translated",
             "value": "清除所有通知"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear all notifications"
+          }
         }
       }
     },
@@ -1144,6 +1686,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "清除过滤器"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear Filter"
           }
         }
       }
@@ -1161,18 +1709,30 @@
             "state": "translated",
             "value": "关闭迷你播放器"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close Mini Player"
+          }
         }
       }
     },
     "Codec": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codec"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "编码格式"
           }
         },
-        "de": {
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Codec"
@@ -1193,6 +1753,12 @@
             "state": "translated",
             "value": "配色方案"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Color Scheme"
+          }
         }
       }
     },
@@ -1208,6 +1774,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "创建新播放列表"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create New Playlist"
           }
         }
       }
@@ -1225,6 +1797,12 @@
             "state": "translated",
             "value": "创建播放列表"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create Playlist"
+          }
         }
       }
     },
@@ -1240,6 +1818,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在创建..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Creating..."
           }
         }
       }
@@ -1257,6 +1841,12 @@
             "state": "translated",
             "value": "自定义"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Custom"
+          }
         }
       }
     },
@@ -1272,6 +1862,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "青色"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cyan"
           }
         }
       }
@@ -1289,6 +1885,12 @@
             "state": "translated",
             "value": "危险区域"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Danger Zone"
+          }
         }
       }
     },
@@ -1304,6 +1906,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "数据库"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Database"
           }
         }
       }
@@ -1321,21 +1929,33 @@
             "state": "translated",
             "value": "数据库大小"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Database Size"
+          }
         }
       }
     },
     "Date Added": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hinzugefügt am"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "添加日期"
           }
         },
-        "de": {
+        "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hinzugefügt am"
+            "value": "Date Added"
           }
         }
       }
@@ -1353,6 +1973,12 @@
             "state": "translated",
             "value": "删除"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
         }
       }
     },
@@ -1368,6 +1994,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "全部删除"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete All"
           }
         }
       }
@@ -1385,6 +2017,12 @@
             "state": "translated",
             "value": "删除播放列表"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete Playlist"
+          }
         }
       }
     },
@@ -1400,6 +2038,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "删除预设"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete Preset"
           }
         }
       }
@@ -1417,6 +2061,12 @@
             "state": "translated",
             "value": "删除当前自定义预设"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete the current custom preset"
+          }
         }
       }
     },
@@ -1432,6 +2082,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "降序"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Descending"
           }
         }
       }
@@ -1449,6 +2105,12 @@
             "state": "translated",
             "value": "描述"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Description"
+          }
         }
       }
     },
@@ -1464,6 +2126,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "全不选"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deselect All"
           }
         }
       }
@@ -1481,21 +2149,33 @@
             "state": "translated",
             "value": "禁用位完美播放（独占模式已激活）"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disable Bit-Perfect Playback (Hog Mode Active)"
+          }
         }
       }
     },
     "Disc Number": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disc-Nummer"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "光盘编号"
           }
         },
-        "de": {
+        "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Disc-Nummer"
+            "value": "Disc Number"
           }
         }
       }
@@ -1513,6 +2193,12 @@
             "state": "translated",
             "value": "忽略"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dismiss"
+          }
         }
       }
     },
@@ -1529,21 +2215,33 @@
             "state": "translated",
             "value": "将 LRC 文件拖放到此处"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drop LRC file here"
+          }
         }
       }
     },
     "Duration": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dauer"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "时长"
           }
         },
-        "de": {
+        "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dauer"
+            "value": "Duration"
           }
         }
       }
@@ -1561,6 +2259,12 @@
             "state": "translated",
             "value": "启用位完美播放（独占模式已激活）"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable Bit-Perfect Playback (Hog Mode Active)"
+          }
         }
       }
     },
@@ -1576,6 +2280,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "开启独占模式以实现位完美播放"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable exclusive audio access for bit-perfect playback"
           }
         }
       }
@@ -1593,6 +2303,12 @@
             "state": "translated",
             "value": "启用重放增益 (ReplayGain)"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable ReplayGain"
+          }
         }
       }
     },
@@ -1608,6 +2324,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "启用均衡器以调整频率响应"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable the equalizer to adjust frequency response"
           }
         }
       }
@@ -1625,6 +2347,12 @@
             "state": "translated",
             "value": "启用后可在文件更改时自动更新您的库"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable to automatically update your library when files change"
+          }
         }
       }
     },
@@ -1640,6 +2368,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "输入自定义均衡器预设的名称"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter a name for your custom equalizer preset"
           }
         }
       }
@@ -1657,6 +2391,12 @@
             "state": "translated",
             "value": "均衡器"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Equalizer"
+          }
         }
       }
     },
@@ -1672,6 +2412,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "均衡器已禁用"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Equalizer Disabled"
           }
         }
       }
@@ -1689,6 +2435,12 @@
             "state": "translated",
             "value": "错误"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error"
+          }
         }
       }
     },
@@ -1704,6 +2456,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "导出为 M3U"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export as M3U"
           }
         }
       }
@@ -1721,6 +2479,232 @@
             "state": "translated",
             "value": "导出 LRC 文件"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export LRC File"
+          }
+        }
+      }
+    },
+    "Failed to add folders": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to add folders"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ordner konnten nicht hinzugefügt werden"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加文件夹失败"
+          }
+        }
+      }
+    },
+    "Failed to add track to playlist": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to add track to playlist"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titel konnte nicht zur Playlist hinzugefügt werden"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加曲目到播放列表失败"
+          }
+        }
+      }
+    },
+    "Failed to navigate to album": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to navigate to album"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Navigation zum Album fehlgeschlagen"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导航到专辑失败"
+          }
+        }
+      }
+    },
+    "Failed to navigate to artist": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to navigate to artist"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Navigation zum Künstler fehlgeschlagen"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导航到艺术家失败"
+          }
+        }
+      }
+    },
+    "Failed to process %lld files in '%@'": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to process %1$lld files in '%2$@'"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld Dateien in '%2$@' konnten nicht verarbeitet werden"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "处理“%2$@”中的 %1$lld 个文件失败"
+          }
+        }
+      }
+    },
+    "Failed to process 1 file in '%@'": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to process 1 file in '%@'"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 Datei in '%@' konnte nicht verarbeitet werden"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "处理“%@”中的 1 个文件失败"
+          }
+        }
+      }
+    },
+    "Failed to refresh folder %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to refresh folder %@"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ordner %@ konnte nicht aktualisiert werden"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刷新文件夹 %@ 失败"
+          }
+        }
+      }
+    },
+    "Failed to remove track from playlist": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to remove track from playlist"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titel konnte nicht aus der Playlist entfernt werden"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "从播放列表移除曲目失败"
+          }
+        }
+      }
+    },
+    "Failed to scan folder '%@'": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to scan folder '%@'"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ordner '%@' konnte nicht gescannt werden"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "扫描文件夹“%@”失败"
+          }
+        }
+      }
+    },
+    "Failed to update '%@'": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to update '%@'"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "'%@' konnte nicht aktualisiert werden"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新“%@”失败"
+          }
         }
       }
     },
@@ -1736,6 +2720,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "收藏"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Favorite"
           }
         }
       }
@@ -1753,21 +2743,33 @@
             "state": "translated",
             "value": "收藏"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Favorites"
+          }
         }
       }
     },
     "Filename": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dateiname"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "文件名"
           }
         },
-        "de": {
+        "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dateiname"
+            "value": "Filename"
           }
         }
       }
@@ -1785,6 +2787,12 @@
             "state": "translated",
             "value": "过滤器"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filter"
+          }
         }
       }
     },
@@ -1800,6 +2808,78 @@
           "stringUnit": {
             "state": "translated",
             "value": "置顶显示"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Float on Top"
+          }
+        }
+      }
+    },
+    "Folder '%@' is now empty, removed %lld tracks": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folder '%1$@' is now empty, removed %2$lld tracks"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ordner '%1$@' ist jetzt leer, %2$lld Titel entfernt"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件夹“%1$@”现在为空，已移除 %2$lld 首曲目"
+          }
+        }
+      }
+    },
+    "Folder monitoring active": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folder monitoring active"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ordnerüberwachung aktiv"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件夹监控已启动"
+          }
+        }
+      }
+    },
+    "Folder monitoring stopped": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folder monitoring stopped"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ordnerüberwachung gestoppt"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件夹监控已停止"
           }
         }
       }
@@ -1817,18 +2897,30 @@
             "state": "translated",
             "value": "文件夹"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folders"
+          }
         }
       }
     },
     "Genre": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Genre"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "流派"
           }
         },
-        "de": {
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Genre"
@@ -1849,6 +2941,12 @@
             "state": "translated",
             "value": "获取信息"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get Info"
+          }
         }
       }
     },
@@ -1864,6 +2962,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "前往专辑“%@”"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Go to Album '%@'"
           }
         }
       }
@@ -1881,6 +2985,12 @@
             "state": "translated",
             "value": "前往艺术家“%@”"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Go to Artist '%@'"
+          }
         }
       }
     },
@@ -1896,6 +3006,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "前往当前曲目"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Go to Current Track"
           }
         }
       }
@@ -1913,6 +3029,12 @@
             "state": "translated",
             "value": "前往主页"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Go to Home"
+          }
         }
       }
     },
@@ -1928,6 +3050,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "绿色"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Green"
           }
         }
       }
@@ -1945,6 +3073,12 @@
             "state": "translated",
             "value": "帮助"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Help"
+          }
         }
       }
     },
@@ -1960,6 +3094,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "隐藏封面"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide Artwork"
           }
         }
       }
@@ -1977,6 +3117,12 @@
             "state": "translated",
             "value": "导入文件夹"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import Folder"
+          }
         }
       }
     },
@@ -1992,6 +3138,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "导入 LRC 文件"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import LRC File"
           }
         }
       }
@@ -2009,6 +3161,12 @@
             "state": "translated",
             "value": "导入 M3U"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import M3U"
+          }
         }
       }
     },
@@ -2024,6 +3182,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "从文件夹导入播放列表（最多 25 个文件夹）"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import playlists from folders (up to 25 folders)"
           }
         }
       }
@@ -2041,6 +3205,12 @@
             "state": "translated",
             "value": "从 M3U 文件导入播放列表（最多 25 个文件）"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import playlists from M3U files (up to 25 files)"
+          }
         }
       }
     },
@@ -2056,6 +3226,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "导入成功"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import Success"
           }
         }
       }
@@ -2073,6 +3249,12 @@
             "state": "translated",
             "value": "正在导入音乐"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importing Music"
+          }
         }
       }
     },
@@ -2088,6 +3270,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "靛蓝色"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Indigo"
           }
         }
       }
@@ -2105,6 +3293,12 @@
             "state": "translated",
             "value": "纯音乐"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Instrumental"
+          }
         }
       }
     },
@@ -2120,6 +3314,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "将此播放列表保持在库的最上方"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep this playlist at the top of your library"
           }
         }
       }
@@ -2137,6 +3337,12 @@
             "state": "translated",
             "value": "较大的缓冲区 = 更稳定，但延迟更高"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Larger buffer = more stable, but higher latency"
+          }
         }
       }
     },
@@ -2152,6 +3358,34 @@
           "stringUnit": {
             "state": "translated",
             "value": "音乐库"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Library"
+          }
+        }
+      }
+    },
+    "Library refreshed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Library refreshed"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mediathek aktualisiert"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "媒体库已刷新"
           }
         }
       }
@@ -2169,6 +3403,12 @@
             "state": "translated",
             "value": "库统计信息"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Library Statistics"
+          }
         }
       }
     },
@@ -2184,6 +3424,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "许可证"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "License"
           }
         }
       }
@@ -2201,6 +3447,12 @@
             "state": "translated",
             "value": "正在加载专辑..."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading albums..."
+          }
         }
       }
     },
@@ -2216,6 +3468,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在加载艺术家..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading artists..."
           }
         }
       }
@@ -2233,6 +3491,12 @@
             "state": "translated",
             "value": "正在加载文件夹..."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading folders..."
+          }
         }
       }
     },
@@ -2248,6 +3512,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在加载流派..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading genres..."
           }
         }
       }
@@ -2265,6 +3535,12 @@
             "state": "translated",
             "value": "正在加载曲目..."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading tracks..."
+          }
         }
       }
     },
@@ -2280,6 +3556,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "响度分析"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loudness Analysis"
           }
         }
       }
@@ -2297,6 +3579,12 @@
             "state": "translated",
             "value": "LRC 文件已成功导入"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LRC file has been imported successfully"
+          }
         }
       }
     },
@@ -2312,6 +3600,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "歌词"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lyrics"
           }
         }
       }
@@ -2329,6 +3623,12 @@
             "state": "translated",
             "value": "歌词已导入"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lyrics Imported"
+          }
         }
       }
     },
@@ -2344,6 +3644,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "主音量"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Master"
           }
         }
       }
@@ -2361,6 +3667,12 @@
             "state": "translated",
             "value": "匹配全部"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Match All"
+          }
         }
       }
     },
@@ -2376,6 +3688,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "匹配所有词（精确搜索）"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Match ALL words (exact search)"
           }
         }
       }
@@ -2393,6 +3711,12 @@
             "state": "translated",
             "value": "匹配任一"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Match Any"
+          }
         }
       }
     },
@@ -2408,6 +3732,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "匹配任意词（更宽泛的结果）"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Match ANY word (broader results)"
           }
         }
       }
@@ -2425,6 +3755,12 @@
             "state": "translated",
             "value": "用于缓存专辑封面的内存限制。较大的缓存 = 更流畅的滚动。"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memory limit for caching album artwork. Larger cache = smoother scrolling."
+          }
         }
       }
     },
@@ -2440,6 +3776,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "迷你播放器"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mini Player"
           }
         }
       }
@@ -2457,6 +3799,12 @@
             "state": "translated",
             "value": "薄荷绿"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mint"
+          }
         }
       }
     },
@@ -2472,6 +3820,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "模式"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mode"
           }
         }
       }
@@ -2489,6 +3843,12 @@
             "state": "translated",
             "value": "音乐文件夹"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Music Folders"
+          }
         }
       }
     },
@@ -2504,6 +3864,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "我的超赞播放列表"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "My Awesome Playlist"
           }
         }
       }
@@ -2521,6 +3887,12 @@
             "state": "translated",
             "value": "我的预设"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "My Presets"
+          }
         }
       }
     },
@@ -2536,6 +3908,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "名称"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name"
           }
         }
       }
@@ -2553,6 +3931,12 @@
             "state": "translated",
             "value": "新播放列表..."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New Playlist..."
+          }
         }
       }
     },
@@ -2568,6 +3952,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "下一首"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next Track"
           }
         }
       }
@@ -2585,6 +3975,12 @@
             "state": "translated",
             "value": "无可用歌词"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No lyrics available"
+          }
         }
       }
     },
@@ -2600,6 +3996,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "没有音乐文件夹"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Music Folders"
           }
         }
       }
@@ -2617,6 +4019,12 @@
             "state": "translated",
             "value": "没有通知"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No notifications"
+          }
         }
       }
     },
@@ -2632,6 +4040,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "未找到输出设备"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No output devices found"
           }
         }
       }
@@ -2649,6 +4063,12 @@
             "state": "translated",
             "value": "没有播放列表"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No playlists"
+          }
         }
       }
     },
@@ -2664,6 +4084,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "未找到播放列表"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No playlists found"
           }
         }
       }
@@ -2681,6 +4107,12 @@
             "state": "translated",
             "value": "暂无播放列表\n创建您的第一个播放列表"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No playlists yet\nCreate your first playlist"
+          }
         }
       }
     },
@@ -2696,6 +4128,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "未找到结果"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No results found"
           }
         }
       }
@@ -2713,6 +4151,12 @@
             "state": "translated",
             "value": "未在播放曲目"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Track Playing"
+          }
         }
       }
     },
@@ -2728,6 +4172,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "未选择曲目"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Track Selected"
           }
         }
       }
@@ -2745,6 +4195,12 @@
             "state": "translated",
             "value": "没有曲目"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Tracks"
+          }
         }
       }
     },
@@ -2760,6 +4216,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "未找到曲目"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No tracks found"
           }
         }
       }
@@ -2777,6 +4239,12 @@
             "state": "translated",
             "value": "没有即将播放的歌曲"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Upcoming Songs"
+          }
         }
       }
     },
@@ -2792,6 +4260,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "未在播放"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not Playing"
           }
         }
       }
@@ -2809,6 +4283,12 @@
             "state": "translated",
             "value": "通知"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications"
+          }
         }
       }
     },
@@ -2824,6 +4304,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "确定"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
           }
         }
       }
@@ -2841,6 +4327,12 @@
             "state": "translated",
             "value": "不透明背景"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opaque Background"
+          }
         }
       }
     },
@@ -2856,6 +4348,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "优化"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optimize"
           }
         }
       }
@@ -2873,6 +4371,12 @@
             "state": "translated",
             "value": "正在优化..."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optimizing..."
+          }
         }
       }
     },
@@ -2888,6 +4392,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "选项"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Options"
           }
         }
       }
@@ -2905,6 +4415,12 @@
             "state": "translated",
             "value": "或"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OR"
+          }
         }
       }
     },
@@ -2920,6 +4436,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "或将 LRC 文件拖放到此处"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "or drag and drop an LRC file here"
           }
         }
       }
@@ -2937,6 +4459,12 @@
             "state": "translated",
             "value": "橙色"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Orange"
+          }
         }
       }
     },
@@ -2952,6 +4480,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "暂停"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pause"
           }
         }
       }
@@ -2969,6 +4503,12 @@
             "state": "translated",
             "value": "性能"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Performance"
+          }
         }
       }
     },
@@ -2984,6 +4524,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "置顶"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pin to Top"
           }
         }
       }
@@ -3001,6 +4547,12 @@
             "state": "translated",
             "value": "粉红色"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pink"
+          }
         }
       }
     },
@@ -3016,6 +4568,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "无样式"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plain"
           }
         }
       }
@@ -3033,6 +4591,12 @@
             "state": "translated",
             "value": "播放"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play"
+          }
         }
       }
     },
@@ -3048,6 +4612,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "播放一首歌开始使用"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play a song to get started"
           }
         }
       }
@@ -3065,6 +4635,12 @@
             "state": "translated",
             "value": "播放一首歌以查看歌词"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play a song to see lyrics"
+          }
         }
       }
     },
@@ -3081,21 +4657,33 @@
             "state": "translated",
             "value": "播放歌曲以在此处查看歌词。"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play a song to see the lyrics here."
+          }
         }
       }
     },
     "Play Count": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wiedergaben"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "播放次数"
           }
         },
-        "de": {
+        "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Wiedergaben"
+            "value": "Play Count"
           }
         }
       }
@@ -3113,6 +4701,12 @@
             "state": "translated",
             "value": "插播"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play Next"
+          }
         }
       }
     },
@@ -3128,6 +4722,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "立即播放"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play Now"
           }
         }
       }
@@ -3145,6 +4745,12 @@
             "state": "translated",
             "value": "播放"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Playback"
+          }
         }
       }
     },
@@ -3158,7 +4764,7 @@
         },
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "Playlist • %1$lld %2$@"
           }
         },
@@ -3172,16 +4778,22 @@
     },
     "Playlist Order": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Playlist-Reihenfolge"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "播放列表顺序"
           }
         },
-        "de": {
+        "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Playlist-Reihenfolge"
+            "value": "Playlist Order"
           }
         }
       }
@@ -3199,6 +4811,34 @@
             "state": "translated",
             "value": "播放列表"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Playlists"
+          }
+        }
+      }
+    },
+    "Please wait for the current import to finish": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Please wait for the current import to finish"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitte warten Sie, bis der aktuelle Import abgeschlossen ist"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请等待当前导入完成"
+          }
         }
       }
     },
@@ -3214,6 +4854,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "电源"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Power"
           }
         }
       }
@@ -3231,6 +4877,12 @@
             "state": "translated",
             "value": "预设"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preset"
+          }
         }
       }
     },
@@ -3246,6 +4898,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "预设管理器"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preset Manager"
           }
         }
       }
@@ -3263,6 +4921,12 @@
             "state": "translated",
             "value": "预设名称"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preset Name"
+          }
         }
       }
     },
@@ -3278,6 +4942,34 @@
           "stringUnit": {
             "state": "translated",
             "value": "上一首"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Previous Track"
+          }
+        }
+      }
+    },
+    "Processing: %lld/%lld files in %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Processing: %1$lld/%2$lld files in %3$@"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verarbeitung: %1$lld/%2$lld Dateien in %3$@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在处理：%3$@ 中的 %1$lld/%2$lld 个文件"
           }
         }
       }
@@ -3295,6 +4987,12 @@
             "state": "translated",
             "value": "紫色"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Purple"
+          }
         }
       }
     },
@@ -3310,6 +5008,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "队列"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Queue"
           }
         }
       }
@@ -3327,6 +5031,12 @@
             "state": "translated",
             "value": "队列为空"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Queue is empty"
+          }
         }
       }
     },
@@ -3343,6 +5053,12 @@
             "state": "translated",
             "value": "队列为空。播放点什么开始吧。"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Queue is empty. Play something to get started."
+          }
         }
       }
     },
@@ -3356,7 +5072,7 @@
         },
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "Queue Persistence Status:\n- Active: %1$@\n- Unsaved Changes: %2$@\n- Last Save: %3$@\n- Queue Count: %4$lld\n- Current Index: %5$lld"
           }
         },
@@ -3364,6 +5080,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "队列持久化状态：\n- 激活：%1$@\n- 未保存的更改：%2$@\n- 上次保存：%3$@\n- 队列数量：%4$lld\n- 当前索引：%5$lld"
+          }
+        }
+      }
+    },
+    "R128 scan completed: %lld track%@ analyzed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "R128 scan completed: %1$lld track%2$@ analyzed"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "R128-Scan abgeschlossen: %1$lld Titel%2$@ analysiert"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "R128 扫描完成：已分析 %1$lld 首曲目%2$@"
           }
         }
       }
@@ -3381,6 +5119,12 @@
             "state": "translated",
             "value": "重建全文搜索"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rebuild FTS"
+          }
         }
       }
     },
@@ -3396,6 +5140,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "重建全文搜索索引以应用增强的搜索配置"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rebuild full-text search indexes to apply enhanced search configuration"
           }
         }
       }
@@ -3413,6 +5163,12 @@
             "state": "translated",
             "value": "重建全文搜索表以获得更好的结果"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rebuild full-text search tables for better results"
+          }
         }
       }
     },
@@ -3428,6 +5184,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在重建..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rebuilding..."
           }
         }
       }
@@ -3445,6 +5207,12 @@
             "state": "translated",
             "value": "最近添加"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recently Added"
+          }
         }
       }
     },
@@ -3460,6 +5228,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "最近播放的曲目"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recently played tracks"
           }
         }
       }
@@ -3477,6 +5251,12 @@
             "state": "translated",
             "value": "红色"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Red"
+          }
         }
       }
     },
@@ -3492,6 +5272,34 @@
           "stringUnit": {
             "state": "translated",
             "value": "刷新库"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refresh Library"
+          }
+        }
+      }
+    },
+    "Refreshing %@...": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refreshing %@..."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ wird aktualisiert..."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在刷新 %@..."
           }
         }
       }
@@ -3509,6 +5317,12 @@
             "state": "translated",
             "value": "松开以导入歌词"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Release to import lyrics"
+          }
         }
       }
     },
@@ -3524,6 +5338,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "如果文件夹已移动，请重新定位"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relocate folder if moved"
           }
         }
       }
@@ -3541,6 +5361,12 @@
             "state": "translated",
             "value": "移除"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove"
+          }
         }
       }
     },
@@ -3556,6 +5382,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "移除全部"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove All"
           }
         }
       }
@@ -3573,6 +5405,12 @@
             "state": "translated",
             "value": "移除所有文件夹？"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove All Folders?"
+          }
         }
       }
     },
@@ -3588,6 +5426,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "移除文件夹"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove folder"
           }
         }
       }
@@ -3605,6 +5449,12 @@
             "state": "translated",
             "value": "移除文件夹？"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove Folder?"
+          }
         }
       }
     },
@@ -3620,6 +5470,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "从收藏中移除"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove from Favorites"
           }
         }
       }
@@ -3637,6 +5493,12 @@
             "state": "translated",
             "value": "从播放列表中移除"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove from Playlist"
+          }
         }
       }
     },
@@ -3652,6 +5514,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "从队列中移除"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove from Queue"
           }
         }
       }
@@ -3669,6 +5537,100 @@
             "state": "translated",
             "value": "移除歌词"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove Lyrics"
+          }
+        }
+      }
+    },
+    "Removed %lld missing tracks from '%@'": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Removed %1$lld missing tracks from '%2$@'"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld fehlende Titel aus '%2$@' entfernt"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已从“%2$@”移除 %1$lld 首缺失曲目"
+          }
+        }
+      }
+    },
+    "Removed 1 missing track from '%@'": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Removed 1 missing track from '%@'"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 fehlender Titel aus '%@' entfernt"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已从“%@”移除 1 首缺失曲目"
+          }
+        }
+      }
+    },
+    "Removed folder '%@' with %lld tracks": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Removed folder '%1$@' with %2$lld tracks"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ordner '%1$@' mit %2$lld Titeln entfernt"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已移除文件夹“%1$@”及其 %2$lld 首曲目"
+          }
+        }
+      }
+    },
+    "Removed folder '%@' with 1 track": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Removed folder '%@' with 1 track"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ordner '%@' mit 1 Titel entfernt"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已移除文件夹“%@”及其 1 首曲目"
+          }
         }
       }
     },
@@ -3684,6 +5646,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "重复"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repeat"
           }
         }
       }
@@ -3701,6 +5669,12 @@
             "state": "translated",
             "value": "重置"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset"
+          }
         }
       }
     },
@@ -3716,6 +5690,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "重置全部"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset All"
           }
         }
       }
@@ -3733,6 +5713,12 @@
             "state": "translated",
             "value": "重置数据库"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset Database"
+          }
         }
       }
     },
@@ -3748,6 +5734,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "重置数据库？"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset Database?"
           }
         }
       }
@@ -3765,6 +5757,12 @@
             "state": "translated",
             "value": "将前置放大器和所有均衡器频段重置为 0 dB"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset preamp and all EQ bands to 0 dB"
+          }
         }
       }
     },
@@ -3780,6 +5778,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "重置为默认值"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset to Defaults"
           }
         }
       }
@@ -3797,6 +5801,12 @@
             "state": "translated",
             "value": "混响"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reverb"
+          }
         }
       }
     },
@@ -3812,6 +5822,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "混响混音"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reverb Mix"
           }
         }
       }
@@ -3829,6 +5845,12 @@
             "state": "translated",
             "value": "右键单击任何曲目并选择“获取信息”以查看详细信息。"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Right-click any track and select 'Get Info' to see detailed information."
+          }
         }
       }
     },
@@ -3844,6 +5866,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "保存"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save"
           }
         }
       }
@@ -3861,6 +5889,12 @@
             "state": "translated",
             "value": "将当前均衡器设置保存为自定义预设"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save current equalizer settings as a custom preset"
+          }
         }
       }
     },
@@ -3876,6 +5910,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "保存自定义预设"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save Custom Preset"
           }
         }
       }
@@ -3893,6 +5933,12 @@
             "state": "translated",
             "value": "保存预设"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save Preset"
+          }
         }
       }
     },
@@ -3908,6 +5954,34 @@
           "stringUnit": {
             "state": "translated",
             "value": "扫描全部"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan All"
+          }
+        }
+      }
+    },
+    "Scan complete": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan complete"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan abgeschlossen"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "扫描完成"
           }
         }
       }
@@ -3925,6 +5999,12 @@
             "state": "translated",
             "value": "扫描文件夹"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan folder"
+          }
         }
       }
     },
@@ -3940,6 +6020,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "扫描库"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan Library"
           }
         }
       }
@@ -3957,6 +6043,12 @@
             "state": "translated",
             "value": "扫描 R128 响度"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan R128 Loudness"
+          }
         }
       }
     },
@@ -3972,6 +6064,122 @@
           "stringUnit": {
             "state": "translated",
             "value": "扫描您的库以计算 EBU R128 响度，从而实现准确的标准化"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan your library to calculate EBU R128 loudness for accurate normalization"
+          }
+        }
+      }
+    },
+    "Scanning '%@' for R128 loudness...": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scanning '%@' for R128 loudness..."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "'%@' wird nach R128-Lautstärke gescannt..."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在扫描“%@”的 R128 响度..."
+          }
+        }
+      }
+    },
+    "Scanning %lld folder%@...": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scanning %1$lld folder%2$@..."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scanne %1$lld Ordner%2$@..."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在扫描 %1$lld 个文件夹%2$@..."
+          }
+        }
+      }
+    },
+    "Scanning album '%@' for R128 loudness...": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scanning album '%@' for R128 loudness..."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Album '%@' wird nach R128-Lautstärke gescannt..."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在扫描专辑“%@”的 R128 响度..."
+          }
+        }
+      }
+    },
+    "Scanning completed for '%@' folder.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scanning completed for '%@' folder."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan für Ordner '%@' abgeschlossen."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件夹“%@”的扫描已完成。"
+          }
+        }
+      }
+    },
+    "Scanning tracks by '%@' for R128 loudness...": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scanning tracks by '%@' for R128 loudness..."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titel von '%@' werden nach R128-Lautstärke gescannt..."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在扫描“%@”的曲目 R128 响度..."
           }
         }
       }
@@ -3989,6 +6197,12 @@
             "state": "translated",
             "value": "搜索索引"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search Index"
+          }
         }
       }
     },
@@ -4004,6 +6218,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "在线搜索"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search Online"
           }
         }
       }
@@ -4021,6 +6241,12 @@
             "state": "translated",
             "value": "搜索播放列表"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search playlists"
+          }
         }
       }
     },
@@ -4036,6 +6262,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "搜索结果"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search Results"
           }
         }
       }
@@ -4053,6 +6285,12 @@
             "state": "translated",
             "value": "正在搜索..."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searching..."
+          }
         }
       }
     },
@@ -4068,6 +6306,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "后退"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seek Backward"
           }
         }
       }
@@ -4085,6 +6329,12 @@
             "state": "translated",
             "value": "前进"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seek Forward"
+          }
         }
       }
     },
@@ -4100,6 +6350,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "选择要播放的曲目"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select a track to play"
           }
         }
       }
@@ -4117,6 +6373,12 @@
             "state": "translated",
             "value": "全选"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select All"
+          }
         }
       }
     },
@@ -4132,6 +6394,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "选择音频输出设备"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select Audio Output Device"
           }
         }
       }
@@ -4149,6 +6417,12 @@
             "state": "translated",
             "value": "多选"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select Multiple"
+          }
         }
       }
     },
@@ -4164,6 +6438,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "选择播放列表"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select Playlists"
           }
         }
       }
@@ -4181,6 +6461,12 @@
             "state": "translated",
             "value": "设置"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
         }
       }
     },
@@ -4196,6 +6482,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "在访达中显示应用数据目录"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show app data directory in Finder"
           }
         }
       }
@@ -4213,6 +6505,12 @@
             "state": "translated",
             "value": "显示封面"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show Artwork"
+          }
         }
       }
     },
@@ -4228,6 +6526,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "在访达中显示"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show in Finder"
           }
         }
       }
@@ -4245,6 +6549,12 @@
             "state": "translated",
             "value": "随机"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shuffle"
+          }
         }
       }
     },
@@ -4260,6 +6570,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "排序方式"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sort by"
           }
         }
       }
@@ -4277,6 +6593,12 @@
             "state": "translated",
             "value": "排序顺序"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sort order"
+          }
         }
       }
     },
@@ -4292,6 +6614,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "排序播放列表"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sort Playlists"
           }
         }
       }
@@ -4309,6 +6637,34 @@
             "state": "translated",
             "value": "来源"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Source"
+          }
+        }
+      }
+    },
+    "Started scanning '%@' folder.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Started scanning '%@' folder."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan für Ordner '%@' gestartet."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已开始扫描“%@”文件夹。"
+          }
         }
       }
     },
@@ -4324,6 +6680,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "同步"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Synced"
           }
         }
       }
@@ -4341,6 +6703,12 @@
             "state": "translated",
             "value": "与音乐播放器同步采样率（独占模式）"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Synchronize Sample Rate with Music Player (Hog mode)"
+          }
         }
       }
     },
@@ -4356,6 +6724,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "蓝绿色"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teal"
           }
         }
       }
@@ -4373,6 +6747,12 @@
             "state": "translated",
             "value": "主题"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Theme"
+          }
         }
       }
     },
@@ -4388,6 +6768,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "此 %@ 没有曲目"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This %@ has no tracks"
           }
         }
       }
@@ -4405,6 +6791,12 @@
             "state": "translated",
             "value": "此曲目"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This Track"
+          }
         }
       }
     },
@@ -4420,6 +6812,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "这将删除您所有的音乐库数据。此操作无法撤销。"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This will delete all your music library data. This action cannot be undone."
           }
         }
       }
@@ -4437,6 +6835,12 @@
             "state": "translated",
             "value": "这将永久删除您所有的库数据，包括文件夹、曲目和播放列表。"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This will permanently delete all your library data including folders, tracks, and playlists."
+          }
         }
       }
     },
@@ -4452,6 +6856,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "这将从您的库中移除“%@”。此操作无法撤销。"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This will remove '%@' from your library. This cannot be undone."
           }
         }
       }
@@ -4469,21 +6879,33 @@
             "state": "translated",
             "value": "这将从您的库中移除全部 %lld 个文件夹。此操作无法撤销。"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This will remove all %lld folders from your library. This cannot be undone."
+          }
         }
       }
     },
     "Title": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titel"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "标题"
           }
         },
-        "de": {
+        "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Titel"
+            "value": "Title"
           }
         }
       }
@@ -4501,6 +6923,12 @@
             "state": "translated",
             "value": "切换重复"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toggle Repeat"
+          }
         }
       }
     },
@@ -4516,6 +6944,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "切换随机"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toggle Shuffle"
           }
         }
       }
@@ -4533,6 +6967,12 @@
             "state": "translated",
             "value": "总时长"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total Duration"
+          }
         }
       }
     },
@@ -4548,6 +6988,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "总存储"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total Storage"
           }
         }
       }
@@ -4565,21 +7011,33 @@
             "state": "translated",
             "value": "曲目信息"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Track Info"
+          }
         }
       }
     },
     "Track Number": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titelnummer"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "曲目编号"
           }
         },
-        "de": {
+        "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Titelnummer"
+            "value": "Track Number"
           }
         }
       }
@@ -4597,6 +7055,12 @@
             "state": "translated",
             "value": "曲目"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tracks"
+          }
         }
       }
     },
@@ -4612,6 +7076,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "透明背景"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transparent Background"
           }
         }
       }
@@ -4629,6 +7099,12 @@
             "state": "translated",
             "value": "尝试不同的搜索词"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try a different search term"
+          }
         }
       }
     },
@@ -4644,6 +7120,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "取消置顶"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unpin"
           }
         }
       }
@@ -4661,6 +7143,34 @@
             "state": "translated",
             "value": "未播放"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unplayed"
+          }
+        }
+      }
+    },
+    "Updated '%@'": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updated '%@'"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "'%@' aktualisiert"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已更新“%@”"
+          }
         }
       }
     },
@@ -4676,6 +7186,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "查看详情"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View Details"
           }
         }
       }
@@ -4693,6 +7209,12 @@
             "state": "translated",
             "value": "查看许可证"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View license"
+          }
         }
       }
     },
@@ -4708,6 +7230,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "在 GitHub 上查看"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View on GitHub"
           }
         }
       }
@@ -4725,6 +7253,12 @@
             "state": "translated",
             "value": "帮助维基"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visit Help Wiki"
+          }
         }
       }
     },
@@ -4740,6 +7274,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "访问项目网站"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visit project website"
           }
         }
       }
@@ -4757,6 +7297,12 @@
             "state": "translated",
             "value": "音量减"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Volume Down"
+          }
         }
       }
     },
@@ -4773,6 +7319,12 @@
             "state": "translated",
             "value": "音量加"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Volume Up"
+          }
         }
       }
     },
@@ -4786,7 +7338,7 @@
         },
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "Watching %1$lld folder%2$@ for changes"
           }
         },
@@ -4811,6 +7363,12 @@
             "state": "translated",
             "value": "网站"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Website"
+          }
         }
       }
     },
@@ -4827,21 +7385,33 @@
             "state": "translated",
             "value": "您想听点什么？"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What do you want to play?"
+          }
         }
       }
     },
     "Year": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jahr"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "年份"
           }
         },
-        "de": {
+        "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Jahr"
+            "value": "Year"
           }
         }
       }
@@ -4859,6 +7429,12 @@
             "state": "translated",
             "value": "黄色"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yellow"
+          }
         }
       }
     },
@@ -4875,6 +7451,12 @@
             "state": "translated",
             "value": "您最喜欢的曲目"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your favorite tracks"
+          }
         }
       }
     },
@@ -4890,6 +7472,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "最常播放的曲目"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your most played tracks"
           }
         }
       }
