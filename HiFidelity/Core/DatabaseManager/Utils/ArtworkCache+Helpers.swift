@@ -56,8 +56,9 @@ extension ArtworkCache {
             }
 
             // Double-check cache
-            if let cachedImage = cache.object(forKey: key) {
-                DispatchQueue.main.async {
+            let cachedImage = cache.object(forKey: key)
+            if cachedImage != nil {
+                DispatchQueue.main.async { [cachedImage] in
                     completion(cachedImage)
                 }
                 return

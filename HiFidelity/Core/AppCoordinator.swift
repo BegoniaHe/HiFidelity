@@ -36,7 +36,7 @@ class AppCoordinator {
         }
 
         // Start queue persistence manager
-        await QueuePersistenceManager.shared.start()
+        QueuePersistenceManager.shared.start()
 
         // Start folder monitoring if enabled
         await startFolderMonitoring()
