@@ -51,7 +51,7 @@ struct ModernPlayerLayout: View {
             ResponsiveMainLayout(
                 showLeftSidebar: $showLeftSidebar,
                 showRightPanel: $showRightPanel,
-                                selectedTab: $selectedTab,
+                selectedTab: $selectedTab,
                 selectedEntity: $selectedEntity,
                 searchText: $searchText,
                 isSearchActive: $isSearchActive,
@@ -153,6 +153,7 @@ struct ModernPlayerLayout: View {
         }
 
     }
+
 }
 
 /// Enum representing the main navigation tabs in the app

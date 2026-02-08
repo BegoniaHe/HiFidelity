@@ -18,6 +18,9 @@ struct ResponsiveMainLayout: View {
 
     var body: some View {
         GeometryReader { geometry in
+            let leftSidebarWidth = calculateSidebarWidth(for: geometry.size)
+            let rightPanelWidth = calculateRightPanelWidth(for: geometry.size)
+
             ZStack {
                 // Main three-panel layout
                 HStack(spacing: 0) {
@@ -27,7 +30,8 @@ struct ResponsiveMainLayout: View {
                             selectedTab: $selectedTab,
                             selectedEntity: $selectedEntity
                         )
-                        .frame(width: calculateSidebarWidth(for: geometry.size))
+                        .frame(width: leftSidebarWidth)
+                        .zIndex(1)
                         .transition(.asymmetric(
                             insertion: .move(edge: .leading).combined(with: .opacity),
                             removal: .move(edge: .leading).combined(with: .opacity)
@@ -43,6 +47,7 @@ struct ResponsiveMainLayout: View {
                         searchText: $searchText,
                         isSearchActive: $isSearchActive
                     )
+                    .zIndex(0)
 
                     // Right: Tabbed Panel (toggleable)
                     if showRightPanel {
@@ -50,7 +55,8 @@ struct ResponsiveMainLayout: View {
                             .transition(.opacity)
 
                         RightPanelView(selectedTab: $rightPanelTab)
-                            .frame(width: calculateRightPanelWidth(for: geometry.size))
+                            .frame(width: rightPanelWidth)
+                            .zIndex(1)
                             .transition(.asymmetric(
                                 insertion: .move(edge: .trailing).combined(with: .opacity),
                                 removal: .move(edge: .trailing).combined(with: .opacity)
@@ -69,6 +75,7 @@ struct ResponsiveMainLayout: View {
                         showLeftSidebar: $showLeftSidebar
                     )
                 }
+                .zIndex(2)
             }
             // Add simultaneous gesture to dismiss focus when clicking anywhere
             // This allows underlying views to still receive their own taps

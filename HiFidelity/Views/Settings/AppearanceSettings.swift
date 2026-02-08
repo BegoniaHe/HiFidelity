@@ -44,17 +44,18 @@ struct AppearanceSettings: View {
                     .font(AppFonts.bodySmall)
                     .foregroundColor(.secondary)
 
-                LazyVGrid(columns: [
-                    GridItem(.adaptive(minimum: 100), spacing: DesignTokens.Spacing.lg)
-                ], spacing: DesignTokens.Spacing.lg) {
-                    ForEach(Theme.allCases) { themeOption in
-                        ThemeCard(
-                            theme: theme,
-                            themeOption: themeOption,
-                            opacity: accentOpacity
-                        )
+                GeometryReader { proxy in
+                    LibraryGrid(availableWidth: proxy.size.width, preset: DesignTokens.Grid.theme) {
+                        ForEach(Theme.allCases) { themeOption in
+                            ThemeCard(
+                                theme: theme,
+                                themeOption: themeOption,
+                                opacity: accentOpacity
+                            )
+                        }
                     }
                 }
+                .frame(minHeight: DesignTokens.Size.Card.themeHeight)
             }
 
             // Accent opacity
@@ -69,7 +70,7 @@ struct AppearanceSettings: View {
                 }
 
                 Slider(value: $accentOpacity, in: 0.5...1.0, step: 0.1)
-                    .accentColor(theme.currentTheme.primaryColor)
+                    .tint(theme.currentTheme.primaryColor)
             }
         }
     }

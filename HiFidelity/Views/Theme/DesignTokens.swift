@@ -248,6 +248,36 @@ struct DesignTokens {
         let y: CGFloat
     }
 
+    struct Grid {
+        struct Preset {
+            let itemWidth: CGFloat
+            let spacing: CGFloat
+            let horizontalPadding: CGFloat
+            let minColumns: Int
+        }
+
+        static let library = Preset(
+            itemWidth: Size.Artwork.xl,
+            spacing: Spacing.xl,
+            horizontalPadding: Spacing.xl,
+            minColumns: 1
+        )
+
+        static let tracks = Preset(
+            itemWidth: Size.Artwork.lg,
+            spacing: Spacing.lg,
+            horizontalPadding: Spacing.lg,
+            minColumns: 1
+        )
+
+        static let theme = Preset(
+            itemWidth: 100,
+            spacing: Spacing.lg,
+            horizontalPadding: 0,
+            minColumns: 2
+        )
+    }
+
     struct Border {
         static let hairline: CGFloat = 0.5
         static let selectedStroke: CGFloat = 3

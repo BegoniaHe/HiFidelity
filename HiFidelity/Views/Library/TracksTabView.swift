@@ -188,19 +188,12 @@ struct TracksTabView: View {
     // MARK: - Grid View
 
     private var trackGridView: some View {
-        ScrollView {
-            LazyVGrid(
-                columns: [
-                    GridItem(.adaptive(minimum: 140, maximum: 180), spacing: DesignTokens.Spacing.lg)
-                ], spacing: DesignTokens.Spacing.lg
-            ) {
-                ForEach(sortedTracks.isEmpty ? tracks : sortedTracks) { track in
-                    TrackGridCard(track: track) {
-                        playTrack(track)
-                    }
+        LibraryGridScrollView(preset: DesignTokens.Grid.tracks) {
+            ForEach(sortedTracks.isEmpty ? tracks : sortedTracks) { track in
+                TrackGridCard(track: track) {
+                    playTrack(track)
                 }
             }
-            .padding(DesignTokens.Spacing.lg)
         }
     }
 

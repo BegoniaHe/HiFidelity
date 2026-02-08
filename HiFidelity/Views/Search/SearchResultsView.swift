@@ -132,69 +132,71 @@ struct SearchResultsView: View {
     // MARK: - Results Content
 
     private var resultsContent: some View {
-        ScrollView {
-            LazyVStack(spacing: DesignTokens.Spacing.xxl, pinnedViews: []) {
-                if selectedCategory == .all || selectedCategory == .tracks {
-                    if !results.tracks.isEmpty {
-                        resultSection(
-                            title: "Tracks",
-                            icon: "music.note",
-                            count: results.tracks.count
-                        ) {
-                            tracksSection
+        GeometryReader { proxy in
+            ScrollView {
+                LazyVStack(spacing: DesignTokens.Spacing.xxl, pinnedViews: []) {
+                    if selectedCategory == .all || selectedCategory == .tracks {
+                        if !results.tracks.isEmpty {
+                            resultSection(
+                                title: "Tracks",
+                                icon: "music.note",
+                                count: results.tracks.count
+                            ) {
+                                tracksSection
+                            }
                         }
                     }
-                }
 
-                if selectedCategory == .all || selectedCategory == .albums {
-                    if !results.albums.isEmpty {
-                        resultSection(
-                            title: "Albums",
-                            icon: "square.stack",
-                            count: results.albums.count
-                        ) {
-                            albumsSection
+                    if selectedCategory == .all || selectedCategory == .albums {
+                        if !results.albums.isEmpty {
+                            resultSection(
+                                title: "Albums",
+                                icon: "square.stack",
+                                count: results.albums.count
+                            ) {
+                                albumsSection(availableWidth: proxy.size.width)
+                            }
                         }
                     }
-                }
 
-                if selectedCategory == .all || selectedCategory == .artists {
-                    if !results.artists.isEmpty {
-                        resultSection(
-                            title: "Artists",
-                            icon: "person.2",
-                            count: results.artists.count
-                        ) {
-                            artistsSection
+                    if selectedCategory == .all || selectedCategory == .artists {
+                        if !results.artists.isEmpty {
+                            resultSection(
+                                title: "Artists",
+                                icon: "person.2",
+                                count: results.artists.count
+                            ) {
+                                artistsSection(availableWidth: proxy.size.width)
+                            }
                         }
                     }
-                }
 
-                if selectedCategory == .all || selectedCategory == .genres {
-                    if !results.genres.isEmpty {
-                        resultSection(
-                            title: "Genres",
-                            icon: "guitars",
-                            count: results.genres.count
-                        ) {
-                            genresSection
+                    if selectedCategory == .all || selectedCategory == .genres {
+                        if !results.genres.isEmpty {
+                            resultSection(
+                                title: "Genres",
+                                icon: "guitars",
+                                count: results.genres.count
+                            ) {
+                                genresSection(availableWidth: proxy.size.width)
+                            }
                         }
                     }
-                }
 
-                if selectedCategory == .all || selectedCategory == .playlists {
-                    if !results.playlists.isEmpty {
-                        resultSection(
-                            title: "Playlists",
-                            icon: "music.note.list",
-                            count: results.playlists.count
-                        ) {
-                            playlistsSection
+                    if selectedCategory == .all || selectedCategory == .playlists {
+                        if !results.playlists.isEmpty {
+                            resultSection(
+                                title: "Playlists",
+                                icon: "music.note.list",
+                                count: results.playlists.count
+                            ) {
+                                playlistsSection(availableWidth: proxy.size.width)
+                            }
                         }
                     }
                 }
+                .padding(DesignTokens.Spacing.xl)
             }
-            .padding(DesignTokens.Spacing.xl)
         }
         .id(selectedCategory)
     }
@@ -247,12 +249,10 @@ struct SearchResultsView: View {
         )
     }
 
-    private var albumsSection: some View {
+    private func albumsSection(availableWidth: CGFloat) -> some View {
         let albumsToShow = selectedCategory == .all ? Array(results.albums.prefix(8)) : results.albums
 
-        return LazyVGrid(columns: [
-            GridItem(.adaptive(minimum: 150, maximum: 200), spacing: DesignTokens.Spacing.lg)
-        ], spacing: DesignTokens.Spacing.lg) {
+        return LibraryGrid(availableWidth: availableWidth, preset: DesignTokens.Grid.library) {
             ForEach(albumsToShow) { album in
                 AlbumCard(album: album) {
                     selectedEntity = .album(album)
@@ -261,12 +261,10 @@ struct SearchResultsView: View {
         }
     }
 
-    private var artistsSection: some View {
+    private func artistsSection(availableWidth: CGFloat) -> some View {
         let artistsToShow = selectedCategory == .all ? Array(results.artists.prefix(8)) : results.artists
 
-        return LazyVGrid(columns: [
-            GridItem(.adaptive(minimum: 150, maximum: 200), spacing: DesignTokens.Spacing.lg)
-        ], spacing: DesignTokens.Spacing.lg) {
+        return LibraryGrid(availableWidth: availableWidth, preset: DesignTokens.Grid.library) {
             ForEach(artistsToShow) { artist in
                 ArtistCard(artist: artist) {
                     selectedEntity = .artist(artist)
@@ -275,12 +273,10 @@ struct SearchResultsView: View {
         }
     }
 
-    private var genresSection: some View {
+    private func genresSection(availableWidth: CGFloat) -> some View {
         let genresToShow = selectedCategory == .all ? Array(results.genres.prefix(8)) : results.genres
 
-        return LazyVGrid(columns: [
-            GridItem(.adaptive(minimum: 150, maximum: 200), spacing: DesignTokens.Spacing.lg)
-        ], spacing: DesignTokens.Spacing.lg) {
+        return LibraryGrid(availableWidth: availableWidth, preset: DesignTokens.Grid.library) {
             ForEach(genresToShow) { genre in
                 GenreCard(genre: genre) {
                     selectedEntity = .genre(genre)
@@ -289,12 +285,10 @@ struct SearchResultsView: View {
         }
     }
 
-    private var playlistsSection: some View {
+    private func playlistsSection(availableWidth: CGFloat) -> some View {
         let playlistsToShow = selectedCategory == .all ? Array(results.playlists.prefix(8)) : results.playlists
 
-        return LazyVGrid(columns: [
-            GridItem(.adaptive(minimum: 150, maximum: 200), spacing: DesignTokens.Spacing.lg)
-        ], spacing: DesignTokens.Spacing.lg) {
+        return LibraryGrid(availableWidth: availableWidth, preset: DesignTokens.Grid.library) {
             ForEach(playlistsToShow) { playlist in
                 PlaylistSearchCard(playlist: playlist) {
                     let playlistItem = PlaylistItem(

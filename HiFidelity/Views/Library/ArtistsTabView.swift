@@ -62,26 +62,19 @@ struct ArtistsTabView: View {
                         message: "No artists match your filter")
                 }
             } else {
-                ScrollView {
-                    LazyVGrid(
-                        columns: [
-                            GridItem(.adaptive(minimum: 160, maximum: 200), spacing: DesignTokens.Spacing.xl)
-                        ], spacing: DesignTokens.Spacing.xl
-                    ) {
-                        ForEach(Array(filteredArtists.enumerated()), id: \.element.id) {
-                            index, artist in
-                            ArtistCard(artist: artist) {
-                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                    selectedEntity = .artist(artist)
-                                }
-                            }
-                            .onAppear {
-                                // Prefetch artwork for upcoming artists
-                                prefetchArtwork(startingAt: index)
+                LibraryGridScrollView(preset: DesignTokens.Grid.library) {
+                    ForEach(Array(filteredArtists.enumerated()), id: \.element.id) {
+                        index, artist in
+                        ArtistCard(artist: artist) {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                selectedEntity = .artist(artist)
                             }
                         }
+                        .onAppear {
+                            // Prefetch artwork for upcoming artists
+                            prefetchArtwork(startingAt: index)
+                        }
                     }
-                    .padding(DesignTokens.Spacing.xl)
                 }
             }
         }
@@ -245,6 +238,7 @@ struct ArtistsTabView: View {
             ArtworkCache.shared.getArtistArtwork(for: artistId, size: 160) { _ in }
         }
     }
+
 }
 
 // MARK: - Artist Options Dropdown

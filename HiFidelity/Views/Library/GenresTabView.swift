@@ -57,19 +57,14 @@ struct GenresTabView: View {
                     emptyStateView(icon: "line.3.horizontal.decrease.circle", message: "No genres match your filter")
                 }
             } else {
-                ScrollView {
-                    LazyVGrid(columns: [
-                        GridItem(.adaptive(minimum: 160, maximum: 200), spacing: DesignTokens.Spacing.xl)
-                    ], spacing: DesignTokens.Spacing.xl) {
-                        ForEach(filteredGenres) { genre in
-                            GenreCard(genre: genre) {
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    selectedEntity = .genre(genre)
-                                }
+                LibraryGridScrollView(preset: DesignTokens.Grid.library) {
+                    ForEach(filteredGenres) { genre in
+                        GenreCard(genre: genre) {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                selectedEntity = .genre(genre)
                             }
                         }
                     }
-                    .padding(DesignTokens.Spacing.xl)
                 }
             }
         }
@@ -204,6 +199,7 @@ struct GenresTabView: View {
 
         filteredGenres = result
     }
+
 }
 
 // MARK: - Genre Options Dropdown

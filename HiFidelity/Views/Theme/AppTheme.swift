@@ -95,7 +95,7 @@ enum Theme: String, CaseIterable, Identifiable {
 /// Extension to easily access theme colors in views
 extension View {
     func themedAccentColor(_ theme: AppTheme) -> some View {
-        self.accentColor(theme.currentTheme.primaryColor)
+        self.tint(theme.currentTheme.primaryColor)
     }
 }
 

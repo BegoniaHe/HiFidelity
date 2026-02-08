@@ -65,26 +65,19 @@ struct AlbumsTabView: View {
                         message: "No albums match your filter")
                 }
             } else {
-                ScrollView {
-                    LazyVGrid(
-                        columns: [
-                            GridItem(.adaptive(minimum: 160, maximum: 200), spacing: DesignTokens.Spacing.xl)
-                        ], spacing: DesignTokens.Spacing.xl
-                    ) {
-                        ForEach(Array(filteredAlbums.enumerated()), id: \.element.id) {
-                            index, album in
-                            AlbumCard(album: album) {
-                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                    selectedEntity = .album(album)
-                                }
-                            }
-                            .onAppear {
-                                // Prefetch artwork for upcoming albums
-                                prefetchArtwork(startingAt: index)
+                LibraryGridScrollView(preset: DesignTokens.Grid.library) {
+                    ForEach(Array(filteredAlbums.enumerated()), id: \.element.id) {
+                        index, album in
+                        AlbumCard(album: album) {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                selectedEntity = .album(album)
                             }
                         }
+                        .onAppear {
+                            // Prefetch artwork for upcoming albums
+                            prefetchArtwork(startingAt: index)
+                        }
                     }
-                    .padding(DesignTokens.Spacing.xl)
                 }
             }
         }
@@ -277,6 +270,7 @@ struct AlbumsTabView: View {
         let albumIds = filteredAlbums[index..<endIndex].compactMap { $0.id }
         ArtworkCache.shared.preloadAlbumArtwork(for: albumIds, size: 160)
     }
+
 }
 
 // MARK: - Album Options Dropdown
