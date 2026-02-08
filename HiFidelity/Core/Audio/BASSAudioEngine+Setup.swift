@@ -280,7 +280,7 @@ extension BASSAudioEngine {
                 BASS_ChannelSetDevice(currentStream, DWORD(newDeviceNumber)) != 0
             Logger.info(
                 streamMovedSuccessfully
-                    ? "Stream moved to new device" : "⚠️ Stream move failed - reload needed")
+                    ? "Stream moved to new device" : "Stream move failed - reload needed")
 
             // If stream was moved successfully and was playing, ensure it continues playing on new device
             if streamMovedSuccessfully && wasPlaying {

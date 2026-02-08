@@ -230,9 +230,9 @@ class PlaybackController {
                 _ = audioEngine.play()
                 isPlaying = true
                 startPositionTimer()
-                Logger.info("✓ Resumed playback on new device at \(savedPosition)s")
+                Logger.info("Resumed playback on new device at \(savedPosition)s")
             } else {
-                Logger.info("✓ Track reloaded on new device - ready to play")
+                Logger.info("Track reloaded on new device - ready to play")
             }
 
             // Update stream info after reload

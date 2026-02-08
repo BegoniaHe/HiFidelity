@@ -174,9 +174,11 @@ struct AdvancedSettings: View {
                 Text("This will delete all your music library data. This action cannot be undone.")
             }
 
-            Text("⚠️ This will permanently delete all your library data including folders, tracks, and playlists.")
-                .font(.caption)
-                .foregroundColor(.secondary)
+            Text(
+                "This will permanently delete all your library data including folders, tracks, and playlists."
+            )
+            .font(.caption)
+            .foregroundColor(.secondary)
         }
     }
 

@@ -444,7 +444,7 @@ extension DACManager {
         if currentDeviceID != 0 && removedDevices.contains(currentDeviceID) {
             if doesDeviceIDExist(currentDeviceID) {
                 Logger.info(
-                    "⚠️ Device \(currentDeviceID) lost output streams but is still attached. Ignoring removal event."
+                    "Device \(currentDeviceID) lost output streams but is still attached. Ignoring removal event."
                 )
                 // Determine if we should pause playback or just wait.
                 // For now, we simply return to prevent the "Device Removed" shutdown logic.
@@ -457,7 +457,7 @@ extension DACManager {
         if (currentDeviceID != 0 && removedDevices.contains(currentDeviceID))
             || (currentDeviceID == 0 && !removedDevices.isEmpty && !previousDeviceIDs.isEmpty) {
             Logger.warning(
-                "⚠️ Current audio device (ID: \(currentDeviceID)) was removed or invalid!")
+                "Current audio device (ID: \(currentDeviceID)) was removed or invalid!")
             handleCurrentDeviceRemoved()
         } else if !removedDevices.isEmpty {
             Logger.debug("Removed devices: \(removedDevices) (not current device)")

@@ -184,14 +184,14 @@ extension BASSAudioEngine {
             Task { @MainActor in
                 if self.dacManager.setDeviceSampleRate(targetRate) {
                     Logger.info(
-                        "✓ Device switched to \(Int(targetRate)) Hz for bit-perfect playback")
+                        "Device switched to \(Int(targetRate)) Hz for bit-perfect playback")
                 } else {
                     Logger.warning("Could not switch device rate - BASS will resample")
                 }
             }
         }
 
-        Logger.info("✓ Gapless transition complete - seamless playback")
+        Logger.info("Gapless transition complete - seamless playback")
         return true
     }
 

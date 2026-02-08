@@ -24,44 +24,44 @@ NC='\033[0m' # No Color
 # Logging functions
 log() { echo -e "✅ $1"; }
 error() { echo -e "❌ $1" >&2; }
-warning() { echo -e "⚠️  $1"; }
+warning() { echo -e "⚠️ $1"; }
 info() { echo -e "ℹ️  $1"; }
 
 # Check required tools
 check_requirements() {
     local missing_tools=()
-    
+
     # Check for Xcode
     if ! command -v xcodebuild >/dev/null 2>&1; then
         missing_tools+=("xcodebuild (Install Xcode from App Store)")
     fi
-    
+
     # Check for git
     if ! command -v git >/dev/null 2>&1; then
         missing_tools+=("git (Install Xcode Command Line Tools)")
     fi
-    
+
     # Check for codesign
     if ! command -v codesign >/dev/null 2>&1; then
         missing_tools+=("codesign (Install Xcode Command Line Tools)")
     fi
-    
+
     # Check for notarytool (if not bypassing)
     if [ "$BYPASS_NOTARY" = false ] && ! command -v xcrun >/dev/null 2>&1; then
         missing_tools+=("xcrun (Install Xcode Command Line Tools)")
     fi
-    
+
     # Check optional tools
     if ! command -v xcpretty >/dev/null 2>&1; then
         warning "xcpretty not found - install with: gem install xcpretty"
         warning "Build output will be verbose without xcpretty"
     fi
-    
+
     if ! command -v create-dmg >/dev/null 2>&1; then
         warning "create-dmg not found - install with: npm install --global create-dmg"
         warning "Using fallback DMG creation method"
     fi
-    
+
     # Exit if required tools are missing
     if [ ${#missing_tools[@]} -gt 0 ]; then
         error "Missing required tools:"
@@ -72,7 +72,7 @@ check_requirements() {
         error "Please install the missing tools and try again."
         exit 1
     fi
-    
+
     # Auto-detect project directory
     if [ -e "$PROJECT" ]; then
         # Already in project root (-e checks if exists, whether file or directory)
@@ -110,7 +110,7 @@ run_build() {
     local log_file="$2"
     local arch="$3"
     shift 3
-    
+
     # Configure signing based on available credentials
     local sign_config=""
     if [ -n "$DEVELOPER_ID" ] && [ "$DEVELOPER_ID" != "-" ]; then
@@ -122,7 +122,7 @@ run_build() {
         # Release: CODE_SIGN_IDENTITY[sdk=macosx*] = "-" with ENABLE_HARDENED_RUNTIME=YES
         sign_config="CODE_SIGN_IDENTITY='-' CODE_SIGN_STYLE=Automatic ENABLE_HARDENED_RUNTIME=YES"
     fi
-    
+
     local cmd="xcodebuild $action \
         -project '$PROJECT' \
         -scheme '$SCHEME' \
@@ -133,7 +133,7 @@ run_build() {
         ARCHS='$arch' \
         ONLY_ACTIVE_ARCH=NO \
         $*"
-    
+
     if [ "$VERBOSE" = false ]; then
         cmd="$cmd -quiet"
         if command -v xcpretty >/dev/null 2>&1; then
@@ -144,7 +144,7 @@ run_build() {
             return $?
         fi
     fi
-    
+
     eval "$cmd" 2>&1 | tee "$log_file"
     return ${PIPESTATUS[0]}
 }
@@ -153,24 +153,24 @@ run_build() {
 notarize() {
     local file="$1"
     local type="$2"
-    
+
     info "Notarizing $type (this may take 5-15 minutes)..."
-    
+
     # Create zip if it's an app
     if [[ "$file" == *.app ]]; then
         local zip_path="${file}.zip"
         ditto -c -k --keepParent "$file" "$zip_path"
         file="$zip_path"
     fi
-    
+
     # Submit for notarization
     if xcrun notarytool submit "$file" --keychain-profile "$NOTARY_PROFILE" --wait; then
         log "$type notarization completed"
-        
+
         # Staple the ticket (use original path for .app)
         local staple_target="${1}"
         xcrun stapler staple "$staple_target"
-        
+
         # Clean up zip if created
         [[ "$file" == *.zip ]] && rm -f "$file"
         return 0
@@ -186,14 +186,14 @@ create_installer() {
     local arch="$1"
     local suffix="$2"
     local display_name="$3"
-    
+
     log "Building $display_name version..."
-    
+
     local archive_path="$BUILD_DIR/$APP_NAME-$suffix.xcarchive"
     local export_path="$BUILD_DIR/export-$suffix"
     local dmg_path="$BUILD_DIR/${APP_NAME}-${VERSION}-$suffix.dmg"
     local error_log="$BUILD_DIR/build-$suffix.log"
-    
+
     # Step 1: Archive
     info "Archiving for $display_name..."
     run_build archive "$error_log" "$arch" \
@@ -201,19 +201,19 @@ create_installer() {
         -destination "platform=macOS" \
         MARKETING_VERSION="$VERSION" \
         CURRENT_PROJECT_VERSION="$BUILD_NUMBER"
-    
+
     if [ ! -d "$archive_path" ]; then
         error "Archive failed for $display_name! Check $error_log for details"
         grep -E "(error:|ERROR:|failed|FAILED)" "$error_log" 2>/dev/null | tail -10
         return 1
     fi
-    
+
     # Step 2: Export based on signing method
     info "Exporting signed app..."
     mkdir -p "$export_path"
-    
+
     local export_log="$BUILD_DIR/export-$suffix.log"
-    
+
     if [ -n "$DEVELOPER_ID" ] && [ "$DEVELOPER_ID" != "-" ]; then
         # Export with Developer ID
         cat > "$BUILD_DIR/exportOptions.plist" <<EOF
@@ -228,7 +228,7 @@ create_installer() {
 </dict>
 </plist>
 EOF
-        
+
         if ! xcodebuild -exportArchive \
             -archivePath "$archive_path" \
             -exportPath "$export_path" \
@@ -241,7 +241,7 @@ EOF
         # Export with development signing (free account)
         # For automatic signing, we can just copy the app from the archive
         info "Using development build (copying from archive)..."
-        
+
         if [ -d "$archive_path/Products/Applications/$APP_NAME.app" ]; then
             cp -R "$archive_path/Products/Applications/$APP_NAME.app" "$export_path/"
             log "App copied from archive successfully"
@@ -252,24 +252,24 @@ EOF
             return 1
         fi
     fi
-    
+
     if [ ! -d "$export_path/$APP_NAME.app" ]; then
         error "Export failed - app not found at: $export_path/$APP_NAME.app"
         error "Export directory contents:"
         ls -la "$export_path/" 2>&1 || echo "Export directory not found"
         return 1
     fi
-    
+
     # Step 3: Notarize app (skip if bypassing)
     if [ "$BYPASS_NOTARY" = false ]; then
         notarize "$export_path/$APP_NAME.app" "app" || return 1
     else
         warning "Skipping app notarization (signed but not notarized)"
     fi
-    
+
     # Step 4: Create DMG
     info "Creating DMG for $display_name..."
-    
+
     # Verify app exists before creating DMG
     if [ ! -d "$export_path/$APP_NAME.app" ]; then
         error "App not found at: $export_path/$APP_NAME.app"
@@ -277,7 +277,7 @@ EOF
         ls -la "$export_path/" 2>&1 || echo "Export path doesn't exist"
         return 1
     fi
-    
+
     if command -v create-dmg >/dev/null 2>&1; then
         # Detect which version of create-dmg we have
         if create-dmg --help 2>&1 | grep -q "sindresorhus"; then
@@ -286,7 +286,7 @@ EOF
             cd "$export_path"
             create-dmg "$APP_NAME.app" ".." 2>&1 | tee "$BUILD_DIR/dmg-$suffix.log" || true
             cd ..
-            
+
             # Find the created DMG and rename it
             local created_dmg=$(ls -t "$BUILD_DIR"/*.dmg 2>/dev/null | grep -v "$dmg_path" | head -1)
             if [ -n "$created_dmg" ]; then
@@ -298,7 +298,7 @@ EOF
             info "Using create-dmg (shell script version)..."
             local dmg_title="$APP_NAME $VERSION"
             [ "$suffix" != "Universal" ] && dmg_title="$APP_NAME $VERSION $suffix"
-            
+
             create-dmg \
                 --volname "$dmg_title" \
                 --window-pos 200 120 \
@@ -307,29 +307,29 @@ EOF
                 --app-drop-link 600 185 \
                 "$dmg_path" \
                 "$export_path/$APP_NAME.app" 2>&1 | tee "$BUILD_DIR/dmg-$suffix.log" || true
-            
+
             [ -f "$dmg_path" ] && log "DMG created with create-dmg (shell script)"
         fi
     fi
-    
+
     # Fallback to hdiutil if DMG doesn't exist yet
     if [ ! -f "$dmg_path" ]; then
         info "Creating DMG with hdiutil..."
         DMG_DIR="$BUILD_DIR/dmg-$suffix"
         mkdir -p "$DMG_DIR"
-        
+
         if [ ! -d "$export_path/$APP_NAME.app" ]; then
             error "Cannot create DMG: App not found at $export_path/$APP_NAME.app"
             return 1
         fi
-        
+
         cp -R "$export_path/$APP_NAME.app" "$DMG_DIR/" || {
             error "Failed to copy app to DMG directory"
             return 1
         }
-        
+
         ln -s /Applications "$DMG_DIR/Applications"
-        
+
         hdiutil create \
             -volname "$APP_NAME $VERSION" \
             -srcfolder "$DMG_DIR" \
@@ -342,14 +342,14 @@ EOF
         rm -rf "$DMG_DIR"
         log "DMG created with hdiutil"
     fi
-    
+
     [ -f "$dmg_path" ] || { error "DMG creation failed!"; return 1; }
-    
+
     # Step 5: Sign DMG if we have Developer ID
     if [ -n "$DEVELOPER_ID" ] && [ "$DEVELOPER_ID" != "-" ]; then
         info "Signing DMG..."
         codesign --force --sign "$DEVELOPER_ID" "$dmg_path"
-        
+
         if [ "$BYPASS_NOTARY" = false ]; then
             notarize "$dmg_path" "DMG" || return 1
         else
@@ -358,13 +358,13 @@ EOF
     else
         warning "DMG not signed (using free developer account)"
     fi
-    
+
     # Generate checksum
     cd "$BUILD_DIR" && shasum -a 256 "$(basename "$dmg_path")" > "$(basename "$dmg_path").sha256" && cd - >/dev/null
-    
+
     # Cleanup
     rm -rf "$archive_path" "$export_path" "$error_log" "$BUILD_DIR/exportOptions.plist"
-    
+
     log "$display_name installer created: $dmg_path"
     return 0
 }
@@ -388,12 +388,12 @@ print_bypass_instructions() {
     if [ -n "$DEVELOPER_ID" ] && [ "$DEVELOPER_ID" != "-" ]; then
         # Instructions for Developer ID signed but not notarized
         echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        echo -e "${YELLOW}⚠️  Signed but Not Notarized - Testing Build${NC}"
+        echo -e "${YELLOW} Signed but Not Notarized - Testing Build${NC}"
         echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
-        
+
         echo -e "This build is signed with your Developer ID but not notarized."
         echo -e "Users will see an 'unidentified developer' warning.\n"
-        
+
         echo -e "${GREEN}To install:${NC}"
         echo -e "  1. Right-click the DMG → Open"
         echo -e "  2. Click 'Open' in the warning dialog"
@@ -403,24 +403,24 @@ print_bypass_instructions() {
     else
         # Instructions for free account development build
         echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        echo -e "${YELLOW}⚠️  Development Build - Free Account${NC}"
+        echo -e "${YELLOW} Development Build - Free Account${NC}"
         echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
-        
+
         echo -e "${RED}IMPORTANT LIMITATIONS:${NC}"
         echo -e "  • This app will ${RED}expire after 7 days${NC}"
         echo -e "  • It may only work on this machine"
         echo -e "  • Cannot be shared with other users\n"
-        
+
         echo -e "${GREEN}To install:${NC}"
         echo -e "  1. Open the DMG"
         echo -e "  2. Drag HiFidelity to Applications"
         echo -e "  3. Open HiFidelity from Applications"
         echo -e "  4. If blocked, go to System Settings → Privacy & Security"
         echo -e "  5. Click 'Open Anyway'\n"
-        
+
         echo -e "${YELLOW}After 7 days:${NC} You'll need to rebuild the app with this script.\n"
     fi
-    
+
     echo -e "${YELLOW}Note:${NC} This build is for testing only, not for distribution to end users.\n"
 }
 
@@ -467,7 +467,7 @@ else
     # Bypass mode - check if we have Developer ID, otherwise use free account
     if [ -z "$TEAM_ID" ] || [ -z "$DEVELOPER_ID" ]; then
         warning "No Developer ID found - will use free Apple Developer account"
-        warning "⚠️  The app will be signed with a development certificate that:"
+        warning " The app will be signed with a development certificate that:"
         warning "   • Expires after 7 days"
         warning "   • May only work on this machine"
         warning "   • Cannot be distributed to other users"
@@ -519,14 +519,14 @@ extract_build_from_project() {
 if [ -z "$VERSION" ]; then
     # Try to get version from Xcode project first
     PROJECT_VERSION=$(extract_version_from_project)
-    
+
     if [ -n "$PROJECT_VERSION" ] && [ "$PROJECT_VERSION" != "" ]; then
         VERSION="$PROJECT_VERSION"
         log "Using version from Xcode project: $VERSION"
     else
         # Fallback to git tags
         LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-        
+
         if [ -n "$LAST_TAG" ]; then
             VERSION="${LAST_TAG#v}"
             log "Using version from git tag: $VERSION"
@@ -604,9 +604,9 @@ for dmg in "$BUILD_DIR"/*.dmg; do
         echo -e "   📋 SHA256: ${GREEN}$(cat "$dmg.sha256" | awk '{print $1}')${NC}"
         if [ "$BYPASS_NOTARY" = true ]; then
             if [ -n "$DEVELOPER_ID" ] && [ "$DEVELOPER_ID" != "-" ]; then
-                echo -e "   ⚠️  ${YELLOW}Signed but not notarized${NC}"
+                echo -e "    ${YELLOW}Signed but not notarized${NC}"
             else
-                echo -e "   ⚠️  ${YELLOW}Development build (expires in 7 days)${NC}"
+                echo -e "    ${YELLOW}Development build (expires in 7 days)${NC}"
             fi
         else
             echo -e "   ✅ Notarized and ready for distribution"
