@@ -26,7 +26,7 @@ struct VolumeControlSection: View {
                 in: 0...1
             )
             .frame(width: DesignTokens.Size.Slider.volumeWidth)
-            .accentColor(theme.currentTheme.primaryColor)
+            .tint(theme.currentTheme.primaryColor)
         }
     }
 
