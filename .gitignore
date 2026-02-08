@@ -116,3 +116,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# BuildServer
+buildServer.json
+
