@@ -44,18 +44,20 @@ struct AppearanceSettings: View {
                     .font(AppFonts.bodySmall)
                     .foregroundColor(.secondary)
 
-                GeometryReader { proxy in
-                    LibraryGrid(availableWidth: proxy.size.width, preset: DesignTokens.Grid.theme) {
-                        ForEach(Theme.allCases) { themeOption in
-                            ThemeCard(
-                                theme: theme,
-                                themeOption: themeOption,
-                                opacity: accentOpacity
-                            )
-                        }
+                LazyVGrid(
+                    columns: [
+                        GridItem(.adaptive(minimum: DesignTokens.Grid.theme.itemWidth), spacing: DesignTokens.Grid.theme.spacing)
+                    ],
+                    spacing: DesignTokens.Grid.theme.spacing
+                ) {
+                    ForEach(Theme.allCases) { themeOption in
+                        ThemeCard(
+                            theme: theme,
+                            themeOption: themeOption,
+                            opacity: accentOpacity
+                        )
                     }
                 }
-                .frame(minHeight: DesignTokens.Size.Card.themeHeight)
             }
 
             // Accent opacity
