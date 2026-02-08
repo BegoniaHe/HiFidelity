@@ -163,17 +163,19 @@ extension BASSAudioEngine {
         ) { [weak self] _ in
             guard let self = self else { return }
 
-            Logger.debug("Audio settings changed - applying updates")
+            MainActor.assumeIsolated {
+                Logger.debug("Audio settings changed - applying updates")
 
-            // Handle sample rate synchronization toggle
-            if self.settings.synchronizeSampleRate && !self.dacManager.isInHogMode() {
-                _ = self.dacManager.enableHogMode()
-            } else if !self.settings.synchronizeSampleRate && self.dacManager.isInHogMode() {
-                self.dacManager.disableHogMode()
+                // Handle sample rate synchronization toggle
+                if self.settings.synchronizeSampleRate && !self.dacManager.isInHogMode() {
+                    _ = self.dacManager.enableHogMode()
+                } else if !self.settings.synchronizeSampleRate && self.dacManager.isInHogMode() {
+                    self.dacManager.disableHogMode()
+                }
+
+                self.applyAudioSettings()
+                self.applyChannelSettings()
             }
-
-            self.applyAudioSettings()
-            self.applyChannelSettings()
         }
 
         // Device needs reacquisition (after hog mode enabled)
@@ -182,7 +184,10 @@ extension BASSAudioEngine {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            self?.reacquireDevice()
+            guard let self = self else { return }
+            MainActor.assumeIsolated {
+                self.reacquireDevice()
+            }
         }
 
         // Device change notifications
@@ -192,10 +197,13 @@ extension BASSAudioEngine {
             queue: .main
         ) { [weak self] notification in
             guard let self = self else { return }
+            let device = notification.object as? AudioOutputDevice
 
-            if let device = notification.object as? AudioOutputDevice {
-                Logger.info("Audio device changed: \(device.name)")
-                self.handleDeviceChange(to: device)
+            MainActor.assumeIsolated {
+                if let device = device {
+                    Logger.info("Audio device changed: \(device.name)")
+                    self.handleDeviceChange(to: device)
+                }
             }
         }
     }
