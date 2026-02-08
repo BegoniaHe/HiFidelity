@@ -66,7 +66,7 @@ struct AdvancedSettings: View {
 
             // Database size and optimize
             HStack {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     Text("Database Size")
                         .font(AppFonts.bodySmall)
                     if let size = databaseManager.getDatabaseSize() {
@@ -102,7 +102,7 @@ struct AdvancedSettings: View {
 
             // FTS rebuild
             HStack {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     Text("Search Index")
                         .font(AppFonts.bodySmall)
                     Text("Rebuild full-text search tables for better results")

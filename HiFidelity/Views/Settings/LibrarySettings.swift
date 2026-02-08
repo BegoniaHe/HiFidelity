@@ -124,7 +124,7 @@ struct LibrarySettings: View {
                     .frame(width: DesignTokens.ControlHeight.xs)
 
                 // Info
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     Text("Importing Music")
                         .font(AppFonts.labelMedium)
                         .foregroundColor(.primary)

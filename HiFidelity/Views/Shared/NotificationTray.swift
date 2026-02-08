@@ -323,7 +323,7 @@ struct NotificationRow: View {
                 .foregroundColor(message.type.color)
                 .frame(width: DesignTokens.Size.Icon.xs)
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(message.title)
                 .font(AppFonts.bodySmall)
                     .foregroundColor(.primary)

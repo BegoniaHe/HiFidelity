@@ -269,7 +269,7 @@ struct AudioSettingsView: View {
         @ViewBuilder control: () -> Content
     ) -> some View {
         HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                 Text(label)
                     .font(AppFonts.labelMedium)
 

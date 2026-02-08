@@ -484,7 +484,7 @@ struct EntityHeader: View {
                     .lineLimit(2)
 
                 // Subtitle and stats
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
 
                     HStack(spacing: 8) {
                         if entity.isPinned {
