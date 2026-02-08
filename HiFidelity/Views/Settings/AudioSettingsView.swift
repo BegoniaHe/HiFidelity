@@ -213,8 +213,8 @@ struct AudioSettingsView: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             // Synchronize Sample Rate
             settingRow(
-                label: "Synchronize Sample Rate with Music Player (Hog mode)",
-                description: "Enable exclusive audio access for bit-perfect playback"
+                label: String(localized: "Synchronize Sample Rate with Music Player (Hog mode)"),
+                description: String(localized: "Enable exclusive audio access for bit-perfect playback")
             ) {
                 Toggle("", isOn: $settings.synchronizeSampleRate)
                     .toggleStyle(.switch)

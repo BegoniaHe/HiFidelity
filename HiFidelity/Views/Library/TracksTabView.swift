@@ -369,6 +369,13 @@ enum TrackFilter: String, CaseIterable {
     case favorites = "Favorites"
     case recentlyAdded = "Recently Added"
     case unplayed = "Unplayed"
+    var displayName: String {
+        switch self {
+        case .favorites: return String(localized: "Favorites")
+        case .recentlyAdded: return String(localized: "Recently Added")
+        case .unplayed: return String(localized: "Unplayed")
+        }
+    }
 }
 
 // MARK: - Track Sort Field
@@ -390,19 +397,19 @@ enum TrackSortField: String, Hashable {
 
     var displayName: String {
         switch self {
-        case .title: return "Title"
-        case .artist: return "Artist"
-        case .album: return "Album"
-        case .genre: return "Genre"
-        case .year: return "Year"
-        case .duration: return "Duration"
-        case .playCount: return "Play Count"
-        case .codec: return "Codec"
-        case .dateAdded: return "Date Added"
-        case .filename: return "Filename"
-        case .trackNumber: return "Track Number"
-        case .discNumber: return "Disc Number"
-        case .playlistOrder: return "Playlist Order"
+        case .title: return String(localized: "Title")
+        case .artist: return String(localized: "Artist")
+        case .album: return String(localized: "Album")
+        case .genre: return String(localized: "Genre")
+        case .year: return String(localized: "Year")
+        case .duration: return String(localized: "Duration")
+        case .playCount: return String(localized: "Play Count")
+        case .codec: return String(localized: "Codec")
+        case .dateAdded: return String(localized: "Date Added")
+        case .filename: return String(localized: "Filename")
+        case .trackNumber: return String(localized: "Track Number")
+        case .discNumber: return String(localized: "Disc Number")
+        case .playlistOrder: return String(localized: "Playlist Order")
         }
     }
 
@@ -574,7 +581,7 @@ struct TrackTableOptionsDropdown: View {
                         selectedFilter = (selectedFilter == filter) ? nil : filter
                     } label: {
                         HStack {
-                            Text(filter.rawValue)
+                            Text(filter.displayName)
                             if selectedFilter == filter {
                                 Image(systemName: "checkmark")
                             }
