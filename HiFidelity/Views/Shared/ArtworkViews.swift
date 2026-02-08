@@ -106,6 +106,7 @@ struct AlbumArtworkView: View {
 
     @State private var artwork: NSImage?
     @State private var loadTask: Task<Void, Never>?
+    @Environment(AppTheme.self) private var theme
 
     init(albumId: Int64, size: CGFloat = 160, cornerRadius: CGFloat = 8) {
         self.albumId = albumId
@@ -139,7 +140,7 @@ struct AlbumArtworkView: View {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .fill(
                     LinearGradient(
-                        colors: [Color.accentColor.opacity(0.6), Color.accentColor],
+                        colors: [theme.currentTheme.primaryColor.opacity(0.6), theme.currentTheme.primaryColor],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
@@ -191,6 +192,7 @@ struct ArtistArtworkView: View {
 
     @State private var artwork: NSImage?
     @State private var loadTask: Task<Void, Never>?
+    @Environment(AppTheme.self) private var theme
 
     init(artistId: Int64, size: CGFloat = 160) {
         self.artistId = artistId
@@ -223,7 +225,7 @@ struct ArtistArtworkView: View {
             Circle()
                 .fill(
                     LinearGradient(
-                        colors: [Color.accentColor.opacity(0.6), Color.accentColor],
+                        colors: [theme.currentTheme.primaryColor.opacity(0.6), theme.currentTheme.primaryColor],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )

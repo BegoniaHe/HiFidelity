@@ -59,7 +59,7 @@ struct AboutMenuView: View {
             } else {
                 Image(systemName: "drop.fill")
                     .font(AppFonts.displayLarge)
-                    .foregroundColor(.accentColor)
+                    .foregroundStyle(.tint)
             }
         }
     }
@@ -209,7 +209,7 @@ struct AboutMenuView: View {
                 Text(title)
                     .font(AppFonts.captionLarge)
             }
-            .foregroundColor(isHovered ? .accentColor : .secondary)
+            .foregroundStyle(isHovered ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
             .underline(isHovered)
             .onHover { hovering in
                 isHovered = hovering

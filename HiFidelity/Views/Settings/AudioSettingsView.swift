@@ -253,7 +253,7 @@ struct AudioSettingsView: View {
             HStack(spacing: DesignTokens.Spacing.sm) {
                 Image(systemName: icon)
                     .font(AppFonts.bodyLarge)
-                    .foregroundColor(.accentColor)
+                    .foregroundStyle(.tint)
 
                 Text(title)
                     .font(AppFonts.heading4)

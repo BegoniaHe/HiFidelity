@@ -136,7 +136,7 @@ struct AudioDeviceSelector: View {
         }
         .buttonStyle(PlainButtonStyle())
         .background(
-            isCurrentDevice(device) ? Color.accentColor.opacity(0.1) : Color.clear
+            isCurrentDevice(device) ? theme.currentTheme.primaryColor.opacity(0.1) : Color.clear
         )
         .onHover { hovering in
             if hovering && !isCurrentDevice(device) {

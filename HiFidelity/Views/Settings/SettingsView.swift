@@ -35,6 +35,7 @@ struct SettingsView: View {
             }
         }
         .frame(width: DesignTokens.Size.Window.settingsWidth, height: DesignTokens.Size.Window.settingsHeight)
+        .themedAccentColor(theme)
         .onReceive(NotificationCenter.default.publisher(for: .openSettings)) { notification in
             if let tab = notification.object as? SettingsTab {
                 selectedTab = tab

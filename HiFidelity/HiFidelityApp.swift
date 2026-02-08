@@ -117,6 +117,7 @@ struct HiFidelityApp: App {
         Window("Equalizer", id: "audio-effects") {
             EqualizerView()
                 .environment(appTheme)
+                .themedAccentColor(appTheme)
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)

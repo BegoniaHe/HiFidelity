@@ -23,9 +23,9 @@ enum NotificationType {
         }
     }
 
-    var color: Color {
+    var color: Color? {
         switch self {
-        case .info: return .accentColor
+        case .info: return nil
         case .warning: return .orange
         case .error: return .red
         }
@@ -320,7 +320,7 @@ struct NotificationRow: View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
             Image(systemName: message.type.icon)
                 .font(AppFonts.labelLarge)
-                .foregroundColor(message.type.color)
+                .foregroundStyle(message.type.color.map(AnyShapeStyle.init) ?? AnyShapeStyle(.tint))
                 .frame(width: DesignTokens.Size.Icon.xs)
 
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
