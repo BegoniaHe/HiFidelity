@@ -125,7 +125,12 @@ struct HiFidelityApp: App {
 
     @CommandsBuilder
     private func appMenuCommands() -> some Commands {
-        CommandGroup(replacing: .appSettings) {}
+        CommandGroup(replacing: .appSettings) {
+            Button("Settings...") {
+                NotificationCenter.default.post(name: .openSettingsWindow, object: SettingsTab.appearance)
+            }
+            .keyboardShortcut(",", modifiers: .command)
+        }
 
         CommandGroup(replacing: .appInfo) {
             Button("About HiFidelity") {

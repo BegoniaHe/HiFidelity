@@ -46,7 +46,7 @@ struct AudioFormat {
         "tta",                         // TTA (True Audio)
 
         // BASS_SPX - Speex extension
-        "spx",                         // Speex 
+        "spx",                         // Speex
 
         // BASSDSD - DSD extension
         "dff", "dsf"                   // DSD (Direct Stream Digital)
@@ -110,5 +110,6 @@ extension Notification.Name {
 
     // Settings
     static let openSettingsAbout = Notification.Name("OpenSettingsAbout")
+    static let openSettingsWindow = Notification.Name("OpenSettingsWindow")
     static let openSettings = Notification.Name("OpenSettings")
 }

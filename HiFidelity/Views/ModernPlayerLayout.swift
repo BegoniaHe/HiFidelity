@@ -89,6 +89,17 @@ struct ModernPlayerLayout: View {
                 )
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .openSettingsWindow)) { notification in
+            // Open settings and optionally switch to a specific tab
+            showSettings = true
+            let tab = (notification.object as? SettingsTab) ?? .appearance
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                NotificationCenter.default.post(
+                    name: .openSettings,
+                    object: tab
+                )
+            }
+        }
         .sheet(isPresented: Binding(
             get: { appCoordinator.showCreatePlaylist },
             set: { appCoordinator.showCreatePlaylist = $0 }
