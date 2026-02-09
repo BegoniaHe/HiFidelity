@@ -27,6 +27,7 @@ struct NSTrackTableView: NSViewRepresentable {
 
     @Environment(TrackInfoManager.self) private var trackInfoManager
     @Environment(AppCoordinator.self) private var appCoordinator
+    @Environment(AppTheme.self) private var theme
     @Bindable var playback = PlaybackController.shared
 
 }
@@ -96,6 +97,14 @@ extension NSTrackTableView {
         context.coordinator.isCurrentTrack = isCurrentTrack
         context.coordinator.playlistContext = playlistContext
         context.coordinator.sortOrder = $sortOrder
+        let selectionColor = NSColor(theme.currentTheme.primaryColor)
+        context.coordinator.selectionColor = selectionColor
+        tableView.enumerateAvailableRowViews { rowView, _ in
+            if let themedRow = rowView as? ThemedTrackRowView {
+                themedRow.selectionColor = selectionColor
+                themedRow.needsDisplay = true
+            }
+        }
 
         // Sync sort descriptors from sortOrder
         context.coordinator.syncSortDescriptors(to: tableView)
@@ -122,7 +131,8 @@ extension NSTrackTableView {
             sortOrder: $sortOrder,
             onPlayTrack: onPlayTrack,
             isCurrentTrack: isCurrentTrack,
-            playlistContext: playlistContext
+            playlistContext: playlistContext,
+            selectionColor: NSColor(theme.currentTheme.primaryColor)
         )
     }
 
@@ -139,6 +149,7 @@ extension NSTrackTableView {
         var onPlayTrack: (Track) -> Void
         var isCurrentTrack: (Track) -> Bool
         var playlistContext: NSTrackTableView.PlaylistContext?
+        var selectionColor: NSColor
 
         weak var tableView: NSTableView?
         private var columnIdentifiers: [ColumnType] = []
@@ -149,7 +160,8 @@ extension NSTrackTableView {
             sortOrder: Binding<[KeyPathComparator<Track>]>,
             onPlayTrack: @escaping (Track) -> Void,
             isCurrentTrack: @escaping (Track) -> Bool,
-            playlistContext: NSTrackTableView.PlaylistContext?
+            playlistContext: NSTrackTableView.PlaylistContext?,
+            selectionColor: NSColor
         ) {
             self.tracks = tracks
             self.selection = selection
@@ -157,6 +169,7 @@ extension NSTrackTableView {
             self.onPlayTrack = onPlayTrack
             self.isCurrentTrack = isCurrentTrack
             self.playlistContext = playlistContext
+            self.selectionColor = selectionColor
 
             super.init()
 
@@ -202,6 +215,12 @@ extension NSTrackTableView.Coordinator {
 
 extension NSTrackTableView.Coordinator {
     // MARK: - NSTableViewDelegate
+
+    func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+        let rowView = ThemedTrackRowView()
+        rowView.selectionColor = selectionColor
+        return rowView
+    }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int)
         -> NSView? {
@@ -255,6 +274,19 @@ extension NSTrackTableView.Coordinator {
         else { return }
 
         updateSortOrder(from: key, ascending: descriptor.ascending)
+    }
+}
+
+// MARK: - Themed Row View
+
+private final class ThemedTrackRowView: NSTableRowView {
+    var selectionColor: NSColor = .controlAccentColor
+
+    override func drawSelection(in dirtyRect: NSRect) {
+        guard selectionHighlightStyle != .none else { return }
+        selectionColor.withAlphaComponent(0.25).setFill()
+        let rect = bounds.insetBy(dx: 2, dy: 1)
+        NSBezierPath(roundedRect: rect, xRadius: 4, yRadius: 4).fill()
     }
 }
 
