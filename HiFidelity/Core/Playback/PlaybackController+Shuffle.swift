@@ -39,7 +39,7 @@ extension PlaybackController {
                 let currentTrackInOriginal: Int
                 if currentQueueIndex >= 0 && currentQueueIndex < queue.count {
                     let currentTrackId = queue[currentQueueIndex].id
-                    currentTrackInOriginal = originalQueue.firstIndex { $0.id == currentTrackId }?? 0
+                    currentTrackInOriginal = originalQueue.firstIndex(where: { $0.id == currentTrackId }) ?? 0
                 } else {
                     currentTrackInOriginal = 0
                 }

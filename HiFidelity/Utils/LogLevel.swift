@@ -185,53 +185,13 @@ final class Logger: @unchecked Sendable {
 
     static func installCrashHandler() {
         // Install exception handler
-        NSSetUncaughtExceptionHandler { exception in
-            Self.critical("UNCAUGHT EXCEPTION: \(exception.name.rawValue)")
-            if let reason = exception.reason {
-                Self.critical("Reason: \(reason)")
-            }
-            Self.critical("Call Stack:\n\(exception.callStackSymbols.joined(separator: "\n"))")
-
-            // Force synchronous write
-            Self.shared.flush()
-
-            // Give a moment for the write to complete
-            Thread.sleep(forTimeInterval: 0.5)
-        }
+        NSSetUncaughtExceptionHandler(handleUncaughtException)
 
         // Install signal handlers for crashes that don't throw exceptions
         let signals = [SIGABRT, SIGILL, SIGSEGV, SIGFPE, SIGBUS, SIGPIPE, SIGTRAP]
 
         for sig in signals {
-            Darwin.signal(sig) { signum in
-                Self.critical("SIGNAL CRASH: Received signal \(signum)")
-
-                // Try to get signal name
-                let signalName: String
-                switch signum {
-                case SIGABRT: signalName = "SIGABRT"
-                case SIGILL: signalName = "SIGILL"
-                case SIGSEGV: signalName = "SIGSEGV"
-                case SIGFPE: signalName = "SIGFPE"
-                case SIGBUS: signalName = "SIGBUS"
-                case SIGPIPE: signalName = "SIGPIPE"
-                case SIGTRAP: signalName = "SIGTRAP"
-                default: signalName = "Unknown"
-                }
-                Self.critical("Signal name: \(signalName)")
-
-                // Try to capture some stack trace
-                let callstack = Thread.callStackSymbols
-                Self.critical("Call Stack:\n\(callstack.joined(separator: "\n"))")
-
-                // Force flush
-                Self.shared.flush()
-                Thread.sleep(forTimeInterval: 0.5)
-
-                // Re-raise the signal to ensure proper termination
-                Darwin.signal(signum, SIG_DFL)
-                raise(signum)
-            }
+            Darwin.signal(sig, handleSignal)
         }
 
         Self.info("Crash handlers installed successfully")
@@ -272,7 +232,7 @@ final class Logger: @unchecked Sendable {
     }
 
     // Force synchronous flush of pending logs
-    private func flush() {
+    fileprivate func flush() {
         logQueue.sync {
             // This ensures all pending async writes are completed
             // The sync call blocks until all previously submitted tasks finish
@@ -301,6 +261,52 @@ final class Logger: @unchecked Sendable {
 
         os_log("%{public}@", log: osLog, type: type, entry.consoleMessage)
     }
+}
+
+// MARK: - Crash Handlers (C-compatible)
+
+private func handleUncaughtException(_ exception: NSException) {
+    Logger.critical("UNCAUGHT EXCEPTION: \(exception.name.rawValue)")
+    if let reason = exception.reason {
+        Logger.critical("Reason: \(reason)")
+    }
+    Logger.critical("Call Stack:\n\(exception.callStackSymbols.joined(separator: "\n"))")
+
+    // Force synchronous write
+    Logger.shared.flush()
+
+    // Give a moment for the write to complete
+    Thread.sleep(forTimeInterval: 0.5)
+}
+
+private func handleSignal(_ signum: Int32) {
+    Logger.critical("SIGNAL CRASH: Received signal \(signum)")
+
+    // Try to get signal name
+    let signalName: String
+    switch signum {
+    case SIGABRT: signalName = "SIGABRT"
+    case SIGILL: signalName = "SIGILL"
+    case SIGSEGV: signalName = "SIGSEGV"
+    case SIGFPE: signalName = "SIGFPE"
+    case SIGBUS: signalName = "SIGBUS"
+    case SIGPIPE: signalName = "SIGPIPE"
+    case SIGTRAP: signalName = "SIGTRAP"
+    default: signalName = "Unknown"
+    }
+    Logger.critical("Signal name: \(signalName)")
+
+    // Try to capture some stack trace
+    let callstack = Thread.callStackSymbols
+    Logger.critical("Call Stack:\n\(callstack.joined(separator: "\n"))")
+
+    // Force flush
+    Logger.shared.flush()
+    Thread.sleep(forTimeInterval: 0.5)
+
+    // Re-raise the signal to ensure proper termination
+    Darwin.signal(signum, SIG_DFL)
+    raise(signum)
 }
 
 // MARK: - Log File Manager

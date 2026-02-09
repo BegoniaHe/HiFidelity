@@ -523,7 +523,7 @@ struct CategoryButton: View {
                 Text(category.title)
                     .font(AppFonts.labelMedium)
 
-                if !isEmpty {
+                if count > 0 {
                     Text("\(count)")
                         .font(AppFonts.labelSmall)
                         .foregroundColor(isSelected ? .white : .secondary)

@@ -37,7 +37,7 @@ final class DatabaseCache {
     private var foldersCache: [Folder]?
     private var folderTracksCache: [Int64: [Track]] = [:] // folderId -> tracks
     private var allTracksCache: [Track]?
-    private var trackCache: [Int64: Track] = [:] // trackId -> track (thread-safe via cacheQueue)
+    private nonisolated(unsafe) var trackCache: [Int64: Track] = [:] // trackId -> track
     private var playlistsCache: [Playlist]?
 
     private var lastFolderRefresh: Date?
