@@ -9,7 +9,6 @@ import Foundation
 
 /// Handler for M3U playlist file format
 struct M3UPlaylistHandler {
-
     // MARK: - Import
 
     /// Import tracks from an M3U playlist file

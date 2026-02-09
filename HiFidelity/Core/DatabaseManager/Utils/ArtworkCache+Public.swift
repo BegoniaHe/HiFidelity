@@ -5,11 +5,10 @@
 //  Created by Varun Rathod on 03/11/25.
 //
 
-import Foundation
 import AppKit
+import Foundation
 
 extension ArtworkCache {
-
     // MARK: - Public API - Async Artwork Loading
 
     /// Get artwork for a track with fallback chain: album → track → nil

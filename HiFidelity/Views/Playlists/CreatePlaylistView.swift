@@ -5,9 +5,9 @@
 //  Created by Varun Rathod on 31/10/25.
 //
 
-import SwiftUI
-import Observation
 import AppKit
+import Observation
+import SwiftUI
 
 /// Modern playlist creation view
 struct CreatePlaylistView: View {
@@ -73,11 +73,9 @@ struct CreatePlaylistView: View {
             Text(importMessage)
         }
     }
-
 }
 
 extension CreatePlaylistView {
-
     // MARK: - Header
 
     private var header: some View {
@@ -217,7 +215,7 @@ extension CreatePlaylistView {
                         LinearGradient(
                             colors: [
                                 theme.currentTheme.primaryColor.opacity(0.6),
-                                theme.currentTheme.primaryColor
+                                theme.currentTheme.primaryColor,
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -277,7 +275,7 @@ extension CreatePlaylistView {
                             RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.sm)
                         .stroke(Color.secondary.opacity(0.2), lineWidth: DesignTokens.Spacing.hairline)
                     )
-            }
+                }
         }
     }
 

@@ -34,13 +34,13 @@ struct ArtistsTabView: View {
     private let sortOptions = [
         SortOption(id: "name", title: "Name", type: .alphabetical, ascending: true),
         SortOption(id: "albums", title: "Album Count", type: .albumCount, ascending: false),
-        SortOption(id: "tracks", title: "Track Count", type: .trackCount, ascending: false)
+        SortOption(id: "tracks", title: "Track Count", type: .trackCount, ascending: false),
     ]
 
     private let filterOptions = [
         FilterOption(id: "10plus", title: "10+ Tracks", predicate: "trackCount >= 10"),
         FilterOption(id: "5plus", title: "5+ Tracks", predicate: "trackCount >= 5"),
-        FilterOption(id: "multialbum", title: "Multiple Albums", predicate: "albumCount > 1")
+        FilterOption(id: "multialbum", title: "Multiple Albums", predicate: "albumCount > 1"),
     ]
 
     var body: some View {
@@ -159,7 +159,6 @@ struct ArtistsTabView: View {
                 filterOptions: filterOptions
             )
             .frame(width: DesignTokens.ControlHeight.sm)
-
         }
         .padding(.horizontal, DesignTokens.Spacing.xl)
         .padding(.vertical, DesignTokens.Spacing.md)
@@ -196,10 +195,13 @@ struct ArtistsTabView: View {
             switch filter.id {
             case "10plus":
                 result = result.filter { $0.trackCount >= 10 }
+
             case "5plus":
                 result = result.filter { $0.trackCount >= 5 }
+
             case "multialbum":
                 result = result.filter { $0.albumCount > 1 }
+
             default:
                 break
             }
@@ -209,10 +211,13 @@ struct ArtistsTabView: View {
         switch selectedSort.type {
         case .alphabetical:
             result.sort { $0.name.localizedCompare($1.name) == .orderedAscending }
+
         case .albumCount:
             result.sort { $0.albumCount > $1.albumCount }
+
         case .trackCount:
             result.sort { $0.trackCount > $1.trackCount }
+
         default:
             break
         }
@@ -238,7 +243,6 @@ struct ArtistsTabView: View {
             ArtworkCache.shared.getArtistArtwork(for: artistId, size: 160) { _ in }
         }
     }
-
 }
 
 // MARK: - Artist Options Dropdown

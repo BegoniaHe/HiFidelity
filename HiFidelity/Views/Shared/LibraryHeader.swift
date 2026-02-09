@@ -166,12 +166,12 @@ struct FilterOption: Identifiable, Equatable {
         let sortOptions = [
             SortOption(id: "name", title: "Name", type: .alphabetical, ascending: true),
             SortOption(id: "recent", title: "Recently Added", type: .dateAdded, ascending: false),
-            SortOption(id: "tracks", title: "Track Count", type: .trackCount, ascending: false)
+            SortOption(id: "tracks", title: "Track Count", type: .trackCount, ascending: false),
         ]
 
         let filterOptions = [
             FilterOption(id: "2020s", title: "2020s", predicate: "year >= 2020"),
-            FilterOption(id: "2010s", title: "2010s", predicate: "year >= 2010 AND year < 2020")
+            FilterOption(id: "2010s", title: "2010s", predicate: "year >= 2010 AND year < 2020"),
         ]
 
         var body: some View {

@@ -28,7 +28,6 @@ struct AppearanceSettings: View {
                 .buttonStyle(.bordered)
             }
             .padding(.top, DesignTokens.Spacing.sm)
-
         }
     }
 

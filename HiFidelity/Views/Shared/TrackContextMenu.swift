@@ -5,9 +5,9 @@
 //  Context menu for track operations
 //
 
-import SwiftUI
 import AppKit
 import Observation
+import SwiftUI
 
 // MARK: - Track Context Menu
 

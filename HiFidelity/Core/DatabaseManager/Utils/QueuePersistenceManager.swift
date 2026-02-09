@@ -103,7 +103,6 @@ final class QueuePersistenceManager {
 
             lastSaveDate = Date()
             hasUnsavedChanges = false
-
         } catch {
             Logger.error("Failed to load queue: \(error)")
             lastError = error
@@ -145,7 +144,6 @@ final class QueuePersistenceManager {
             hasUnsavedChanges = false
 
             Logger.debug("Queue saved successfully")
-
         } catch {
             Logger.error("Failed to save queue: \(error)")
             lastError = error

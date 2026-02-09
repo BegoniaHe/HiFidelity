@@ -9,7 +9,6 @@ import Foundation
 import GRDB
 
 extension ArtworkCache {
-
     // MARK: - Private Database Loading
 
     /// Load artwork data from database with appropriate fallback
@@ -23,8 +22,10 @@ extension ArtworkCache {
             switch entityType {
             case .track:
                 data = try loadTrackArtworkWithFallback(trackId: entityId)?.data
+
             case .album:
                 data = try loadAlbumArtworkWithFallback(albumId: entityId)
+
             case .artist:
                 data = try loadArtistArtworkWithFallback(artistId: entityId)
             }

@@ -5,8 +5,8 @@
 //  Generic detail view for Albums, Artists, Genres, and Playlists
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Generic entity detail view showing tracks
 struct EntityDetailView: View {
@@ -59,11 +59,10 @@ struct EntityDetailView: View {
             return nil
         }
         return NSTrackTableView.PlaylistContext(
-            playlist: playlist,
-            onRemove: {
+            playlist: playlist
+        ) {
                 Task { await loadTracks() }
-            }
-        )
+        }
     }
 
     var body: some View {
@@ -219,12 +218,14 @@ struct EntityDetailView: View {
             switch filter {
             case .favorites:
                 filteredTracks = tracks.filter { $0.isFavorite }
+
             case .recentlyAdded:
                 let thirtyDaysAgo = Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
                 filteredTracks = tracks.filter {
                     guard let dateAdded = $0.dateAdded else { return false }
                     return dateAdded >= thirtyDaysAgo
                 }
+
             case .unplayed:
                 filteredTracks = tracks.filter { $0.playCount == 0 }
             }
@@ -284,7 +285,7 @@ struct EntityDetailView: View {
             "filename": .filename,
             "trackNumber": .trackNumber,
             "discNumber": .discNumber,
-            "playlistPosition": .playlistOrder
+            "playlistPosition": .playlistOrder,
         ]
 
         for (key, field) in sortKeyMap {
@@ -339,6 +340,7 @@ enum EntityType: Identifiable, Hashable {
         case .album(let album): return album.year
         case .artist: return nil
         case .genre: return nil
+
         case .playlist(let playlist):
             if case .smart(let smartType) = playlist.type {
                 return smartType.description
@@ -361,6 +363,7 @@ enum EntityType: Identifiable, Hashable {
         case .album(let album): return album.id
         case .artist(let artist): return artist.id
         case .genre(let genre): return genre.id
+
         case .playlist(let playlist):
             if case .user(let playlistEntry) = playlist.type {
                 return playlistEntry.id
@@ -379,6 +382,7 @@ enum EntityType: Identifiable, Hashable {
     var colorScheme: String? {
         switch self {
         case .album, .artist, .genre: return nil
+
         case .playlist(let playlist):
             if case .user(let playlistEntry) = playlist.type {
                 return playlistEntry.colorScheme
@@ -392,6 +396,7 @@ enum EntityType: Identifiable, Hashable {
         case .album: return "ALBUM"
         case .artist: return "ARTIST"
         case .genre: return "GENRE"
+
         case .playlist(let playlist):
             if case .smart = playlist.type {
                 return "SMART PLAYLIST"
@@ -405,6 +410,7 @@ enum EntityType: Identifiable, Hashable {
         case .album: return "square.stack"
         case .artist: return "person.2"
         case .genre: return "guitars"
+
         case .playlist(let playlist):
             if case .smart(let smartType) = playlist.type {
                 return smartType.icon
@@ -437,8 +443,10 @@ enum EntityType: Identifiable, Hashable {
                 switch smartType {
                 case .favorites:
                     return try await database.getFavoriteTracks()
+
                 case .topPlayed:
                     return try await database.getTopPlayedTracks(limit: 25)
+
                 case .recentlyPlayed:
                     return try await database.getRecentlyPlayedTracks(limit: 25)
                 }
@@ -485,7 +493,6 @@ struct EntityHeader: View {
 
                 // Subtitle and stats
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-
                     HStack(spacing: 8) {
                         if entity.isPinned {
                             Image(systemName: "pin.fill")
@@ -631,7 +638,7 @@ struct EntityHeader: View {
         LinearGradient(
             colors: [
                 theme.currentTheme.primaryColor.opacity(0.8),
-                theme.currentTheme.primaryColor.opacity(0.5)
+                theme.currentTheme.primaryColor.opacity(0.5),
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
@@ -642,7 +649,7 @@ struct EntityHeader: View {
         LinearGradient(
             colors: [
                 theme.currentTheme.primaryColor.opacity(0.15),
-                Color(nsColor: .windowBackgroundColor)
+                Color(nsColor: .windowBackgroundColor),
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing

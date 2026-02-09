@@ -55,6 +55,7 @@ class SecurityScopedBookmarkManager {
                         staleCount += 1
                         foldersNeedingRefresh.append(folder)
                     }
+
                 case .failure:
                     failureCount += 1
                 }
@@ -70,7 +71,6 @@ class SecurityScopedBookmarkManager {
                 if !foldersNeedingRefresh.isEmpty {
                     await refreshStaleBookmarks()
                 }
-
             } catch {
                 Logger.error("Failed to load folders for bookmark resolution: \(error)")
             }
@@ -113,7 +113,6 @@ class SecurityScopedBookmarkManager {
                 Logger.error("Could not start accessing: \(folder.name)")
                 return .failure(NSError(domain: "SecurityScope", code: 1))
             }
-
         } catch {
             Logger.error("Failed to resolve bookmark for \(folder.name): \(error)")
             return await attemptDirectAccess(folder)
@@ -178,7 +177,6 @@ class SecurityScopedBookmarkManager {
             }
 
             Logger.info("Refreshed bookmark for: \(folder.name)")
-
         } catch {
             Logger.error("Failed to refresh bookmark for \(folder.name): \(error)")
         }
@@ -218,7 +216,6 @@ class SecurityScopedBookmarkManager {
 
             accessedFolders.removeAll()
             Logger.info("Released all security-scoped resources")
-
         } catch {
             Logger.error("Error stopping folder access: \(error)")
         }

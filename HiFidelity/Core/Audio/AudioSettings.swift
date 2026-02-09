@@ -86,5 +86,4 @@ class AudioSettings {
 
         Logger.info("Audio settings reset to defaults")
     }
-
 }

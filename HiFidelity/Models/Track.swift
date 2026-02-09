@@ -168,7 +168,7 @@ struct Track: Identifiable, Equatable, Hashable, FetchableRecord, MutablePersist
         "album_artist": Columns.albumArtist,
         "composer": Columns.composer,
         "genre": Columns.genre,
-        "year": Columns.year
+        "year": Columns.year,
     ]
 
     // MARK: - FetchableRecord
@@ -341,23 +341,23 @@ struct Track: Identifiable, Equatable, Hashable, FetchableRecord, MutablePersist
     // Folder relationship
     static let folder = belongsTo(Folder.self)
     var folder: QueryInterfaceRequest<Folder> {
-        request(for: Track.folder)
+        request(for: Self.folder)
     }
 
-    // Normalized entity relationships 
+    // Normalized entity relationships
     static let albumEntity = belongsTo(Album.self, key: "album")
     var albumEntity: QueryInterfaceRequest<Album> {
-        request(for: Track.albumEntity)
+        request(for: Self.albumEntity)
     }
 
     static let artistEntity = belongsTo(Artist.self, key: "artist")
     var artistEntity: QueryInterfaceRequest<Artist> {
-        request(for: Track.artistEntity)
+        request(for: Self.artistEntity)
     }
 
     static let genreEntity = belongsTo(Genre.self, key: "genre")
     var genreEntity: QueryInterfaceRequest<Genre> {
-        request(for: Track.genreEntity)
+        request(for: Self.genreEntity)
     }
 
     // Playlist relationship (many-to-many through junction table)
@@ -366,7 +366,7 @@ struct Track: Identifiable, Equatable, Hashable, FetchableRecord, MutablePersist
 
     // MARK: - Equatable
 
-    static func == (lhs: Track, rhs: Track) -> Bool {
+    static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id
     }
 
@@ -375,7 +375,6 @@ struct Track: Identifiable, Equatable, Hashable, FetchableRecord, MutablePersist
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-
 }
 
 // MARK: - Helper Methods
@@ -473,7 +472,7 @@ extension Track {
             Columns.codec,
             Columns.albumId,
             Columns.artistId,
-            Columns.r128IntegratedLoudness
+            Columns.r128IntegratedLoudness,
         ]
     }
 

@@ -7,7 +7,6 @@
 import Foundation
 
 struct MetadataManagement {
-
     static func applyMetadataToTrack(_ track: inout Track, from metadata: TrackMetadata, at fileURL: URL) {
         // Core fields
         track.title = metadata.title ?? fileURL.deletingPathExtension().lastPathComponent
@@ -56,5 +55,4 @@ struct MetadataManagement {
         // Extended metadata
         track.extendedMetadata = metadata.extended
     }
-
 }

@@ -4,9 +4,9 @@
 //  Helpers and import/export for LyricsPanel
 //
 
+import AppKit
 import SwiftUI
 import UniformTypeIdentifiers
-import AppKit
 
 extension LyricsPanel {
     // MARK: - Drag Overlay
@@ -140,7 +140,7 @@ extension LyricsPanel {
 
         // Check if provider has file URL
         if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
-            provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { (urlData, error) in
+            provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { urlData, error in
                 if let error = error {
                     Logger.error("Failed to load dropped item: \(error)")
                     return
@@ -148,7 +148,6 @@ extension LyricsPanel {
 
                 if let urlData = urlData as? Data,
                    let url = URL(dataRepresentation: urlData, relativeTo: nil) {
-
                     // Check if it's an LRC file
                     guard url.pathExtension.lowercased() == "lrc" else {
                         Logger.warning("Dropped file is not an LRC file: \(url.lastPathComponent)")

@@ -335,58 +335,73 @@ struct GenreCard: View {
         switch genreName {
         case let name where name.contains("rock"):
             return [Color(red: 0.8, green: 0.2, blue: 0.2), Color(red: 0.5, green: 0.1, blue: 0.1)]
+
         case let name where name.contains("jazz"):
             return [
                 Color(red: 0.2, green: 0.3, blue: 0.6), Color(red: 0.1, green: 0.15, blue: 0.35)
             ]
+
         case let name where name.contains("classical"):
             return [
                 Color(red: 0.5, green: 0.3, blue: 0.6), Color(red: 0.3, green: 0.15, blue: 0.4)
             ]
+
         case let name
         where name.contains("electronic") || name.contains("edm") || name.contains("techno"):
             return [Color(red: 0.0, green: 0.7, blue: 0.9), Color(red: 0.0, green: 0.4, blue: 0.6)]
+
         case let name where name.contains("pop"):
             return [
                 Color(red: 0.9, green: 0.3, blue: 0.6), Color(red: 0.6, green: 0.15, blue: 0.4)
             ]
+
         case let name where name.contains("hip hop") || name.contains("rap"):
             return [
                 Color(red: 0.3, green: 0.25, blue: 0.3), Color(red: 0.15, green: 0.12, blue: 0.15)
             ]
+
         case let name where name.contains("metal"):
             return [
                 Color(red: 0.2, green: 0.2, blue: 0.2), Color(red: 0.05, green: 0.05, blue: 0.05)
             ]
+
         case let name where name.contains("country"):
             return [Color(red: 0.7, green: 0.5, blue: 0.2), Color(red: 0.5, green: 0.3, blue: 0.1)]
+
         case let name where name.contains("blues"):
             return [
                 Color(red: 0.1, green: 0.3, blue: 0.5), Color(red: 0.05, green: 0.15, blue: 0.3)
             ]
+
         case let name where name.contains("reggae"):
             return [Color(red: 0.0, green: 0.6, blue: 0.3), Color(red: 0.0, green: 0.4, blue: 0.2)]
+
         case let name where name.contains("folk"):
             return [Color(red: 0.5, green: 0.6, blue: 0.3), Color(red: 0.3, green: 0.4, blue: 0.2)]
+
         case let name where name.contains("r&b") || name.contains("soul"):
             return [
                 Color(red: 0.6, green: 0.2, blue: 0.4), Color(red: 0.4, green: 0.1, blue: 0.25)
             ]
+
         case let name where name.contains("indie"):
             return [Color(red: 0.4, green: 0.5, blue: 0.6), Color(red: 0.2, green: 0.3, blue: 0.4)]
+
         case let name where name.contains("ambient") || name.contains("chill"):
             return [
                 Color(red: 0.3, green: 0.5, blue: 0.6), Color(red: 0.15, green: 0.3, blue: 0.4)
             ]
+
         case let name where name.contains("latin"):
             return [Color(red: 0.9, green: 0.4, blue: 0.2), Color(red: 0.6, green: 0.2, blue: 0.1)]
+
         default:
             // Generate colors based on hash of genre name for consistency
             let hash = abs(genre.name.hashValue)
             let hue = Double(hash % 360) / 360.0
             return [
                 Color(hue: hue, saturation: 0.6, brightness: 0.7),
-                Color(hue: hue, saturation: 0.7, brightness: 0.4)
+                Color(hue: hue, saturation: 0.7, brightness: 0.4),
             ]
         }
     }
@@ -398,35 +413,50 @@ struct GenreCard: View {
         switch genreName {
         case let name where name.contains("rock"):
             return "bolt.fill"
+
         case let name where name.contains("jazz"):
             return "music.note"
+
         case let name where name.contains("classical"):
             return "music.quarternote.3"
+
         case let name
         where name.contains("electronic") || name.contains("edm") || name.contains("techno"):
             return "waveform"
+
         case let name where name.contains("pop"):
             return "sparkles"
+
         case let name where name.contains("hip hop") || name.contains("rap"):
             return "mic.fill"
+
         case let name where name.contains("metal"):
             return "flame.fill"
+
         case let name where name.contains("country"):
             return "guitars.fill"
+
         case let name where name.contains("blues"):
             return "music.note.list"
+
         case let name where name.contains("reggae"):
             return "waveform.path.ecg"
+
         case let name where name.contains("folk"):
             return "leaf.fill"
+
         case let name where name.contains("r&b") || name.contains("soul"):
             return "heart.fill"
+
         case let name where name.contains("indie"):
             return "paintbrush.fill"
+
         case let name where name.contains("ambient") || name.contains("chill"):
             return "cloud.fill"
+
         case let name where name.contains("latin"):
             return "hifispeaker.fill"
+
         default:
             return "music.note"
         }

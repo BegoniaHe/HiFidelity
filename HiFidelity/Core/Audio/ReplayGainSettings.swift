@@ -142,6 +142,7 @@ class ReplayGainSettings {
         switch mode {
         case .track:
             gainString = track.extendedMetadata?.replayGainTrack
+
         case .album:
             // Prefer album gain, fall back to track gain
             gainString = track.extendedMetadata?.replayGainAlbum ?? track.extendedMetadata?.replayGainTrack
@@ -204,6 +205,7 @@ enum ReplayGainMode: String, CaseIterable {
         switch self {
         case .track:
             return "Track Gain"
+
         case .album:
             return "Album Gain"
         }
@@ -213,6 +215,7 @@ enum ReplayGainMode: String, CaseIterable {
         switch self {
         case .track:
             return "Normalize each track individually"
+
         case .album:
             return "Preserve album dynamics"
         }
@@ -230,8 +233,10 @@ enum LoudnessSource: String, CaseIterable {
         switch self {
         case .automatic:
             return "Automatic (Prefer R128)"
+
         case .r128Only:
             return "R128 Only"
+
         case .replayGainOnly:
             return "ReplayGain Tags Only"
         }
@@ -241,8 +246,10 @@ enum LoudnessSource: String, CaseIterable {
         switch self {
         case .automatic:
             return "Use R128 if available, fall back to ReplayGain tags"
+
         case .r128Only:
             return "Only use R128 loudness analysis"
+
         case .replayGainOnly:
             return "Only use ReplayGain tags from metadata"
         }

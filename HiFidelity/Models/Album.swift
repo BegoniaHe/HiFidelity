@@ -100,7 +100,7 @@ struct Album: Identifiable, Hashable, Codable, FetchableRecord, MutablePersistab
 
     static let tracks = hasMany(Track.self)
     var tracks: QueryInterfaceRequest<Track> {
-        request(for: Album.tracks)
+        request(for: Self.tracks)
     }
 
     // Auto-increment id

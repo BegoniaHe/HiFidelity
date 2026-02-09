@@ -104,14 +104,13 @@ class FolderWatcherService {
         )
 
         let pathsToWatch = [path] as CFArray
-        let callback: FSEventStreamCallback = { (
+        let callback: FSEventStreamCallback = {
             _,
             clientCallBackInfo,
             numEvents,
             eventPaths,
             eventFlags,
-            _
-        ) in
+            _ in
             guard let info = clientCallBackInfo else { return }
             let watcher = Unmanaged<FolderWatcherService>.fromOpaque(info).takeUnretainedValue()
 

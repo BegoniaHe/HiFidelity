@@ -123,7 +123,6 @@ class PathRecoveryManager {
             recoveredPaths[track.url.path] = newURL.path
 
             Logger.info("Updated track path in database: \(track.filename)")
-
         } catch {
             Logger.error("Failed to update track path: \(error)")
         }

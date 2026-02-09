@@ -281,6 +281,7 @@ struct TracksTabView: View {
             switch filter {
             case .favorites:
                 filteredTracks = tracks.filter { $0.isFavorite }
+
             case .recentlyAdded:
                 let thirtyDaysAgo =
                     Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
@@ -288,6 +289,7 @@ struct TracksTabView: View {
                     guard let dateAdded = $0.dateAdded else { return false }
                     return dateAdded >= thirtyDaysAgo
                 }
+
             case .unplayed:
                 filteredTracks = tracks.filter { $0.playCount == 0 }
             }
@@ -336,7 +338,7 @@ struct TracksTabView: View {
             "filename": .filename,
             "trackNumber": .trackNumber,
             "discNumber": .discNumber,
-            "playlistPosition": .playlistOrder
+            "playlistPosition": .playlistOrder,
         ]
 
         for (key, field) in sortKeyMap {
@@ -406,17 +408,17 @@ enum TrackSortField: String, Hashable {
         }
     }
 
-    static var regularFields: [TrackSortField] {
+    static var regularFields: [Self] {
         [
             .title, .artist, .album, .genre, .year, .duration, .playCount, .codec, .dateAdded,
-            .filename, .trackNumber, .discNumber, .playlistOrder
+            .filename, .trackNumber, .discNumber, .playlistOrder,
         ]
     }
 
-    static var allFields: [TrackSortField] {
+    static var allFields: [Self] {
         [
             .title, .artist, .album, .genre, .year, .duration, .playCount, .codec, .dateAdded,
-            .filename, .trackNumber, .discNumber, .playlistOrder
+            .filename, .trackNumber, .discNumber, .playlistOrder,
         ]
     }
 
@@ -426,28 +428,40 @@ enum TrackSortField: String, Hashable {
         switch self {
         case .title:
             return KeyPathComparator(\Track.title, order: order)
+
         case .artist:
             return KeyPathComparator(\Track.artist, order: order)
+
         case .album:
             return KeyPathComparator(\Track.album, order: order)
+
         case .genre:
             return KeyPathComparator(\Track.genre, order: order)
+
         case .year:
             return KeyPathComparator(\Track.year, order: order)
+
         case .duration:
             return KeyPathComparator(\Track.duration, order: order)
+
         case .playCount:
             return KeyPathComparator(\Track.playCount, order: order)
+
         case .codec:
             return KeyPathComparator(\Track.codec, order: order)
+
         case .dateAdded:
             return KeyPathComparator(\Track.dateAdded, order: order)
+
         case .filename:
             return KeyPathComparator(\Track.filename, order: order)
+
         case .trackNumber:
             return KeyPathComparator(\Track.trackNumber, order: order)
+
         case .discNumber:
             return KeyPathComparator(\Track.discNumber, order: order)
+
         case .playlistOrder:
             return KeyPathComparator(\Track.playlistPosition, order: order)
         }
@@ -461,14 +475,16 @@ enum TrackSortField: String, Hashable {
             // Sort by disc first, then track number
             return [
                 KeyPathComparator(\Track.discNumber, order: order),
-                KeyPathComparator(\Track.trackNumber, order: order)
+                KeyPathComparator(\Track.trackNumber, order: order),
             ]
+
         case .discNumber:
             // Sort by disc first, then track number
             return [
                 KeyPathComparator(\Track.discNumber, order: order),
-                KeyPathComparator(\Track.trackNumber, order: order)
+                KeyPathComparator(\Track.trackNumber, order: order),
             ]
+
         default:
             // All other fields use single comparator
             return [getComparator(ascending: ascending)]
@@ -506,7 +522,7 @@ struct TrackTableOptionsDropdown: View {
             "filename": .filename,
             "trackNumber": .trackNumber,
             "discNumber": .discNumber,
-            "playlistPosition": .playlistOrder
+            "playlistPosition": .playlistOrder,
         ]
 
         for (key, field) in sortKeyMap {

@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 31/10/25.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Queue panel showing upcoming tracks
 struct QueuePanel: View {
@@ -111,7 +111,6 @@ struct QueuePanel: View {
                 }
                 .buttonStyle(.plain)
                 .contentShape(Rectangle())
-
             }
             .frame(width: DesignTokens.Size.Artwork.sm, height: DesignTokens.Size.Artwork.sm)
 
@@ -154,7 +153,6 @@ struct QueuePanel: View {
                 TrackContextMenuBuilder.showTrackInfo(track)
             }
         }
-
     }
 
     // MARK: - Queue List
@@ -322,7 +320,7 @@ struct QueuePanel: View {
                     .frame(width: DesignTokens.ControlHeight.xs, height: DesignTokens.ControlHeight.xs)
                     .contentShape(Rectangle())
                     .scaleEffect(isHovered ? 1.1 : 1.0)
-            }
+                }
             .buttonStyle(.plain)
             .onHover { hovering in
                 withAnimation(.easeInOut(duration: 0.15)) {

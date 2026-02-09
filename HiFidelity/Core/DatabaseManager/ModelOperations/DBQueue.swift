@@ -9,7 +9,6 @@ import Foundation
 import GRDB
 
 extension DatabaseManager {
-
     // MARK: - Save Queue
 
     /// Save the current playback queue to database

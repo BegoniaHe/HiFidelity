@@ -4,23 +4,26 @@
 //  Created by Varun Rathod on 23/10/25.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
 extension MetadataManagement {
-
     static func processCommonKey(_ commonKey: AVMetadataKey?, value: String, into metadata: inout TrackMetadata) {
         guard let commonKey = commonKey else { return }
 
         switch commonKey {
         case .commonKeyTitle where metadata.title == nil:
             metadata.title = value
+
         case .commonKeyArtist where metadata.artist == nil:
             metadata.artist = value
+
         case .commonKeyAlbumName where metadata.album == nil:
             metadata.album = value
+
         case .commonKeyCreator where metadata.composer == nil:
             metadata.composer = value
+
         default:
             break
         }
@@ -149,5 +152,4 @@ extension MetadataManagement {
             parseITunesTag(keyString, value, into: &metadata)
         }
     }
-
 }

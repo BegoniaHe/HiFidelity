@@ -5,10 +5,10 @@
 //  Created by Varun Rathod on 22/12/25.
 //
 
-import Foundation
-import Observation
 import Bass
+import Foundation
 import GRDB
+import Observation
 
 /// Service for scanning audio files and calculating EBU R128 loudness
 /// This analyzes tracks to determine their integrated loudness (LUFS)

@@ -529,7 +529,6 @@ struct FolderRow: View {
 
             // Status (right column)
             HStack(spacing: DesignTokens.Spacing.sm) {
-
                 // Action buttons (shown on hover)
                 HStack(spacing: DesignTokens.Spacing.xs) {
                     // Relocate button
@@ -595,7 +594,6 @@ struct FolderRow: View {
                 }
                 .transition(.scale.combined(with: .opacity))
             }
-
         }
         .padding(.horizontal, DesignTokens.Spacing.lg)
         .padding(.vertical, DesignTokens.Spacing.md)

@@ -5,11 +5,10 @@
 //  Created by Varun Rathod on 03/11/25.
 //
 
-import Foundation
 import AppKit
+import Foundation
 
 extension ArtworkCache {
-
     // MARK: - Private Image Processing
 
     /// Downsample image to target size for memory efficiency
@@ -43,7 +42,7 @@ extension ArtworkCache {
             kCGImageSourceCreateThumbnailFromImageAlways: true,
             kCGImageSourceCreateThumbnailWithTransform: true,
             kCGImageSourceThumbnailMaxPixelSize: targetPixelSize,
-            kCGImageSourceShouldCache: false  // We're doing our own caching
+            kCGImageSourceShouldCache: false,  // We're doing our own caching
         ]
 
         guard let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary) else {

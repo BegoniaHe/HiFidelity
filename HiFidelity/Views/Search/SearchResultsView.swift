@@ -5,8 +5,8 @@
 //  Search results view with categorized results
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 struct SearchResultsView: View {
     let searchQuery: String
@@ -342,14 +342,19 @@ struct SearchResultsView: View {
         switch category {
         case .all:
             return results.totalCount
+
         case .tracks:
             return results.tracks.count
+
         case .albums:
             return results.albums.count
+
         case .artists:
             return results.artists.count
+
         case .genres:
             return results.genres.count
+
         case .playlists:
             return results.playlists.count
         }
@@ -374,7 +379,6 @@ struct SearchResultsView: View {
             results = DatabaseManager.SearchResults()
         }
     }
-
 }
 
 // MARK: - Track Search Row
@@ -464,7 +468,7 @@ struct PlaylistSearchCard: View {
                         LinearGradient(
                             colors: [
                                 theme.currentTheme.primaryColor.opacity(0.3),
-                                theme.currentTheme.primaryColor.opacity(0.1)
+                                theme.currentTheme.primaryColor.opacity(0.1),
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -519,7 +523,7 @@ struct CategoryButton: View {
                 Text(category.title)
                     .font(AppFonts.labelMedium)
 
-                if count > 0 {
+                if !isEmpty {
                     Text("\(count)")
                         .font(AppFonts.labelSmall)
                         .foregroundColor(isSelected ? .white : .secondary)

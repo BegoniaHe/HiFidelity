@@ -4,8 +4,8 @@
 //  Playback control and stream lifecycle
 //
 
-import Foundation
 import Bass
+import Foundation
 
 extension BASSAudioEngine {
     // MARK: - Playback Control

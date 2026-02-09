@@ -4,9 +4,9 @@
 //  Supporting types for MiniPlayerView
 //
 
-import SwiftUI
-import Observation
 import AppKit
+import Observation
+import SwiftUI
 
 // MARK: - Mini Player Panel Type
 

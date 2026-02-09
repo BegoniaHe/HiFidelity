@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 31/10/25.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Modern three-panel layout: Sidebar | Main Content | Optional Panels + Bottom Playback Bar
 struct ModernPlayerLayout: View {
@@ -27,8 +27,10 @@ struct ModernPlayerLayout: View {
     private var minimumWidth: CGFloat {
         switch (showLeftSidebar, showRightPanel) {
            case (true, true):   return DesignTokens.Size.Window.mainMinWidthBothPanels  // Both panels open
+
            case (true, false),
                (false, true):  return DesignTokens.Size.Window.mainMinWidthSinglePanel  // One panel open
+
            case (false, false): return DesignTokens.Size.Window.mainMinWidthSinglePanel  // No panels open (just main content)
         }
     }
@@ -151,9 +153,7 @@ struct ModernPlayerLayout: View {
                 }
             }
         }
-
     }
-
 }
 
 /// Enum representing the main navigation tabs in the app

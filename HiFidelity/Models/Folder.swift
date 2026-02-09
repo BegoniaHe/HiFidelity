@@ -109,7 +109,7 @@ struct Folder: Identifiable, Hashable, Codable, FetchableRecord, MutablePersista
     static let tracks = hasMany(Track.self)
 
     var tracks: QueryInterfaceRequest<Track> {
-        request(for: Folder.tracks)
+        request(for: Self.tracks)
     }
 
     // MARK: - Hashable & Identifiable
@@ -119,7 +119,7 @@ struct Folder: Identifiable, Hashable, Codable, FetchableRecord, MutablePersista
         hasher.combine(url)
     }
 
-    static func == (lhs: Folder, rhs: Folder) -> Bool {
+    static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id && lhs.url == rhs.url
     }
 }

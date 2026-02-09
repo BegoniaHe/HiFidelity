@@ -413,7 +413,7 @@ extension BASSAudioEngine {
             "libbass_mpc.dylib",  // Musepack decoder
             "libbass_spx.dylib",  // Speex decoder
             "libbass_tta.dylib",  // TTA (True Audio) decoder
-            "libbasshls.dylib"  // HLS streaming support
+            "libbasshls.dylib",  // HLS streaming support
         ]
 
         Logger.debug("Loading BASS decoder plugins from: \(frameworksPath)")

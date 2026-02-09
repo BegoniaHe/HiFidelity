@@ -5,8 +5,8 @@
 //  Compact queue view for mini player
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Compact queue view for mini player window
 struct MiniQueueView: View {
@@ -278,6 +278,6 @@ struct MiniQueueView: View {
 // MARK: - Preview
 
 #Preview {
-    MiniQueueView(onClose: {})
+    MiniQueueView {}
     .frame(width: DesignTokens.Size.Preview.miniPanelWidth, height: DesignTokens.Size.Preview.miniPanelHeight)
 }

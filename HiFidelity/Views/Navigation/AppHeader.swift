@@ -137,7 +137,7 @@ struct AppHeader: View {
             NotificationTray()
 
             // Settings
-            SettingsButton(action: { showSettings = true })
+            SettingsButton { showSettings = true }
         }
     }
 

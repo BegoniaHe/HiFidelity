@@ -130,9 +130,9 @@ struct ExtendedMetadata: Codable {
         return String(data: data, encoding: .utf8)
     }
 
-    static func fromJSON(_ json: String?) -> ExtendedMetadata? {
+    static func fromJSON(_ json: String?) -> Self? {
         guard let json = json,
               let data = json.data(using: .utf8) else { return nil }
-        return try? JSONDecoder().decode(ExtendedMetadata.self, from: data)
+        return try? JSONDecoder().decode(Self.self, from: data)
     }
 }

@@ -5,11 +5,10 @@
 //  Created by Varun Rathod on 03/11/25.
 //
 
-import Foundation
 import AppKit
+import Foundation
 
 extension ArtworkCache {
-
     // MARK: - Private Generic Helpers
 
     /// Generic artwork loading for any entity type

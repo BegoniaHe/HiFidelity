@@ -4,11 +4,10 @@
 //  Created by Varun Rathod on 23/10/25.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
 extension MetadataManagement {
-
     // MARK: - Metadata Key Mappings
 
     enum MetadataKeyType {
@@ -23,15 +22,17 @@ extension MetadataManagement {
                     AVMetadataKey.commonKeyCreator.rawValue,
                     AVMetadataKey.iTunesMetadataKeyComposer.rawValue,
                     AVMetadataKey.id3MetadataKeyComposer.rawValue,
-                    AVMetadataKey.quickTimeMetadataKeyProducer.rawValue
+                    AVMetadataKey.quickTimeMetadataKeyProducer.rawValue,
                 ]
+
             case .genre:
                 return [
                     "genre", "gnre", "©gen", "\u{00A9}gen", "TCON",
                     AVMetadataKey.id3MetadataKeyContentType.rawValue,
                     AVMetadataKey.iTunesMetadataKeyUserGenre.rawValue,
-                    AVMetadataKey.quickTimeMetadataKeyGenre.rawValue
+                    AVMetadataKey.quickTimeMetadataKeyGenre.rawValue,
                 ]
+
             case .year:
                 return [
                     "year", "date", "©day", "\u{00A9}day", "TDRC", "TYER",
@@ -40,50 +41,57 @@ extension MetadataManagement {
                     AVMetadataKey.id3MetadataKeyRecordingTime.rawValue,
                     AVMetadataKey.iTunesMetadataKeyReleaseDate.rawValue,
                     AVMetadataKey.quickTimeMetadataKeyYear.rawValue,
-                    AVMetadataKey.commonKeyCreationDate.rawValue
+                    AVMetadataKey.commonKeyCreationDate.rawValue,
                 ]
+
             case .albumArtist:
                 return [
                     "TPE2", "albumartist", "album artist",
                     AVMetadataKey.iTunesMetadataKeyAlbumArtist.rawValue,
-                    AVMetadataKey.id3MetadataKeyBand.rawValue
+                    AVMetadataKey.id3MetadataKeyBand.rawValue,
                 ]
+
             case .trackNumber:
                 return [
                     "TRCK", "tracknumber", "track", "trkn",
                     AVMetadataKey.id3MetadataKeyTrackNumber.rawValue,
-                    AVMetadataKey.iTunesMetadataKeyTrackNumber.rawValue
+                    AVMetadataKey.iTunesMetadataKeyTrackNumber.rawValue,
                 ]
+
             case .discNumber:
                 return [
                     "TPOS", "discnumber", "disc", "disk",
-                    AVMetadataKey.iTunesMetadataKeyDiscNumber.rawValue
+                    AVMetadataKey.iTunesMetadataKeyDiscNumber.rawValue,
                 ]
+
             case .artwork:
                 return [
                     "artwork", "covr", "apic", "pic", "cover", "albumart",
                     AVMetadataKey.commonKeyArtwork.rawValue,
                     AVMetadataKey.iTunesMetadataKeyCoverArt.rawValue,
                     AVMetadataKey.id3MetadataKeyAttachedPicture.rawValue,
-                    "APIC", "PIC", "COVR"
+                    "APIC", "PIC", "COVR",
                 ]
+
             case .copyright:
                 return [
                     "TCOP", "©cpy", "\u{00A9}cpy", "copyright",
                     AVMetadataKey.commonKeyCopyrights.rawValue,
                     AVMetadataKey.id3MetadataKeyCopyright.rawValue,
-                    AVMetadataKey.iTunesMetadataKeyCopyright.rawValue
+                    AVMetadataKey.iTunesMetadataKeyCopyright.rawValue,
                 ]
+
             case .bpm:
                 return [
                     "TBPM", "bpm", "beatsperminute",
-                    AVMetadataKey.iTunesMetadataKeyBeatsPerMin.rawValue
+                    AVMetadataKey.iTunesMetadataKeyBeatsPerMin.rawValue,
                 ]
+
             case .comment:
                 return [
                     "COMM", "comment", "©cmt", "\u{00A9}cmt",
                     AVMetadataKey.commonKeyDescription.rawValue,
-                    AVMetadataKey.iTunesMetadataKeyUserComment.rawValue
+                    AVMetadataKey.iTunesMetadataKeyUserComment.rawValue,
                 ]
             }
         }
@@ -103,5 +111,4 @@ extension MetadataManagement {
             }
         }
     }
-
 }

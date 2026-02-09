@@ -5,8 +5,8 @@
 //  Karaoke-style synchronized lyrics with LRC file support
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 import UniformTypeIdentifiers
 
 /// Complete karaoke-style lyrics panel with LRC support
@@ -88,11 +88,9 @@ struct LyricsPanel: View {
         }
         .textSelection(.enabled)
     }
-
 }
 
 extension LyricsPanel {
-
     // MARK: - Header
 
     private var header: some View {
@@ -141,7 +139,6 @@ extension LyricsPanel {
         }
         .padding(.horizontal, DesignTokens.Spacing.xl)
         .padding(.vertical, DesignTokens.Spacing.md)
-
     }
 
     // MARK: - Lyrics Content
@@ -311,5 +308,4 @@ extension LyricsPanel {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.bottom, DesignTokens.ControlHeight.playbackBar)
     }
-
 }

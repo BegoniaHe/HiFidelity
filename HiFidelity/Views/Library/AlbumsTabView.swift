@@ -36,14 +36,14 @@ struct AlbumsTabView: View {
         SortOption(id: "artist", title: "Album Artist", type: .alphabetical, ascending: true),
         SortOption(id: "year", title: "Year", type: .year, ascending: false),
         SortOption(id: "recent", title: "Recently Added", type: .dateAdded, ascending: false),
-        SortOption(id: "tracks", title: "Track Count", type: .trackCount, ascending: false)
+        SortOption(id: "tracks", title: "Track Count", type: .trackCount, ascending: false),
     ]
 
     private let filterOptions = [
         FilterOption(id: "2020s", title: "2020s", predicate: "year >= 2020"),
         FilterOption(id: "2010s", title: "2010s", predicate: "year >= 2010 AND year < 2020"),
         FilterOption(id: "2000s", title: "2000s", predicate: "year >= 2000 AND year < 2010"),
-        FilterOption(id: "90s", title: "90s & Earlier", predicate: "year < 2000")
+        FilterOption(id: "90s", title: "90s & Earlier", predicate: "year < 2000"),
     ]
 
     var body: some View {
@@ -201,6 +201,7 @@ struct AlbumsTabView: View {
                     }
                     return false
                 }
+
             case "2010s":
                 result = result.filter {
                     if let yearStr = $0.year, let year = Int(yearStr) {
@@ -208,6 +209,7 @@ struct AlbumsTabView: View {
                     }
                     return false
                 }
+
             case "2000s":
                 result = result.filter {
                     if let yearStr = $0.year, let year = Int(yearStr) {
@@ -215,6 +217,7 @@ struct AlbumsTabView: View {
                     }
                     return false
                 }
+
             case "90s":
                 result = result.filter {
                     if let yearStr = $0.year, let year = Int(yearStr) {
@@ -222,6 +225,7 @@ struct AlbumsTabView: View {
                     }
                     return false
                 }
+
             default:
                 break
             }
@@ -239,16 +243,20 @@ struct AlbumsTabView: View {
             } else {
                 result.sort { $0.title.localizedCompare($1.title) == .orderedAscending }
             }
+
         case .year:
             result.sort { album1, album2 in
                 let year1 = Int(album1.year ?? "0") ?? 0
                 let year2 = Int(album2.year ?? "0") ?? 0
                 return year1 > year2
             }
+
         case .dateAdded:
             result.sort { $0.dateAdded > $1.dateAdded }
+
         case .trackCount:
             result.sort { $0.trackCount > $1.trackCount }
+
         default:
             break
         }
@@ -270,7 +278,6 @@ struct AlbumsTabView: View {
         let albumIds = filteredAlbums[index..<endIndex].compactMap { $0.id }
         ArtworkCache.shared.preloadAlbumArtwork(for: albumIds, size: 160)
     }
-
 }
 
 // MARK: - Album Options Dropdown

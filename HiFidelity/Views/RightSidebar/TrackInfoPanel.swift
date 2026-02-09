@@ -5,9 +5,9 @@
 //  Track information panel showing detailed metadata
 //
 
-import SwiftUI
 import GRDB
 import Observation
+import SwiftUI
 
 /// Manages track info panel state
 @MainActor
@@ -218,7 +218,7 @@ struct TrackInfoPanel: View {
                         .frame(height: DesignTokens.Size.Playback.bottomSpacerHeight)
                 }
                 .textSelection(.enabled)
-        }
+            }
     }
 
     // MARK: - Empty State

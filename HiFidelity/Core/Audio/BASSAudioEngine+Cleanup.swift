@@ -4,8 +4,8 @@
 //  Cleanup and shutdown
 //
 
-import Foundation
 import Bass
+import Foundation
 
 extension BASSAudioEngine {
     // MARK: - Cleanup

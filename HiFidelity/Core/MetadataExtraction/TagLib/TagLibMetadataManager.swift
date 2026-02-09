@@ -6,12 +6,11 @@
 //  Provides a clean Swift interface to TagLib-based metadata extraction
 //
 
-import Foundation
 import AppKit
+import Foundation
 
 /// Swift wrapper for TagLib metadata extraction
 struct TagLibMetadataManager {
-
     /// Extract metadata from an audio file using TagLib
     /// - Parameter url: URL to the audio file
     /// - Returns: TrackMetadata object populated with extracted data
@@ -257,7 +256,6 @@ struct TagLibMetadataManager {
 // MARK: - Convenience Extensions
 
 extension TagLibMetadataManager {
-
     /// Extract metadata and apply it directly to a Track object
     /// - Parameters:
     ///   - track: Track object to populate
@@ -335,7 +333,6 @@ extension TagLibMetadataManager {
 // MARK: - Error Handling
 
 extension TagLibMetadataManager {
-
     enum MetadataError: Error, LocalizedError {
         case fileNotFound
         case unsupportedFormat
@@ -346,10 +343,13 @@ extension TagLibMetadataManager {
             switch self {
             case .fileNotFound:
                 return "Audio file not found"
+
             case .unsupportedFormat:
                 return "Unsupported audio file format"
+
             case .extractionFailed(let reason):
                 return "Metadata extraction failed: \(reason)"
+
             case .invalidFileURL:
                 return "Invalid file URL"
             }

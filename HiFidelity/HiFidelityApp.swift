@@ -5,10 +5,10 @@
 //  Created by Varun Rathod on 21/10/25.
 //
 
-import SwiftUI
-import SwiftData
 import AppKit
 import Observation
+import SwiftData
+import SwiftUI
 
 /// Main SwiftUI App entry point for HiFidelity
 /// AppDelegate is defined in Core/AppDelegate.swift
@@ -43,7 +43,6 @@ struct HiFidelityApp: App {
 
             // View Menu Commands
             viewMenuCommands()
-
         }
         .onChange(of: scenePhase) { _, newPhase in
             handleScenePhaseChange(newPhase)
@@ -52,7 +51,6 @@ struct HiFidelityApp: App {
         .windowResizability(.contentSize)
 
         equalizerWindowContentView()
-
     }
 
     init() {
@@ -103,10 +101,13 @@ struct HiFidelityApp: App {
             Task {
                 await QueuePersistenceManager.shared.saveNow()
             }
+
         case .inactive:
             Logger.debug("Scene became inactive")
+
         case .active:
             Logger.debug("Scene became active")
+
         @unknown default:
             break
         }
@@ -256,5 +257,4 @@ struct HiFidelityApp: App {
             .keyboardShortcut("r", modifiers: .command)
         }
     }
-
 }

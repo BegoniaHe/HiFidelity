@@ -9,7 +9,6 @@ import Foundation
 import GRDB
 
 extension DatabaseManager {
-
     // MARK: - Database Triggers
 
     /// Create statistics update triggers for albums, artists, and genres

@@ -4,12 +4,11 @@
 //  Created by Varun Rathod on 23/10/25.
 //
 
-import Foundation
 import AVFoundation
 import CoreMedia
+import Foundation
 
 extension MetadataManagement {
-
     // MARK: - Public Methods
 
     @available(macOS, deprecated: 13.0)
@@ -133,5 +132,4 @@ extension MetadataManagement {
             }
         }
     }
-
 }

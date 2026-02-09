@@ -216,7 +216,6 @@ struct AboutMenuView: View {
             }
         }
     }
-
 }
 
 #Preview {

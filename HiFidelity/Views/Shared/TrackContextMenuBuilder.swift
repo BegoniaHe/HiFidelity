@@ -5,14 +5,13 @@
 //  Shared logic for track context menu actions
 //
 
-import Foundation
 import AppKit
+import Foundation
 
 /// Centralized track context menu logic
 /// Used by both SwiftUI context menus and NSMenu implementations
 @MainActor
 class TrackContextMenuBuilder {
-
     // MARK: - Playback Actions
 
     static func playTrack(_ track: Track) {

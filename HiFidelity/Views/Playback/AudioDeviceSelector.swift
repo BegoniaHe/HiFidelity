@@ -228,7 +228,6 @@ struct AudioDeviceSelector: View {
         if dacManager.switchToDevice(device) {
             Logger.info("Switched to device: \(device.name)")
             showDeviceMenu = false
-
         }
     }
 

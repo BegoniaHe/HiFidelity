@@ -4,12 +4,11 @@
 //  Created by Varun Rathod on 23/10/25.
 //
 
-import Foundation
 import AVFoundation
 import CoreMedia
+import Foundation
 
 extension MetadataManagement {
-
     // MARK: - Helper Methods
 
     static func isKeyOfType(
@@ -176,7 +175,7 @@ extension MetadataManagement {
         let dateFormatters = [
             "yyyy-MM-dd", "yyyy/MM/dd", "yyyy.MM.dd", "yyyy",
             "dd-MM-yyyy", "dd/MM/yyyy", "MM-dd-yyyy", "MM/dd/yyyy",
-            "yyyy-MM-dd'T'HH:mm:ssZ", "yyyy-MM-dd HH:mm:ss"
+            "yyyy-MM-dd'T'HH:mm:ssZ", "yyyy-MM-dd HH:mm:ss",
         ]
 
         let formatter = DateFormatter()
@@ -207,17 +206,17 @@ extension MetadataManagement {
         case kAudioFormatAC3: return "AC-3"
         case kAudioFormatMPEG4AAC_HE: return "HE-AAC"
         case kAudioFormatMPEG4AAC_HE_V2: return "HE-AACv2"
+
         default:
             // Convert FourCC bytes to string
             let bytes: [UInt8] = [
                 UInt8((fourCC >> 24) & 0xFF),
                 UInt8((fourCC >> 16) & 0xFF),
                 UInt8((fourCC >> 8) & 0xFF),
-                UInt8(fourCC & 0xFF)
+                UInt8(fourCC & 0xFF),
             ]
             return String(bytes: bytes, encoding: .ascii)?
                 .trimmingCharacters(in: .whitespaces) ?? "Unknown"
         }
     }
-
 }

@@ -28,7 +28,6 @@ struct PlaybackControlsCenter: View {
 
     private var controlButtons: some View {
         HStack(spacing: DesignTokens.Spacing.lg) {
-
             // Shuffle
             ControlButton(
                 icon: "shuffle",

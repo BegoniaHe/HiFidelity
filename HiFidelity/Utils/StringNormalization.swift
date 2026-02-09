@@ -73,7 +73,7 @@ extension String {
             ("fr", ["le", "la", "les", "l'"]),
             ("de", ["der", "die", "das"]),
             ("it", ["il", "lo", "la", "i", "gli", "le"]),
-            ("pt", ["o", "a", "os", "as"])
+            ("pt", ["o", "a", "os", "as"]),
         ]
 
         // Check each language's articles
@@ -101,7 +101,7 @@ extension String {
 
 /*
  # Normalization Examples
- 
+
  ## For Searching (normalized)
  "The Beatles".normalized       // "beatles"
  "Beyoncé".normalized           // "beyonce"
@@ -109,7 +109,7 @@ extension String {
  "AC/DC".normalized             // "ac dc"
  "Björk".normalized             // "bjork"
  "  The  Rolling   Stones  ".normalized  // "rolling stones"
- 
+
  ## For Sorting (sortName)
  "The Beatles".sortName         // "Beatles, The"
  "A Tribe Called Quest".sortName  // "Tribe Called Quest, A"
@@ -117,9 +117,9 @@ extension String {
  "Les Misérables".sortName      // "Misérables, Les"  (French)
  "Der Dritte Raum".sortName     // "Dritte Raum, Der"  (German)
  "Beatles".sortName             // "Beatles"  (no article)
- 
+
  # Usage in Database Operations
- 
+
  ## Creating entities
  let name = "The Beatles"
  var artist = Artist(
@@ -127,23 +127,23 @@ extension String {
      sortName: name.sortName,       // Sort: "Beatles, The"
      normalizedName: name.normalized  // Search: "beatles"
  )
- 
+
  ## Searching
  let query = "beatles"
  let normalized = query.normalized
  let results = try Artist
      .filter(Artist.Columns.normalizedName.like("%\(normalized)%"))
      .fetchAll(db)
- 
+
  ## Sorting in UI
  let sorted = artists.sorted { $0.sortName < $1.sortName }
  // Results: "Beatles, The", "Rolling Stones, The", "Who, The"
- 
+
  # Why Two Fields?
- 
+
  - name: Display to user ("The Beatles")
  - sortName: Alphabetical ordering ("Beatles, The")
  - normalizedName: Searching and deduplication ("beatles")
- 
+
  This matches industry standards (iTunes, MusicBrainz)
  */

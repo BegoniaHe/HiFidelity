@@ -97,7 +97,7 @@ class MiniPlayerWindowController: NSWindowController, NSWindowDelegate {
         self.init(window: window)
 
         // Store reference
-        MiniPlayerWindowController.shared = self
+        Self.shared = self
 
         // Set window delegate to track position changes
         window.delegate = self
@@ -118,7 +118,7 @@ class MiniPlayerWindowController: NSWindowController, NSWindowDelegate {
         }
         // Save closed state
         UserDefaults.standard.set(false, forKey: "miniPlayerWasOpen")
-        MiniPlayerWindowController.shared = nil
+        Self.shared = nil
     }
 
     // MARK: - NSWindowDelegate

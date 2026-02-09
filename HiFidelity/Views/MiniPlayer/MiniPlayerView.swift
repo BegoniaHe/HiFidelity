@@ -33,11 +33,11 @@ struct MiniPlayerView: View {
 
                 switch panel {
                 case .queue:
-                    MiniQueueView(onClose: { expandedPanel = nil })
+                    MiniQueueView { expandedPanel = nil }
                         .frame(height: DesignTokens.Size.Window.miniPanelHeight)
 
                 case .lyrics:
-                    MiniLyricsView(onClose: { expandedPanel = nil })
+                    MiniLyricsView { expandedPanel = nil }
                         .frame(height: DesignTokens.Size.Window.miniPanelHeight)
                 }
             }
@@ -68,11 +68,9 @@ struct MiniPlayerView: View {
             updateWindowLevel()
         }
     }
-
 }
 
 extension MiniPlayerView {
-
     // MARK: - Window Management
 
     private func updateWindowSize(expanded: Bool) {
@@ -512,7 +510,7 @@ extension MiniPlayerView {
                         )
                         .contentShape(Rectangle())
 
-                    if playback.queue.count > 0 {
+                    if !playback.queue.isEmpty {
                         Text("\(playback.queue.count)")
                             .font(AppFonts.captionSmall)
                             .foregroundColor(.white)

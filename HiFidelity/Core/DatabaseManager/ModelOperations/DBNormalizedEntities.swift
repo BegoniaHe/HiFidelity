@@ -9,7 +9,6 @@ import Foundation
 import GRDB
 
 extension DatabaseManager {
-
     // MARK: - Album Operations
 
     /// Get or create an album entity and return its ID

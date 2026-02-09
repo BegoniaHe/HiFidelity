@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 31/10/25.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Genres tab view displaying all genres in a grid layout
 struct GenresTabView: View {
@@ -32,12 +32,12 @@ struct GenresTabView: View {
 
     private let sortOptions = [
         SortOption(id: "name", title: "Name", type: .alphabetical, ascending: true),
-        SortOption(id: "tracks", title: "Track Count", type: .trackCount, ascending: false)
+        SortOption(id: "tracks", title: "Track Count", type: .trackCount, ascending: false),
     ]
 
     private let filterOptions = [
         FilterOption(id: "popular", title: "Popular (20+ tracks)", predicate: "trackCount >= 20"),
-        FilterOption(id: "medium", title: "Medium (10+ tracks)", predicate: "trackCount >= 10")
+        FilterOption(id: "medium", title: "Medium (10+ tracks)", predicate: "trackCount >= 10"),
     ]
 
     var body: some View {
@@ -176,8 +176,10 @@ struct GenresTabView: View {
             switch filter.id {
             case "popular":
                 result = result.filter { $0.trackCount >= 20 }
+
             case "medium":
                 result = result.filter { $0.trackCount >= 10 }
+
             default:
                 break
             }
@@ -187,8 +189,10 @@ struct GenresTabView: View {
         switch selectedSort.type {
         case .alphabetical:
             result.sort { $0.name.localizedCompare($1.name) == .orderedAscending }
+
         case .trackCount:
             result.sort { $0.trackCount > $1.trackCount }
+
         default:
             break
         }
@@ -199,7 +203,6 @@ struct GenresTabView: View {
 
         filteredGenres = result
     }
-
 }
 
 // MARK: - Genre Options Dropdown

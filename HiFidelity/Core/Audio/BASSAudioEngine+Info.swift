@@ -4,8 +4,8 @@
 //  Stream info and error handling
 //
 
-import Foundation
 import Bass
+import Foundation
 
 extension BASSAudioEngine {
     // MARK: - Audio Information

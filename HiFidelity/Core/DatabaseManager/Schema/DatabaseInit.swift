@@ -16,7 +16,6 @@ import Foundation
 import GRDB
 
 extension DatabaseManager {
-
     // MARK: - Complete Schema Setup
 
     /// Create all tables for the application
@@ -254,7 +253,6 @@ extension DatabaseManager {
 
     nonisolated static func createTracksTable(in db: Database) throws {
         try db.createTableIfNotExists("tracks") { tableDefinition in
-
             tableDefinition.autoIncrementedPrimaryKey("id")
 
             // File identification

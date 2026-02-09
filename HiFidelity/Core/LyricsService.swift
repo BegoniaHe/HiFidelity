@@ -13,7 +13,6 @@ import Foundation
 /// Service for fetching synchronized lyrics from online sources
 @MainActor
 final class LyricsService {
-
     // MARK: - Singleton
 
     static let shared = LyricsService()
@@ -54,11 +53,10 @@ final class LyricsService {
         albumName: String? = nil,
         duration: Int? = nil
     ) async throws -> [LyricsSearchResult] {
-
         var components = URLComponents(string: "\(baseURL)/search")!
         var queryItems: [URLQueryItem] = [
             URLQueryItem(name: "track_name", value: trackName),
-            URLQueryItem(name: "artist_name", value: artistName)
+            URLQueryItem(name: "artist_name", value: artistName),
         ]
 
         Logger.info("Searching lyrics: \(trackName) by \(artistName)")
@@ -140,11 +138,10 @@ final class LyricsService {
         albumName: String? = nil,
         duration: Int? = nil
     ) async throws -> LyricsSearchResult? {
-
         var components = URLComponents(string: "\(baseURL)/get")!
         var queryItems: [URLQueryItem] = [
             URLQueryItem(name: "track_name", value: trackName),
-            URLQueryItem(name: "artist_name", value: artistName)
+            URLQueryItem(name: "artist_name", value: artistName),
         ]
 
         if let albumName = albumName {
@@ -250,12 +247,16 @@ enum LyricsServiceError: LocalizedError {
         switch self {
         case .invalidURL:
             return "Invalid request URL"
+
         case .invalidResponse:
             return "Invalid response from lyrics server"
+
         case .rateLimitExceeded:
             return "Rate limit exceeded. Please try again later"
+
         case .serverError(let code):
             return "Server error (status code: \(code))"
+
         case .noLyricsFound:
             return "No lyrics found for this track"
         }
@@ -265,8 +266,10 @@ enum LyricsServiceError: LocalizedError {
         switch self {
         case .rateLimitExceeded:
             return "Wait a few minutes before trying again"
+
         case .noLyricsFound:
             return "Try importing an LRC file manually"
+
         default:
             return "Check your internet connection and try again"
         }

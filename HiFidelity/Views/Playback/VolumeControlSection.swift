@@ -16,9 +16,8 @@ struct VolumeControlSection: View {
         HStack(spacing: DesignTokens.Spacing.md) {
             // Mute button
             VolumeButton(
-                icon: volumeIcon,
-                action: { playback.toggleMute() }
-            )
+                icon: volumeIcon
+            ) { playback.toggleMute() }
 
             // Volume slider
             Slider(

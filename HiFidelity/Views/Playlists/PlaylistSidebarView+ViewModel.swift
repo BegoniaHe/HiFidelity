@@ -77,14 +77,17 @@ final class PlaylistSidebarViewModel {
             switch option {
             case .name:
                 result = item1.name.localizedCaseInsensitiveCompare(item2.name) == .orderedAscending
+
             case .dateCreated:
                 let date1 = item1.createdDate ?? Date.distantPast
                 let date2 = item2.createdDate ?? Date.distantPast
                 result = date1 < date2
+
             case .dateModified:
                 let date1 = item1.modifiedDate ?? Date.distantPast
                 let date2 = item2.modifiedDate ?? Date.distantPast
                 result = date1 < date2
+
             case .trackCount:
                 result = item1.trackCount < item2.trackCount
             }

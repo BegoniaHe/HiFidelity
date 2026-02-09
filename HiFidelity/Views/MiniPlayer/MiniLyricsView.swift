@@ -5,8 +5,8 @@
 //  Compact lyrics view for mini player
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 import UniformTypeIdentifiers
 
 /// Compact lyrics view for mini player window
@@ -198,12 +198,11 @@ struct MiniLyricsView: View {
 
         currentLineIndex = lyrics.currentLineIndex(at: playback.currentTime)
     }
-
 }
 
 // MARK: - Preview
 
 #Preview {
-    MiniLyricsView(onClose: {})
+    MiniLyricsView {}
     .frame(width: DesignTokens.Size.Preview.miniPanelWidth, height: DesignTokens.Size.Preview.miniPanelHeight)
 }

@@ -9,7 +9,6 @@ import Foundation
 import GRDB
 
 extension DatabaseManager {
-
     // MARK: - Get Tracks for Playlist
 
     func getTracksForPlaylist(playlistId: Int64) async throws -> [Track] {

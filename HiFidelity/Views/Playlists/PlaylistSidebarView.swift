@@ -120,11 +120,9 @@ struct PlaylistSidebarView: View {
             }
         }
     }
-
 }
 
 extension PlaylistSidebarView {
-
     // MARK: - Header
 
     private var playlistsHeader: some View {
@@ -182,12 +180,12 @@ extension PlaylistSidebarView {
                 Spacer()
 
                 // Selection mode toggle button
-                SelectionModeButton(action: {
+                SelectionModeButton {
                     isSelectionMode = true
-                })
+                }
 
                 // Create button
-                CreatePlaylistButton(action: { showCreatePlaylist = true })
+                CreatePlaylistButton { showCreatePlaylist = true }
             }
         }
         .padding(.horizontal, DesignTokens.Spacing.lg)
@@ -455,7 +453,7 @@ extension PlaylistSidebarView {
                         LinearGradient(
                             colors: [
                                 theme.currentTheme.primaryColor.opacity(0.4),
-                                theme.currentTheme.primaryColor.opacity(0.8)
+                                theme.currentTheme.primaryColor.opacity(0.8),
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing

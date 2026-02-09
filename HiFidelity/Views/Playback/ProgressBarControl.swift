@@ -87,7 +87,7 @@ struct ProgressBarControl: View {
         LinearGradient(
             colors: [
                 theme.currentTheme.primaryColor,
-                theme.currentTheme.primaryColor.opacity(0.8)
+                theme.currentTheme.primaryColor.opacity(0.8),
             ],
             startPoint: .leading,
             endPoint: .trailing
@@ -171,7 +171,6 @@ struct ProgressBarControl: View {
         }
         return String(format: "%d:%02d", minutes, seconds)
     }
-
 }
 
 private struct BlurEffectView: NSViewRepresentable {
@@ -219,7 +218,7 @@ private struct HoverTrackingView: NSViewRepresentable {
                 .mouseEnteredAndExited,
                 .mouseMoved,
                 .activeInActiveApp,
-                .inVisibleRect
+                .inVisibleRect,
             ]
             let area = NSTrackingArea(rect: bounds, options: options, owner: self, userInfo: nil)
             addTrackingArea(area)

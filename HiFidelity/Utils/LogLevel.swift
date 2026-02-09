@@ -33,7 +33,7 @@ enum LogLevel: Int, Comparable {
         }
     }
 
-    static func < (lhs: LogLevel, rhs: LogLevel) -> Bool {
+    static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.rawValue < rhs.rawValue
     }
 }
@@ -186,14 +186,14 @@ final class Logger: @unchecked Sendable {
     static func installCrashHandler() {
         // Install exception handler
         NSSetUncaughtExceptionHandler { exception in
-            Logger.critical("UNCAUGHT EXCEPTION: \(exception.name.rawValue)")
+            Self.critical("UNCAUGHT EXCEPTION: \(exception.name.rawValue)")
             if let reason = exception.reason {
-                Logger.critical("Reason: \(reason)")
+                Self.critical("Reason: \(reason)")
             }
-            Logger.critical("Call Stack:\n\(exception.callStackSymbols.joined(separator: "\n"))")
+            Self.critical("Call Stack:\n\(exception.callStackSymbols.joined(separator: "\n"))")
 
             // Force synchronous write
-            Logger.shared.flush()
+            Self.shared.flush()
 
             // Give a moment for the write to complete
             Thread.sleep(forTimeInterval: 0.5)
@@ -204,7 +204,7 @@ final class Logger: @unchecked Sendable {
 
         for sig in signals {
             Darwin.signal(sig) { signum in
-                Logger.critical("SIGNAL CRASH: Received signal \(signum)")
+                Self.critical("SIGNAL CRASH: Received signal \(signum)")
 
                 // Try to get signal name
                 let signalName: String
@@ -218,14 +218,14 @@ final class Logger: @unchecked Sendable {
                 case SIGTRAP: signalName = "SIGTRAP"
                 default: signalName = "Unknown"
                 }
-                Logger.critical("Signal name: \(signalName)")
+                Self.critical("Signal name: \(signalName)")
 
                 // Try to capture some stack trace
                 let callstack = Thread.callStackSymbols
-                Logger.critical("Call Stack:\n\(callstack.joined(separator: "\n"))")
+                Self.critical("Call Stack:\n\(callstack.joined(separator: "\n"))")
 
                 // Force flush
-                Logger.shared.flush()
+                Self.shared.flush()
                 Thread.sleep(forTimeInterval: 0.5)
 
                 // Re-raise the signal to ensure proper termination
@@ -234,7 +234,7 @@ final class Logger: @unchecked Sendable {
             }
         }
 
-        Logger.info("Crash handlers installed successfully")
+        Self.info("Crash handlers installed successfully")
     }
 
     // MARK: - Private Methods
@@ -285,12 +285,16 @@ final class Logger: @unchecked Sendable {
         switch entry.level {
         case .debug:
             type = .debug
+
         case .info:
             type = .info
+
         case .warning:
             type = .default
+
         case .error:
             type = .error
+
         case .critical:
             type = .fault
         }

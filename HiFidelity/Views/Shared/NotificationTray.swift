@@ -203,7 +203,6 @@ struct NotificationTray: View {
     private var hasNotifications: Bool {
         !manager.messages.isEmpty
     }
-
 }
 
 // MARK: - Notification Popover
@@ -307,11 +306,11 @@ struct NotificationRow: View {
         } else if interval < 3600 {
             let minutes = Int(interval / 60)
             return "\(minutes) min\(minutes == 1 ? "" : "s") ago"
-        } else if interval < 86400 {
+        } else if interval < 86_400 {
             let hours = Int(interval / 3600)
             return "\(hours) hour\(hours == 1 ? "" : "s") ago"
         } else {
-            let days = Int(interval / 86400)
+            let days = Int(interval / 86_400)
             return "\(days) day\(days == 1 ? "" : "s") ago"
         }
     }
@@ -358,7 +357,6 @@ struct NotificationRow: View {
 
 #Preview {
     VStack(spacing: 40) {
-
         // With notifications
         NotificationTray()
             .onAppear {

@@ -5,10 +5,10 @@
 //  Manages DSP effects and custom processing for audio playback
 //
 
-import Foundation
-import Observation
 import Bass
 import BassFX
+import Foundation
+import Observation
 
 /// Manages audio effects (DSP) for the current audio stream
 /// Supports built-in BASS FX and custom DSP processing
@@ -63,7 +63,7 @@ class AudioEffectsManager {
     internal var currentStream: HSTREAM = 0
 
     // Equalizer frequencies (Hz) - matching common EQ frequencies
-    internal let eqFrequencies: [Float] = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000]
+    internal let eqFrequencies: [Float] = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16_000]
 
     // Settings keys
     enum SettingsKey: String, CaseIterable {
@@ -89,7 +89,6 @@ class AudioEffectsManager {
         Logger.info("AudioEffectsManager initialized")
         loadSettings()
     }
-
 }
 
 // MARK: - Custom EQ Preset Model
@@ -101,7 +100,7 @@ struct CustomEQPreset: Codable, Identifiable, Equatable {
     var preampGain: Float
     var dateCreated: Date
 
-    static func == (lhs: CustomEQPreset, rhs: CustomEQPreset) -> Bool {
+    static func == (lhs: Self, rhs: Self) -> Bool {
         return lhs.id == rhs.id
     }
 }

@@ -41,11 +41,11 @@ struct PlaylistTrack: Identifiable, Codable, FetchableRecord, MutablePersistable
     static let track = belongsTo(Track.self)
 
     var playlist: QueryInterfaceRequest<Playlist> {
-        request(for: PlaylistTrack.playlist)
+        request(for: Self.playlist)
     }
 
     var track: QueryInterfaceRequest<Track> {
-        request(for: PlaylistTrack.track)
+        request(for: Self.track)
     }
 
     // Auto-increment id

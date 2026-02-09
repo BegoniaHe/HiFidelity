@@ -72,7 +72,7 @@ struct Artist: Identifiable, Hashable, Codable, FetchableRecord, MutablePersista
 
     static let tracks = hasMany(Track.self)
     var tracks: QueryInterfaceRequest<Track> {
-        request(for: Artist.tracks)
+        request(for: Self.tracks)
     }
 
     // Auto-increment id

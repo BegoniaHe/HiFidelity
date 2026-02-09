@@ -57,7 +57,7 @@ struct TrackLyrics: Identifiable, Codable, FetchableRecord, MutablePersistableRe
 
     static let track = belongsTo(Track.self)
     var track: QueryInterfaceRequest<Track> {
-        request(for: TrackLyrics.track)
+        request(for: Self.track)
     }
 
     // MARK: - Auto-incrementing ID

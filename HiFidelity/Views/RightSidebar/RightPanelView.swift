@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 19/11/25.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Enum representing the tabs in the right panel
 enum RightPanelTab {
@@ -28,8 +28,10 @@ struct RightPanelView: View {
                 switch selectedTab {
                 case .trackInfo:
                     TrackInfoPanel()
+
                 case .queue:
                     QueuePanel()
+
                 case .lyrics:
                     LyricsPanel()
                 }
@@ -37,5 +39,4 @@ struct RightPanelView: View {
         }
         .background(Color(nsColor: .windowBackgroundColor))
     }
-
 }

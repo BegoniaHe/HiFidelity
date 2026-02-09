@@ -9,7 +9,6 @@ import Foundation
 import GRDB
 
 extension DatabaseManager {
-
     // MARK: - Search Mode
 
     enum SearchMode {
@@ -419,6 +418,7 @@ extension DatabaseManager {
         case .or:
             // OR mode: broader results, any term matches
             weightedQuery = ftsTerms.joined(separator: " OR ")
+
         case .and:
             // AND mode: stricter results, all terms must match
             // Use implicit AND (space) for better performance

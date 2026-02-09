@@ -4,9 +4,9 @@
 //  Stream lifecycle management for AudioEffectsManager
 //
 
-import Foundation
 import Bass
 import BassFX
+import Foundation
 
 extension AudioEffectsManager {
     // MARK: - Stream Management

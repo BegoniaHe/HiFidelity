@@ -18,7 +18,7 @@ struct AudioOutputDevice: Identifiable, Equatable {
     let sampleRate: Float64
     let channels: Int
 
-    static func == (lhs: AudioOutputDevice, rhs: AudioOutputDevice) -> Bool {
+    static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id
     }
 }
@@ -90,7 +90,7 @@ class DACManager {
 
     /// Get current sample rate of the device
     func getCurrentDeviceSampleRate() -> Float64 {
-        guard currentDeviceID != 0 else { return 44100 }
+        guard currentDeviceID != 0 else { return 44_100 }
 
         var sampleRate = Float64(0)
         var propertySize = UInt32(MemoryLayout<Float64>.size)
@@ -112,7 +112,7 @@ class DACManager {
 
         if status != noErr {
             Logger.error("Failed to get device sample rate: \(status)")
-            return 44100
+            return 44_100
         }
 
         return sampleRate
@@ -243,7 +243,7 @@ class DACManager {
 
     /// Get available sample rates for the current device
     func getAvailableSampleRates() -> [Float64] {
-        guard currentDeviceID != 0 else { return [44100, 48000, 88200, 96000, 176400, 192000] }
+        guard currentDeviceID != 0 else { return [44_100, 48_000, 88_200, 96_000, 176_400, 192_000] }
 
         var address = AudioObjectPropertyAddress(
             mSelector: kAudioDevicePropertyAvailableNominalSampleRates,
@@ -261,7 +261,7 @@ class DACManager {
         )
 
         guard status == noErr else {
-            return [44100, 48000, 88200, 96000, 176400, 192000]
+            return [44_100, 48_000, 88_200, 96_000, 176_400, 192_000]
         }
 
         let count = Int(propertySize) / MemoryLayout<AudioValueRange>.size
@@ -277,7 +277,7 @@ class DACManager {
         )
 
         guard status == noErr else {
-            return [44100, 48000, 88200, 96000, 176400, 192000]
+            return [44_100, 48_000, 88_200, 96_000, 176_400, 192_000]
         }
 
         // Extract unique sample rates
@@ -583,7 +583,6 @@ extension DACManager {
 
         if defaultDeviceID != 0 {
             if let newDevice = buildDeviceInfo(for: defaultDeviceID) {
-
                 Logger.info("Auto-switching to default device: \(newDevice.name)")
                 if wasHogging {
                     Logger.info(
@@ -917,7 +916,7 @@ extension DACManager {
             &sampleRate
         )
 
-        return status == noErr ? sampleRate : 44100
+        return status == noErr ? sampleRate : 44_100
     }
 
     /// Get number of output channels for a specific device

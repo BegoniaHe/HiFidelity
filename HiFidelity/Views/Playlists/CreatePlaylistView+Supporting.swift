@@ -4,8 +4,8 @@
 //  Supporting types for CreatePlaylistView
 //
 
-import SwiftUI
 import AppKit
+import SwiftUI
 
 // MARK: - Color Scheme Button
 
@@ -69,42 +69,49 @@ enum PlaylistColorScheme: String, CaseIterable {
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
+
         case .blue:
             return LinearGradient(
                 colors: [Color.blue.opacity(0.6), Color.blue],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
+
         case .purple:
             return LinearGradient(
                 colors: [Color.purple.opacity(0.6), Color.purple],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
+
         case .pink:
             return LinearGradient(
                 colors: [Color.pink.opacity(0.6), Color.pink],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
+
         case .red:
             return LinearGradient(
                 colors: [Color.red.opacity(0.6), Color.red],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
+
         case .orange:
             return LinearGradient(
                 colors: [Color.orange.opacity(0.6), Color.orange],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
+
         case .green:
             return LinearGradient(
                 colors: [Color.green.opacity(0.6), Color.green],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
+
         case .teal:
             return LinearGradient(
                 colors: [Color.teal.opacity(0.6), Color.teal],

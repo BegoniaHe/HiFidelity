@@ -83,13 +83,13 @@ struct Playlist: Identifiable, Hashable, Codable, FetchableRecord, MutablePersis
     // Playlist has many playlist_tracks
     static let playlistTracks = hasMany(PlaylistTrack.self)
     var playlistTracks: QueryInterfaceRequest<PlaylistTrack> {
-        request(for: Playlist.playlistTracks)
+        request(for: Self.playlistTracks)
     }
 
     // Get actual tracks through the junction table
     static let tracks = hasMany(Track.self, through: playlistTracks, using: PlaylistTrack.track)
     var tracks: QueryInterfaceRequest<Track> {
-        request(for: Playlist.tracks)
+        request(for: Self.tracks)
     }
 
     // Auto-increment id

@@ -9,7 +9,6 @@ import SwiftUI
 
 /// Centralized font system for consistent typography across the app
 struct AppFonts {
-
     // MARK: - Display Fonts (Large Headers)
 
     static let displayLarge = Font.system(size: 32, weight: .bold)

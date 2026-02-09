@@ -36,7 +36,7 @@ enum Mood: String, Codable, CaseIterable {
     }
 
     /// Derive mood from audio features
-    static func fromFeatures(energy: Double?, valence: Double?, danceability: Double?, acousticness: Double?) -> Mood {
+    static func fromFeatures(energy: Double?, valence: Double?, danceability: Double?, acousticness: Double?) -> Self {
         let energyValue = energy ?? 0.5
         let valenceValue = valence ?? 0.5
         let danceabilityValue = danceability ?? 0.5
@@ -294,7 +294,7 @@ struct SongFeatures: Codable, FetchableRecord, MutablePersistableRecord {
     static let track = belongsTo(Track.self)
 
     var track: QueryInterfaceRequest<Track> {
-        request(for: SongFeatures.track)
+        request(for: Self.track)
     }
 }
 

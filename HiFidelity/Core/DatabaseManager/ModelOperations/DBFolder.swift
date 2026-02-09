@@ -5,12 +5,11 @@
 //  Created by Varun Rathod on 30/10/25.
 //
 
-import Foundation
 import AppKit
+import Foundation
 import GRDB
 
 extension DatabaseManager {
-
     // MARK: - Folder DB operations
 
     func updateFolderTrackCount(_ folder: Folder) async throws {
@@ -144,12 +143,12 @@ extension DatabaseManager {
 
             // Add folders to database with their bookmarks
             if !urlsToAdd.isEmpty {
-
                 DispatchQueue.global(qos: .background).async {
                     self.addFolders(urlsToAdd, bookmarkDataMap: bookmarkDataMap) { result in
                         switch result {
                         case .success(let dbFolders):
                             Logger.info("Successfully added \(dbFolders.count) folders to database")
+
                         case .failure(let error):
                             Logger.error("Failed to add folders to database: \(error)")
                         }
@@ -572,6 +571,7 @@ extension DatabaseManager {
                     switch result {
                     case .success:
                         Logger.info("Successfully refreshed folder \(folder.name)")
+
                     case .failure(let error):
                         Logger.error("Failed to refresh folder \(folder.name): \(error)")
                     }
@@ -699,7 +699,6 @@ extension DatabaseManager {
 
         Logger.info("Updated folder path: \(oldPath) -> \(newPath)")
     }
-
 }
 
 // MARK: - Folder Scan State Actor

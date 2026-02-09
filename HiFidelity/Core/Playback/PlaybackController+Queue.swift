@@ -46,7 +46,7 @@ extension PlaybackController {
         playTrackAtIndex(currentQueueIndex)
     }
 
-    /// Play tracks in shuffled order 
+    /// Play tracks in shuffled order
     func playTracksShuffled(_ tracks: [Track]) {
         guard !tracks.isEmpty else { return }
 

@@ -298,6 +298,7 @@ class PlaybackController {
                 self.seek(to: 0)
                 self.play()
             }
+
         case .all, .off:
             // Play next track (gapless if pre-loaded)
             DispatchQueue.main.async {

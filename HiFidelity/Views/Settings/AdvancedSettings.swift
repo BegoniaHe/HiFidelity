@@ -184,7 +184,6 @@ struct AdvancedSettings: View {
     private func applyCacheSize(_ sizeMB: Int) {
         ArtworkCache.shared.updateCacheSize(sizeMB: sizeMB)
     }
-
 }
 
 #Preview {

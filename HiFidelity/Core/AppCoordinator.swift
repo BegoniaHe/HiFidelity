@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 26/10/25.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 @MainActor
 @Observable

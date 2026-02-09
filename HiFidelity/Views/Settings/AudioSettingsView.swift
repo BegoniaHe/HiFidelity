@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 15/11/25.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 struct AudioSettingsView: View {
     @Bindable var settings = AudioSettings.shared
@@ -16,7 +16,6 @@ struct AudioSettingsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-
             // Output Device// Output Device
             settingsSection(title: "Output Device", icon: "speaker.wave.3") {
                 deviceSettings

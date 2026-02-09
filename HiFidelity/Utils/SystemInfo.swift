@@ -5,16 +5,15 @@
 //  Created by Varun Rathod on 03/11/25.
 //
 
-import Foundation
 import AppKit
 import AVFoundation
+import Foundation
 
 // MARK: - System Information Utility
 
 /// Utility class to gather and print system, hardware, and audio information
 /// for debugging and troubleshooting purposes
 final class SystemInfo {
-
     // MARK: - Public API
 
     /// Print all system information at app startup
@@ -121,7 +120,6 @@ final class SystemInfo {
         if let model = getHardwareModel() {
             Logger.info("  • Hardware Model: \(model)")
         }
-
     }
 
     // MARK: - Audio Device Information

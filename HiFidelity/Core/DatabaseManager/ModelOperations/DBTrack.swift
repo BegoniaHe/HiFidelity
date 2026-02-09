@@ -38,7 +38,6 @@ extension DatabaseManager {
                             let attributes = try fileURL.resourceValues(forKeys: [.contentModificationDateKey])
                             if let fileModDate = attributes.contentModificationDate,
                                let dbModDate = existingTrack.dateModified {
-
                                 // File was modified, update metadata
                                 if fileModDate > dbModDate {
                                     var updatedTrack = existingTrack
@@ -61,7 +60,6 @@ extension DatabaseManager {
                         TagLibMetadataManager.applyMetadata(to: &track, from: metadata, at: fileURL)
 
                         return (fileURL, TrackProcessResult.new(track, metadata))
-
                     } catch {
                         Logger.error("Failed to process track \(fileURL.lastPathComponent): \(error)")
                         return (fileURL, TrackProcessResult.skipped)
@@ -86,8 +84,10 @@ extension DatabaseManager {
             switch result {
             case .new(let track, let metadata):
                 newTracks.append((track, metadata))
+
             case .update(let track, let metadata):
                 updatedTracks.append((track, metadata))
+
             case .skipped:
                 skippedCount += 1
             }
@@ -487,5 +487,4 @@ extension DatabaseManager {
             Logger.info("Stored artwork for artist ID: \(artistId) from source: \(sourceType)")
         }
     }
-
 }

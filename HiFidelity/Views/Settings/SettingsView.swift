@@ -5,8 +5,8 @@
 //  Created by Varun Rathod on 31/10/25.
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Main settings view with tabbed interface
 struct SettingsView: View {
@@ -96,18 +96,22 @@ struct SettingsView: View {
                     AppearanceSettings(theme: theme)
                         .padding(DesignTokens.Spacing.xxl)
                 }
+
             case .audio:
                 ScrollView {
                     AudioSettingsView()
                         .padding(DesignTokens.Spacing.xxl)
                 }
+
             case .library:
                     LibrarySettings()
+
             case .advanced:
                 ScrollView {
                     AdvancedSettings()
                         .padding(DesignTokens.Spacing.xxl)
                 }
+
             case .about:
                 ScrollView {
                     AboutMenuView()

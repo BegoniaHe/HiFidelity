@@ -5,8 +5,8 @@
 //  Professional 10-band graphic equalizer
 //
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 // MARK: - Professional Equalizer View
 
@@ -534,32 +534,46 @@ enum EQPreset: String, CaseIterable, Identifiable {
         switch self {
         case .flat:
             return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
         case .rock:
             return [5, 3, -1, -2, 0, 2, 4, 5, 5, 4]
+
         case .pop:
             return [-2, -1, 0, 2, 4, 4, 2, 0, -1, -2]
+
         case .jazz:
             return [4, 3, 1, 2, -2, -2, 0, 2, 3, 4]
+
         case .classical:
             return [5, 4, 3, 2, -2, -2, 0, 2, 3, 4]
+
         case .electronic:
             return [5, 4, 0, -2, 2, 4, 5, 6, 6, 5]
+
         case .bassBoost:
             return [8, 7, 5, 3, 1, 0, 0, 0, 0, 0]
+
         case .trebleBoost:
             return [0, 0, 0, 0, 0, 1, 3, 5, 7, 8]
+
         case .vocal:
             return [-3, -2, 0, 3, 5, 5, 3, 0, -2, -3]
+
         case .acoustic:
             return [4, 4, 3, 1, 2, 2, 3, 4, 4, 3]
+
         case .dance:
             return [6, 5, 2, 0, 0, -2, 0, 2, 5, 6]
+
         case .latin:
             return [4, 3, 0, 0, -2, -2, -2, 0, 4, 5]
+
         case .hiphop:
             return [7, 6, 4, 2, 0, -1, 0, 1, 3, 4]
+
         case .metal:
             return [6, 5, 2, 0, -2, -1, 2, 4, 5, 6]
+
         case .lounge:
             return [-2, -1, 1, 3, 2, 1, 0, -1, 2, 3]
         }
@@ -594,5 +608,4 @@ struct EqualizerToggleButton: View {
             minWidth: DesignTokens.Size.Window.equalizerMinWidth,
             minHeight: DesignTokens.Size.Window.equalizerMinHeight
         )
-
 }

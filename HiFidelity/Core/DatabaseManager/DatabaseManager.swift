@@ -14,8 +14,8 @@
 //
 
 import Foundation
-import Observation
 import GRDB
+import Observation
 
 @MainActor
 @Observable
@@ -55,7 +55,7 @@ class DatabaseManager {
                                                 withIntermediateDirectories: true,
                                                 attributes: nil)
 
-        let dbFilename = bundleID.hasSuffix(".debug") ?  "\(About.bundleName)-debug.db" : "\(About.bundleName).db"
+        let dbFilename = bundleID.hasSuffix(".debug") ? "\(About.bundleName)-debug.db" : "\(About.bundleName).db"
         dbPath = appDirectory.appendingPathComponent(dbFilename).path
         Logger.info("Database path: \(dbPath)")
 
@@ -179,7 +179,7 @@ class DatabaseManager {
             "albums_fts_insert", "albums_fts_delete", "albums_fts_update",
             "artists_fts_insert", "artists_fts_delete", "artists_fts_update",
             "genres_fts_insert", "genres_fts_delete", "genres_fts_update",
-            "playlists_fts_insert", "playlists_fts_delete", "playlists_fts_update"
+            "playlists_fts_insert", "playlists_fts_delete", "playlists_fts_update",
         ]
 
         for trigger in triggersToDrop {
@@ -228,22 +228,31 @@ enum DatabaseError: Error {
         switch self {
         case .invalidTrackId:
             return "Invalid track ID"
+
         case .invalidFolderId:
             return "Invalid folder ID"
+
         case .updateFailed:
             return "Failed to update database"
+
         case .migrationFailed(let message):
             return "Migration failed: \(message)"
+
         case .scanFailed(let message):
             return "Scan failed: \(message)"
+
         case .trackNotFound(let id):
             return "Track with ID \(id) not found"
+
         case .fileNotFound(let path):
             return "File not found at path: \(path)"
+
         case .lyricsNotFound(let trackId):
             return "No lyrics found for track ID \(trackId)"
+
         case .recordNotFound(let table, let id):
             return "Record not found in table '\(table)' with ID \(id)"
+
         case .duplicateTrackInPlaylist:
             return "Track already exists in this playlist"
         }

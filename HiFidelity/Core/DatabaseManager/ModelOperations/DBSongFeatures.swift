@@ -9,7 +9,6 @@ import Foundation
 import GRDB
 
 extension DatabaseManager {
-
     // MARK: - Insert/Update Features
 
     /// Insert or update song features for a track

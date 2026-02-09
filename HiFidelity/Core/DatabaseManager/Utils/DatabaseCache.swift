@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import Observation
 import GRDB
+import Observation
 
 // MARK: - Database Cache
 
@@ -202,7 +202,6 @@ final class DatabaseCache {
             }
 
             return tracks
-
         } else {
             // Virtual folder - filter from all tracks
             let allTracks = try await getAllTracks(forceRefresh: forceRefresh)

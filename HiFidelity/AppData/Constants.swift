@@ -49,7 +49,7 @@ struct AudioFormat {
         "spx",                         // Speex
 
         // BASSDSD - DSD extension
-        "dff", "dsf"                   // DSD (Direct Stream Digital)
+        "dff", "dsf",                   // DSD (Direct Stream Digital)
     ]
 
     static var supportedFormatsDisplay: String {
@@ -65,7 +65,6 @@ struct AudioFormat {
     static func isNotSupported(_ fileExtension: String) -> Bool {
         !supportedMusicFormat.contains(fileExtension.lowercased())
     }
-
 }
 
 // MARK: - About

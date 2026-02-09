@@ -11,7 +11,6 @@ import SwiftUI
 
 /// NSTableView-based track table with unlimited columns
 struct NSTrackTableView: NSViewRepresentable {
-
     /// Context for playlist-specific operations
     struct PlaylistContext {
         let playlist: PlaylistItem
@@ -29,11 +28,9 @@ struct NSTrackTableView: NSViewRepresentable {
     @Environment(AppCoordinator.self) private var appCoordinator
     @Environment(AppTheme.self) private var theme
     @Bindable var playback = PlaybackController.shared
-
 }
 
 extension NSTrackTableView {
-
     func makeNSView(context: Context) -> NSScrollView {
         let scrollView = NSScrollView()
         let tableView = NSTableView()
@@ -88,7 +85,7 @@ extension NSTrackTableView {
         // Check if tracks actually changed before reloading
         let tracksChanged =
             context.coordinator.tracks.count != tracks.count
-            || !context.coordinator.tracks.elementsEqual(tracks, by: { $0.id == $1.id })
+            || !context.coordinator.tracks.elementsEqual(tracks) { $0.id == $1.id }
 
         // Update coordinator data
         context.coordinator.tracks = tracks
@@ -139,7 +136,6 @@ extension NSTrackTableView {
             selectionColor: NSColor(theme.currentTheme.primaryColor)
         )
     }
-
 }
 
 // MARK: - Coordinator
@@ -309,7 +305,7 @@ extension NSTrackTableView.Coordinator {
         columnIdentifiers = [
             .title, .artist, .album, .genre, .year,
             .trackNumber, .discNumber, .duration,
-            .playCount, .codec, .dateAdded, .filename
+            .playCount, .codec, .dateAdded, .filename,
         ]
 
         for columnType in columnIdentifiers {
@@ -347,26 +343,37 @@ extension NSTrackTableView.Coordinator {
         switch column {
         case .title:
             return createTitleCell(track: track, isCurrent: isCurrent, cellView: cellView)
+
         case .artist:
             return createTextCell(text: track.artist, cellView: cellView)
+
         case .album:
             return createTextCell(text: track.album, cellView: cellView)
+
         case .genre:
             return createTextCell(text: track.genre, cellView: cellView)
+
         case .year:
             return createTextCell(text: track.year, cellView: cellView)
+
         case .trackNumber:
             return createNumberCell(value: track.trackNumber, cellView: cellView)
+
         case .discNumber:
             return createNumberCell(value: track.discNumber, cellView: cellView)
+
         case .duration:
             return createDurationCell(track: track, cellView: cellView)
+
         case .playCount:
             return createNumberCell(value: track.playCount, cellView: cellView)
+
         case .codec:
             return createTextCell(text: track.codec ?? "—", cellView: cellView)
+
         case .dateAdded:
             return createDateCell(date: track.dateAdded, cellView: cellView)
+
         case .filename:
             return createTextCell(text: track.filename, cellView: cellView)
         }
@@ -418,7 +425,7 @@ extension NSTrackTableView.Coordinator {
             titleLabel.leadingAnchor.constraint(equalTo: artworkView.trailingAnchor, constant: 10),
             titleLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             titleLabel.trailingAnchor.constraint(
-                equalTo: containerView.trailingAnchor, constant: -8)
+                equalTo: containerView.trailingAnchor, constant: -8),
         ])
 
         cellView.addSubview(containerView)
@@ -427,7 +434,7 @@ extension NSTrackTableView.Coordinator {
             containerView.topAnchor.constraint(equalTo: cellView.topAnchor),
             containerView.leadingAnchor.constraint(equalTo: cellView.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: cellView.trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: cellView.bottomAnchor)
+            containerView.bottomAnchor.constraint(equalTo: cellView.bottomAnchor),
         ])
 
         // Prefetch nearby artwork
@@ -448,7 +455,7 @@ extension NSTrackTableView.Coordinator {
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: 8),
             label.centerYAnchor.constraint(equalTo: cellView.centerYAnchor),
-            label.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -8)
+            label.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -8),
         ])
 
         return cellView
@@ -465,7 +472,7 @@ extension NSTrackTableView.Coordinator {
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: 8),
             label.centerYAnchor.constraint(equalTo: cellView.centerYAnchor),
-            label.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -8)
+            label.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -8),
         ])
 
         return cellView
@@ -482,7 +489,7 @@ extension NSTrackTableView.Coordinator {
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: 8),
             label.centerYAnchor.constraint(equalTo: cellView.centerYAnchor),
-            label.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -8)
+            label.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -8),
         ])
 
         return cellView
@@ -853,7 +860,7 @@ extension NSTrackTableView.Coordinator {
             ("codec", "codec"),
             ("dateAdded", "dateAdded"),
             ("filename", "filename"),
-            ("playlistPosition", "playlistPosition")
+            ("playlistPosition", "playlistPosition"),
         ]
 
         for (keyPath, columnKey) in keyMapping {
@@ -873,7 +880,6 @@ extension NSTrackTableView.Coordinator {
         // Restore from UserDefaults
         if let data = UserDefaults.standard.data(forKey: "nsTableColumnState"),
             let state = try? JSONDecoder().decode(ColumnState.self, from: data) {
-
             for (identifier, width) in state.columnWidths {
                 if let column = tableView.tableColumn(
                     withIdentifier: NSUserInterfaceItemIdentifier(identifier)) {

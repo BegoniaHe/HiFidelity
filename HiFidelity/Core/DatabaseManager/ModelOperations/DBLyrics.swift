@@ -11,7 +11,6 @@ import GRDB
 // MARK: - Lyrics Database Operations
 
 extension DatabaseManager {
-
     // MARK: - Create
 
     /// Insert new lyrics for a track

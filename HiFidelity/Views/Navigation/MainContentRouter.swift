@@ -4,8 +4,8 @@
 //
 //  Created by Varun Rathod
 
-import SwiftUI
 import Observation
+import SwiftUI
 
 /// Centralized content router that handles navigation between different views
 struct MainContentRouter: View {
@@ -42,7 +42,6 @@ struct MainContentRouter: View {
                    )
                    .zIndex(1)
                }
-
            }
 
             // Layer 3 — Search
@@ -89,7 +88,6 @@ private struct EntityDetailWithNavigation: View {
             EntityDetailView(entity: entity)
         }
         .background(.ultraThinMaterial)
-
     }
 
     private var backButton: some View {

@@ -5,14 +5,14 @@
 //  Created by Varun Rathod on 03/11/25.
 //
 
-import Foundation
 import AppKit
+import Foundation
 import GRDB
 
 // MARK: - Artwork Cache
 
 /// High-performance artwork cache with downsampling, prefetching, and multi-level caching
-/// 
+///
 /// Features:
 /// - Two-tier memory cache (thumbnails + full-size)
 /// - Size-specific downsampling for optimal memory usage
@@ -21,7 +21,6 @@ import GRDB
 /// - Cross-caching (album artwork shared across tracks)
 @MainActor
 final class ArtworkCache {
-
     // MARK: - Singleton
 
     static let shared = ArtworkCache()

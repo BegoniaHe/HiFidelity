@@ -57,7 +57,7 @@ extension PlaybackController {
 //            self?.seekForward(event.interval)
 //            return .success
 //        }
-//        
+//
 //        commandCenter.skipBackwardCommand.isEnabled = true
 //        commandCenter.skipBackwardCommand.preferredIntervals = [NSNumber(value: 15)]
 //        commandCenter.skipBackwardCommand.addTarget { [weak self] event in

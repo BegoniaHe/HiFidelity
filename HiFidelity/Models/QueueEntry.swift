@@ -33,7 +33,7 @@ struct QueueEntry: Identifiable, Codable, FetchableRecord, MutablePersistableRec
 
     static let track = belongsTo(Track.self)
     var track: QueryInterfaceRequest<Track> {
-        request(for: QueueEntry.track)
+        request(for: Self.track)
     }
 
     // Auto-increment id
