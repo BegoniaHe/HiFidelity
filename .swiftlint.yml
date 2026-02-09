@@ -25,7 +25,7 @@ opt_in_rules:
   - vertical_whitespace_closing_braces
   - vertical_whitespace_opening_braces
   - vertical_whitespace_between_cases
-  
+
   # Code quality
   - explicit_init
   - explicit_self
@@ -34,19 +34,19 @@ opt_in_rules:
   - explicit_top_level_acl
   - redundant_type_annotation
   - explicit_enum_raw_value
-  
+
   # Naming
   - prefixed_toplevel_constant
   - type_contents_order
   - file_name
   - file_name_no_space
-  
+
   # Organization
   - sorted_imports
   - sorted_first_last
   - vertical_parameter_alignment_on_call
   - trailing_closure
-  
+
   # Safety
   - force_unwrapping
   - force_try
@@ -54,7 +54,7 @@ opt_in_rules:
   - implicitly_unwrapped_optional
   - fatal_error_message
   - yoda_condition
-  
+
   # Best practices
   - array_init
   - attributes
@@ -120,8 +120,8 @@ opt_in_rules:
 
 # Disable rules that conflict with strict formatting
 disabled_rules:
-  - todo  # Allow TODOs during development
-  - multiple_closures_with_trailing_closure  # Allow multiple trailing closures
+  - todo # Allow TODOs during development
+  - multiple_closures_with_trailing_closure # Allow multiple trailing closures
 
 # Rule configurations
 analyzer_rules:
@@ -258,9 +258,9 @@ file_name:
     - main.swift
     - LinuxMain.swift
     - TestHelpers.swift
-  prefix_pattern: ''
+  prefix_pattern: ""
   suffix_pattern: '\\+.*'
-  nested_type_separator: '.'
+  nested_type_separator: "."
 
 # Modifier order
 modifier_order:
@@ -295,13 +295,13 @@ custom_rules:
     regex: '(?<!#if DEBUG\n)print\('
     message: "Use proper logging instead of print()"
     severity: warning
-  
+
   no_empty_line_after_opening_brace:
     name: "No Empty Line After Opening Brace"
     regex: '\{\n\n'
     message: "Remove empty line after opening brace"
     severity: warning
-  
+
   no_empty_line_before_closing_brace:
     name: "No Empty Line Before Closing Brace"
     regex: '\n\n\s*\}'
