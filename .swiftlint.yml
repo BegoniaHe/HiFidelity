@@ -1,5 +1,6 @@
 excluded:
   - build
+  - .build
 
 identifier_name:
   min_length:

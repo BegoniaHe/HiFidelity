@@ -54,33 +54,17 @@
 		BB02F34F2ED8E22A0095934F /* Exceptions for "HiFidelity" folder in "HiFidelity" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				deps/include/taglib/tlist.tcc,
-				deps/include/taglib/tmap.tcc,
 				Info.plist,
 			);
 			target = BBDB7AD02EA796130003F406 /* HiFidelity */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		BB02F3512ED8E2B10095934F /* Exceptions for "HiFidelity" folder in "Embed Libraries" phase from "HiFidelity" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			attributesByRelativePath = {
-				deps/lib/libtag.2.dylib = (CodeSignOnCopy, );
-			};
-			buildPhase = BB6077262ED3767100D9F238 /* Embed Libraries */;
-			membershipExceptions = (
-				deps/lib/libtag.2.dylib,
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		BBDB7AD32EA796130003F406 /* HiFidelity */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				BB02F34F2ED8E22A0095934F /* Exceptions for "HiFidelity" folder in "HiFidelity" target */,
-				BB02F3512ED8E2B10095934F /* Exceptions for "HiFidelity" folder in "Embed Libraries" phase from "HiFidelity" target */,
 			);
 			path = HiFidelity;
 			sourceTree = "<group>";
@@ -404,6 +388,7 @@
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readwrite;
+				EXCLUDED_SOURCE_FILE_NAMES = "*.tcc";
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/HiFidelity/deps/include";
@@ -460,6 +445,7 @@
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readwrite;
+				EXCLUDED_SOURCE_FILE_NAMES = "*.tcc";
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/HiFidelity/deps/include";
