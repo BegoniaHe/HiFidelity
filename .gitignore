@@ -122,3 +122,8 @@ buildServer.json
 # Ignore deps directory in HiFidelity
 HiFidelity/deps
 
+# Ignore lsp config
+
+Package.swift
+Package.resolved
+
