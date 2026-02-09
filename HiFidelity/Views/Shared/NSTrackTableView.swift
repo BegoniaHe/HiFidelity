@@ -118,9 +118,13 @@ extension NSTrackTableView {
         if let selectedId = selection,
             let index = tracks.firstIndex(where: { $0.id == selectedId }),
             !tableView.selectedRowIndexes.contains(index) {
-            tableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
+            context.coordinator.performProgrammaticSelectionChange {
+                tableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
+            }
         } else if selection == nil && !tableView.selectedRowIndexes.isEmpty {
-            tableView.deselectAll(nil)
+            context.coordinator.performProgrammaticSelectionChange {
+                tableView.deselectAll(nil)
+            }
         }
     }
 
@@ -153,6 +157,7 @@ extension NSTrackTableView {
 
         weak var tableView: NSTableView?
         private var columnIdentifiers: [ColumnType] = []
+        private var isProgrammaticSelectionChange = false
 
         init(
             tracks: [Track],
@@ -195,6 +200,12 @@ extension NSTrackTableView {
                     window.makeFirstResponder(nil)
                 }
             }
+        }
+
+        func performProgrammaticSelectionChange(_ updates: () -> Void) {
+            isProgrammaticSelectionChange = true
+            updates()
+            isProgrammaticSelectionChange = false
         }
     }
 }
@@ -256,6 +267,7 @@ extension NSTrackTableView.Coordinator {
 
     func tableViewSelectionDidChange(_ notification: Notification) {
         guard let tableView = notification.object as? NSTableView else { return }
+        guard !isProgrammaticSelectionChange else { return }
         let selectedRow = tableView.selectedRow
 
         if selectedRow >= 0 && selectedRow < tracks.count {
