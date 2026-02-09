@@ -51,6 +51,10 @@ struct AudioDeviceSelector: View {
             // Device list
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
+                    systemDefaultRow
+
+                    Divider()
+
                     if dacManager.availableDevices.isEmpty {
                         Text("No output devices found")
                             .font(AppFonts.captionLarge)
@@ -93,6 +97,75 @@ struct AudioDeviceSelector: View {
     }
 
     // MARK: - Device Row
+
+    private var systemDefaultRow: some View {
+        Button(action: {
+            selectSystemDefault()
+        }) {
+            HStack(spacing: DesignTokens.Spacing.md) {
+                Image(systemName: isSystemDefaultSelected ? "checkmark.circle.fill" : "circle")
+                    .font(AppFonts.labelLarge)
+                    .foregroundColor(
+                        isSystemDefaultSelected
+                            ? theme.currentTheme.primaryColor : .secondary.opacity(0.3)
+                    )
+                    .frame(width: DesignTokens.Size.Icon.xs)
+
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xxs) {
+                    Text("System Default")
+                        .font(AppFonts.bodySmall)
+                        .foregroundColor(.primary)
+
+                    if let defaultDevice = dacManager.systemDefaultDevice {
+                        HStack(spacing: DesignTokens.Spacing.xsPlus) {
+                            Text(defaultDevice.name)
+                                .font(AppFonts.captionMedium)
+                                .foregroundColor(.secondary)
+
+                            /*
+                            Text("•")
+                                .font(AppFonts.captionMedium)
+                                .foregroundColor(.secondary.opacity(0.5))
+
+                            Text("\(Int(defaultDevice.sampleRate)) Hz")
+                                .font(AppFonts.captionMedium)
+                                .foregroundColor(.secondary)
+
+                            Text("•")
+                                .font(AppFonts.captionMedium)
+                                .foregroundColor(.secondary.opacity(0.5))
+
+                            Text(channelDescription(defaultDevice.channels))
+                                .font(AppFonts.captionMedium)
+                                .foregroundColor(.secondary)
+                            */
+                        }
+                    } else {
+                        Text("No default device available")
+                            .font(AppFonts.captionMedium)
+                            .foregroundColor(.secondary)
+                    }
+                }
+
+                Spacer()
+            }
+            .padding(.horizontal, DesignTokens.Spacing.lg)
+            .padding(.vertical, DesignTokens.Spacing.sm)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(PlainButtonStyle())
+        .background(
+            isSystemDefaultSelected
+                ? theme.currentTheme.primaryColor.opacity(0.1) : Color.clear
+        )
+        .onHover { hovering in
+            if hovering && !isSystemDefaultSelected {
+                NSCursor.pointingHand.push()
+            } else {
+                NSCursor.pop()
+            }
+        }
+    }
 
     private func deviceRow(_ device: AudioOutputDevice) -> some View {
         Button(action: {
@@ -159,8 +232,21 @@ struct AudioDeviceSelector: View {
         }
     }
 
+    private func selectSystemDefault() {
+        guard !isSystemDefaultSelected else { return }
+
+        if dacManager.switchToSystemDefault() {
+            Logger.info("Switched to system default output")
+            showDeviceMenu = false
+        }
+    }
+
     private func isCurrentDevice(_ device: AudioOutputDevice) -> Bool {
-        device.id == dacManager.currentDeviceID
+        !dacManager.followsSystemDefault && device.id == dacManager.currentDeviceID
+    }
+
+    private var isSystemDefaultSelected: Bool {
+        dacManager.followsSystemDefault
     }
 
     private func channelDescription(_ channels: Int) -> String {
