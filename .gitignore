@@ -119,3 +119,6 @@ Temporary Items
 # BuildServer
 buildServer.json
 
+# Ignore deps directory in HiFidelity
+HiFidelity/deps
+
