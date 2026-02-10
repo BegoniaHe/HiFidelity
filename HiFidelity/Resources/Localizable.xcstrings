@@ -4354,6 +4354,22 @@
         }
       }
     },
+    "Open HiFidelity" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HiFidelity öffnen"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开 HiFidelity"
+          }
+        }
+      }
+    },
     "Optimize" : {
       "localizations" : {
         "de" : {
@@ -5098,6 +5114,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "队列持久化状态：\n- 激活：%1$@\n- 未保存的更改：%2$@\n- 上次保存：%3$@\n- 队列数量：%4$lld\n- 当前索引：%5$lld"
+          }
+        }
+      }
+    },
+    "Quit HiFidelity" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HiFidelity schließen"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出 HiFidelity"
           }
         }
       }

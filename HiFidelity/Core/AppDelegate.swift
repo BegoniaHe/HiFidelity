@@ -12,6 +12,7 @@ import Sparkle
 /// AppDelegate handles application lifecycle events and macOS-specific functionality
 class AppDelegate: NSObject, NSApplicationDelegate {
     internal var updaterController: SPUStandardUpdaterController?
+    private var didHandleExternalURL = false
 
     // MARK: - Application Lifecycle
 
@@ -38,6 +39,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Restore miniplayer if it was open when the app closed
         restoreMiniPlayerState()
+
+        // If the app was launched directly (not via URL), open the main window
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+            guard let self = self, !self.didHandleExternalURL else { return }
+            MainWindowController.show()
+        }
 
         Logger.info("Application did finish launching")
     }
@@ -70,6 +77,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         // Keep app running even when last window is closed (standard macOS behavior)
         return false
+    }
+
+    // MARK: - URL Scheme Handling
+
+    /// Fallback handler for hifidelity:// URLs (covers cases where onOpenURL may not fire)
+    func application(_ application: NSApplication, open urls: [URL]) {
+        didHandleExternalURL = true
+        for url in urls {
+            URLSchemeRouter.handleURL(url)
+        }
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        if !flag {
+            MainWindowController.show()
+        }
+        return true
     }
 
     // MARK: - Application State Changes

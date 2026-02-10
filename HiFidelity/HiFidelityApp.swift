@@ -19,6 +19,7 @@ struct HiFidelityApp: App {
 
     private let appCoordinator = AppCoordinator()
     @State private var appTheme = AppTheme.shared
+    @State private var isMenuBarExtraInserted = true
 
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.openWindow) private var openWindow
@@ -49,8 +50,11 @@ struct HiFidelityApp: App {
         }
         .windowToolbarStyle(.unifiedCompact)
         .windowResizability(.contentSize)
+        .defaultLaunchBehavior(.suppressed)
+        .handlesExternalEvents(matching: [])
 
         equalizerWindowContentView()
+        menuBarExtraContentView()
     }
 
     init() {
@@ -88,6 +92,8 @@ struct HiFidelityApp: App {
             if let toolbar = window.toolbar {
                 toolbar.displayMode = .iconOnly
             }
+
+            MainWindowController.applySavedPositionOrCenter(to: window)
         }
     }
 
@@ -114,7 +120,6 @@ struct HiFidelityApp: App {
     }
 
     private func equalizerWindowContentView() -> some Scene {
-        // Separate window for Equalizer (single instance only)
         Window("Equalizer", id: "audio-effects") {
             EqualizerView()
                 .environment(appTheme)
@@ -123,6 +128,16 @@ struct HiFidelityApp: App {
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
         .defaultPosition(.center)
+        .defaultLaunchBehavior(.suppressed)
+        .handlesExternalEvents(matching: [])
+    }
+
+    private func menuBarExtraContentView() -> some Scene {
+        MenuBarExtra(isInserted: $isMenuBarExtraInserted) {
+            MenuBarView()
+        } label: {
+            Image("MenuBarIcon")
+        }
     }
 
     @CommandsBuilder

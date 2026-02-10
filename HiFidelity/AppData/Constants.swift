@@ -111,4 +111,7 @@ extension Notification.Name {
     static let openSettingsAbout = Notification.Name("OpenSettingsAbout")
     static let openSettingsWindow = Notification.Name("OpenSettingsWindow")
     static let openSettings = Notification.Name("OpenSettings")
+
+    // Window control
+    static let openMainWindow = Notification.Name("OpenMainWindow")
 }

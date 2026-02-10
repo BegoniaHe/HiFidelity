@@ -38,6 +38,21 @@
     <key>NSSupportsAutomaticGraphicsSwitching</key>
     <true/>
 
+	<!-- URL Scheme for remote control -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.hifidelity.urlscheme</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>hifidelity</string>
+			</array>
+		</dict>
+	</array>
+
 	<!-- Sparkle Configuration -->
 	<key>SUEnableDownloaderService</key>
 	<true/>
