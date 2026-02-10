@@ -83,7 +83,7 @@ enum URLSchemeRouter {
 
         case .togglePlayStop:
             if PlaybackController.shared.isPlaying {
-                PlaybackController.shared.stop()
+                PlaybackController.shared.pause()
             } else {
                 PlaybackController.shared.play()
             }
@@ -92,7 +92,7 @@ enum URLSchemeRouter {
             PlaybackController.shared.play()
 
         case .stop:
-            PlaybackController.shared.stop()
+            PlaybackController.shared.stopPlayback()
 
         // MARK: Volume
         case .volumeUp:
