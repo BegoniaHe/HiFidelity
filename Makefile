@@ -86,11 +86,19 @@ build: check-taglib
 		build
 
 # Run the debug app
-run: build-debug
+run: build
+	@echo "[Run] Terminating existing instances..."
+	@pkill -f "$(RELEASE_APP)/Contents/MacOS/$(APP_NAME)" 2>/dev/null || true
+	@echo "[Run] Launching $(APP_NAME)..."
+	@sudo open "$(RELEASE_APP)"
+
+run-debug: build-debug
 	@echo "[Run] Terminating existing instances..."
 	@pkill -f "$(DEBUG_APP)/Contents/MacOS/$(APP_NAME)" 2>/dev/null || true
 	@echo "[Run] Launching $(APP_NAME)..."
 	@sudo open "$(DEBUG_APP)"
+
+dev: run-debug
 
 # Clean build artifacts
 clean:
@@ -124,6 +132,32 @@ init:
 		exit 1; \
 	fi
 
+# Install debug .app to /Applications
+install-debug: build-debug
+	@echo "[Install] Checking for existing installation..."
+	@if [ -d "/Applications/$(APP_NAME).app" ]; then \
+		echo "[Install] Removing existing installation..."; \
+		sudo rm -rf "/Applications/$(APP_NAME).app"; \
+	fi
+	@echo "[Install] Installing $(APP_NAME) to /Applications..."
+	@sudo cp -R "$(DEBUG_APP)" "/Applications/$(APP_NAME).app"
+	@echo "[Install] Removing quarantine attribute..."
+	@sudo xattr -r -d com.apple.quarantine "/Applications/$(APP_NAME).app"
+	@echo "[Install] Installation complete"
+
+# Install release .app to /Applications
+install: build
+	@echo "[Install] Checking for existing installation..."
+	@if [ -d "/Applications/$(APP_NAME).app" ]; then \
+		echo "[Install] Removing existing installation..."; \
+		sudo rm -rf "/Applications/$(APP_NAME).app"; \
+	fi
+	@echo "[Install] Installing $(APP_NAME) to /Applications..."
+	@sudo cp -R "$(RELEASE_APP)" "/Applications/$(APP_NAME).app"
+	@echo "[Install] Removing quarantine attribute..."
+	@sudo xattr -r -d com.apple.quarantine "/Applications/$(APP_NAME).app"
+	@echo "[Install] Installation complete"
+	
 # Show help
 help:
 	@echo "HiFidelity Build System"
@@ -139,3 +173,4 @@ help:
 	@echo "  make build-taglib   - Build TagLib from source"
 	@echo "  make rebuild-taglib - Force rebuild TagLib"
 	@echo "  make help           - Show this help message"
+	@echo "  make install        - Install the app to /Applications"

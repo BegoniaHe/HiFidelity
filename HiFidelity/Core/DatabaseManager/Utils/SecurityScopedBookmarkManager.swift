@@ -23,15 +23,13 @@ class SecurityScopedBookmarkManager {
     // MARK: - Initialization
 
     /// Initialize and resolve all security-scoped bookmarks
-    func initializeSecurityScopes() {
+    func initializeSecurityScopes() async {
         Logger.info("Initializing security-scoped bookmarks...")
-
-        Task {
-            do {
-                // Load all folders from database
-                let folders = try await DatabaseManager.shared.dbQueue.read { db in
-                    try Folder.fetchAll(db)
-                }
+        do {
+            // Load all folders from database
+            let folders = try await DatabaseManager.shared.dbQueue.read { db in
+                try Folder.fetchAll(db)
+            }
 
             if folders.isEmpty {
                 Logger.info("No folders in library - skipping bookmark resolution")
@@ -67,13 +65,12 @@ class SecurityScopedBookmarkManager {
             Logger.info("   - Failed: \(failureCount)")
             Logger.info("   - Stale: \(staleCount)")
 
-                // Refresh stale bookmarks
-                if !foldersNeedingRefresh.isEmpty {
-                    await refreshStaleBookmarks()
-                }
-            } catch {
-                Logger.error("Failed to load folders for bookmark resolution: \(error)")
+            // Refresh stale bookmarks
+            if !foldersNeedingRefresh.isEmpty {
+                await refreshStaleBookmarks()
             }
+        } catch {
+            Logger.error("Failed to load folders for bookmark resolution: \(error)")
         }
     }
 

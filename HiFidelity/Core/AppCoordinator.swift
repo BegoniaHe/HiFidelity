@@ -31,9 +31,7 @@ class AppCoordinator {
         Logger.info("Initializing HiFidelity application...")
 
         // Initialize security-scoped bookmarks for all folders
-        await MainActor.run {
-            bookmarkManager.initializeSecurityScopes()
-        }
+        await bookmarkManager.initializeSecurityScopes()
 
         // Start queue persistence manager
         QueuePersistenceManager.shared.start()
