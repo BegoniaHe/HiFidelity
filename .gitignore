@@ -127,3 +127,5 @@ HiFidelity/deps
 Package.swift
 Package.resolved
 
+# TestAudio
+TestAudio/

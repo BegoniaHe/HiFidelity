@@ -33,7 +33,7 @@ extension BASSAudioEngine {
             path,
             0,
             0,
-            DWORD(BASS_STREAM_PRESCAN) // Use native bit depth from source file
+            DWORD(BASS_STREAM_PRESCAN)  // Use native bit depth from source file
         )
 
         if currentStream == 0 {
@@ -47,6 +47,9 @@ extension BASSAudioEngine {
             return false
         }
 
+        // Store the URL for logging
+        self.currentURL = url
+
         // CRITICAL: Switch device sample rate to match track for bit-perfect playback
         // Why this is necessary:
         // - Audio devices operate at a specific sample rate (e.g., 44.1kHz, 48kHz, 96kHz)
@@ -57,12 +60,16 @@ extension BASSAudioEngine {
             // Get stream info to determine actual sample rate and bit depth
             if let streamInfo = getStreamInfo() {
                 Logger.info("Loaded track: \(url.lastPathComponent)")
-                Logger.info("  Stream: \(streamInfo.frequency) Hz, \(streamInfo.channels) channels, \(streamInfo.bitDepth)-bit")
+                Logger.info(
+                    "  Stream: \(streamInfo.frequency) Hz, \(streamInfo.channels) channels, \(streamInfo.bitDepth)-bit"
+                )
 
                 let targetRate = Float64(streamInfo.frequency)
                 Task { @MainActor in
                     if self.dacManager.setDeviceSampleRate(targetRate) {
-                        Logger.info("  Bit-perfect: Device switched to \(streamInfo.frequency) Hz (no resampling)")
+                        Logger.info(
+                            "  Bit-perfect: Device switched to \(streamInfo.frequency) Hz (no resampling)"
+                        )
                     } else {
                         Logger.warning("  Could not switch device rate, BASS will resample")
                     }
@@ -99,7 +106,7 @@ extension BASSAudioEngine {
             }
         }
 
-        let result = BASS_ChannelPlay(currentStream, 0) // 0 = don't restart from beginning
+        let result = BASS_ChannelPlay(currentStream, 0)  // 0 = don't restart from beginning
 
         if result == 0 {
             let errorCode = BASS_ErrorGetCode()
@@ -107,7 +114,7 @@ extension BASSAudioEngine {
             return false
         }
 
-        Logger.debug("Playing stream")
+        Logger.debug("Playing stream \(currentStream) from URL: \(currentURL?.path ?? "unknown path")")
         return true
     }
 
@@ -116,7 +123,7 @@ extension BASSAudioEngine {
 
         let result = BASS_ChannelPause(currentStream)
 
-        Logger.debug("Paused stream")
+        Logger.debug("Paused stream \(currentStream) from URL: \(currentURL?.path ?? "unknown path")")
         return result != 0
     }
 
@@ -132,10 +139,10 @@ extension BASSAudioEngine {
         BASS_StreamFree(currentStream)
         currentStream = 0
 
-        Logger.debug("Stopped stream")
-    }
+        Logger.debug("Stopped stream \(currentStream) from URL: \(currentURL?.path ?? "unknown path")")
 
-    func resume() -> Bool {
-        return play()
+        func resume() -> Bool {
+            return play()
+        }
     }
 }

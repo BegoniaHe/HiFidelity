@@ -17,6 +17,7 @@ class BASSAudioEngine {
 
     internal var currentStream: HSTREAM = 0
     internal var nextStream: HSTREAM = 0  // For gapless playback
+    internal var currentURL: URL?  // Track current playing URL for logging
     internal var isInitialized = false
     internal var loadedPlugins: [HPLUGIN] = []
     @MainActor internal var settings: AudioSettings { AudioSettings.shared }
