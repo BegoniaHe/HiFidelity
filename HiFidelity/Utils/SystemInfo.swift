@@ -6,7 +6,7 @@
 //
 
 import AppKit
-import AVFoundation
+import CoreAudio
 import Foundation
 
 // MARK: - System Information Utility
