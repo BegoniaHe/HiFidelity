@@ -143,8 +143,10 @@ extension DatabaseManager {
 
             // Add folders to database with their bookmarks
             if !urlsToAdd.isEmpty {
+                let urlsSnapshot = urlsToAdd
+                let bookmarkDataMapSnapshot = bookmarkDataMap
                 DispatchQueue.global(qos: .background).async {
-                    self.addFolders(urlsToAdd, bookmarkDataMap: bookmarkDataMap) { result in
+                    self.addFolders(urlsSnapshot, bookmarkDataMap: bookmarkDataMapSnapshot) { result in
                         switch result {
                         case .success(let dbFolders):
                             Logger.info("Successfully added \(dbFolders.count) folders to database")

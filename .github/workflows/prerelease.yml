@@ -16,7 +16,7 @@ concurrency:
 jobs:
   recreate-prerelease:
     name: Recreate prerelease
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     outputs:
       build_version: ${{ steps.version.outputs.build_version }}
       release_tag: ${{ steps.create.outputs.release_tag }}
@@ -104,6 +104,21 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+
+      - name: Select latest Xcode and verify toolchain
+        run: |
+          latest_xcode="$(ls -d /Applications/Xcode*.app | sort -V | tail -n1)"
+          if [ -z "$latest_xcode" ]; then
+            echo "No Xcode installation found on runner"
+            exit 1
+          fi
+
+          echo "DEVELOPER_DIR=${latest_xcode}/Contents/Developer" >> "$GITHUB_ENV"
+          export DEVELOPER_DIR="${latest_xcode}/Contents/Developer"
+
+          echo "Using Xcode at: ${latest_xcode}"
+          xcodebuild -version
+          swift --version
 
       - name: Build app (Release)
         run: make build

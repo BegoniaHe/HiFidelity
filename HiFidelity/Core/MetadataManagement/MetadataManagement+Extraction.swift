@@ -11,7 +11,7 @@ extension MetadataManagement {
     // MARK: - Public Methods
 
     @available(macOS, deprecated: 13.0)
-    static func extractMetadata(from url: URL, completion: @escaping (TrackMetadata) -> Void) {
+    static func extractMetadata(from url: URL, completion: @escaping @Sendable (TrackMetadata) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
             let metadata = extractMetadataSync(from: url)
             DispatchQueue.main.async {
