@@ -1,0 +1,150 @@
+name: Auto Prerelease
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prerelease-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  recreate-prerelease:
+    name: Recreate prerelease
+    runs-on: ubuntu-latest
+    outputs:
+      build_version: ${{ steps.version.outputs.build_version }}
+      release_tag: ${{ steps.create.outputs.release_tag }}
+    steps:
+      - name: Generate timestamp version
+        id: version
+        run: |
+          build_version="$(date -u +'%Y%m%d.%H%M%S')"
+          echo "build_version=$build_version" >> "$GITHUB_OUTPUT"
+
+      - name: Delete all existing prereleases
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const releases = await github.paginate(github.rest.repos.listReleases, {
+              owner,
+              repo,
+              per_page: 100,
+            });
+
+            const prereleases = releases.filter((release) => release.prerelease);
+            core.info(`Found ${prereleases.length} prerelease(s) to delete.`);
+
+            for (const release of prereleases) {
+              core.info(`Deleting prerelease #${release.id} (${release.tag_name})`);
+              await github.rest.repos.deleteRelease({
+                owner,
+                repo,
+                release_id: release.id,
+              });
+
+              if (release.tag_name) {
+                try {
+                  await github.rest.git.deleteRef({
+                    owner,
+                    repo,
+                    ref: `tags/${release.tag_name}`,
+                  });
+                  core.info(`Deleted tag ${release.tag_name}`);
+                } catch (error) {
+                  if (error.status === 404) {
+                    core.info(`Tag ${release.tag_name} already removed.`);
+                  } else {
+                    throw error;
+                  }
+                }
+              }
+            }
+
+      - name: Create prerelease
+        id: create
+        uses: actions/github-script@v7
+        env:
+          BUILD_VERSION: ${{ steps.version.outputs.build_version }}
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const tag = 'prerelease-latest';
+            const buildVersion = process.env.BUILD_VERSION;
+
+            await github.rest.repos.createRelease({
+              owner,
+              repo,
+              tag_name: tag,
+              target_commitish: context.sha,
+              name: `Prerelease ${buildVersion}`,
+              body: `Automated prerelease build version: ${buildVersion}\nCommit: ${context.sha}`,
+              draft: false,
+              prerelease: true,
+              generate_release_notes: false,
+            });
+
+            core.setOutput('release_tag', tag);
+
+  build-and-upload:
+    name: Build and upload DMG
+    runs-on: macos-latest
+    needs: recreate-prerelease
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Build app (Release)
+        run: make build
+
+      - name: Package DMG
+        id: package
+        env:
+          BUILD_VERSION: ${{ needs.recreate-prerelease.outputs.build_version }}
+        run: |
+          APP_PATH="build/Build/Products/Release/HiFidelity.app"
+          if [ ! -d "$APP_PATH" ]; then
+            echo "App not found at $APP_PATH"
+            exit 1
+          fi
+
+          DMG_NAME="HiFidelity-prerelease-${BUILD_VERSION}.dmg"
+          DMG_PATH="build/${DMG_NAME}"
+          STAGING_DIR="build/dmg-staging"
+
+          rm -rf "$STAGING_DIR"
+          mkdir -p "$STAGING_DIR"
+          cp -R "$APP_PATH" "$STAGING_DIR/"
+          ln -s /Applications "$STAGING_DIR/Applications"
+
+          hdiutil create \
+            -volname "HiFidelity Prerelease ${BUILD_VERSION}" \
+            -srcfolder "$STAGING_DIR" \
+            -ov \
+            -format UDZO \
+            "$DMG_PATH"
+
+          shasum -a 256 "$DMG_PATH" > "${DMG_PATH}.sha256"
+
+          echo "dmg_path=$DMG_PATH" >> "$GITHUB_OUTPUT"
+          echo "sha_path=${DMG_PATH}.sha256" >> "$GITHUB_OUTPUT"
+
+      - name: Upload assets to prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.recreate-prerelease.outputs.release_tag }}
+          DMG_PATH: ${{ steps.package.outputs.dmg_path }}
+          SHA_PATH: ${{ steps.package.outputs.sha_path }}
+        run: |
+          gh release upload "$RELEASE_TAG" "$DMG_PATH" "$SHA_PATH" --clobber
