@@ -50,7 +50,7 @@
 
 ## ✨ Features
 
-- Powered by the BASS (un4seen) audio library for professional-grade audio quality and TagLib for meta-data reading
+- Powered by the BASS (un4seen) audio library for professional-grade audio quality and Lyra for metadata extraction
 - Support for 10+ audio formats including lossless and high-resolution files
   - **Lossless & Hi-Res**: FLAC, OGA, WAV, AIFF, AIF, APE, WV, TTA, DFF, DSF
   - **Compressed**: MP3, MP2, AAC, OGG, OPUS, M4A, M4B, M4P, MP4, M4V, MPC
@@ -159,7 +159,7 @@ brew install --cask rvarunrathod/tap/hifidelity
 #### Acknowledgments
 
 - [**BASS Audio Library**](https://www.un4seen.com/): Professional audio engine
-- [**TagLib**](https://taglib.org/): Metadata extraction
+- [**Lyra**](https://github.com/BegoniaHe/Lyra): Metadata extraction
 - [**GRDB**](https://github.com/groue/GRDB.swift): Fast, reliable local database
 - [**Sparkle**](https://github.com/sparkle-project/Sparkle): A software update framework for macOS
 - [**Lrclib**](https://lrclib.net/): Utility for mass-downloading LRC synced lyrics for your offline music library.

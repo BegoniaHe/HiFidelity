@@ -8,8 +8,5 @@
 #ifndef HiFidelity_Bridging_Header_h
 #define HiFidelity_Bridging_Header_h
 
-// TagLib Metadata Extractor
-#import "TagLibMetadataExtractor.h"
-
 #endif /* HiFidelity_Bridging_Header_h */
 
