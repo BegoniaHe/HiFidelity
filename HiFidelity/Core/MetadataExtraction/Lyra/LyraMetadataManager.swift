@@ -1,17 +1,17 @@
 //
-//  TagLibMetadataManager.swift
+//  LyraMetadataManager.swift
 //  HiFidelity
 //
-//  Swift wrapper for TagLib metadata extraction
-//  Provides a clean Swift interface to TagLib-based metadata extraction
+//  Swift wrapper for Lyra metadata extraction
+//  Provides a clean Swift interface to Lyra-based metadata extraction
 //
 
 import AppKit
 import Foundation
 import Lyra
 
-/// Swift wrapper for TagLib metadata extraction
-struct TagLibMetadataManager {
+/// Swift wrapper for Lyra metadata extraction
+struct LyraMetadataManager {
     /// Extract metadata from an audio file using Lyra
     /// - Parameter url: URL to the audio file
     /// - Returns: TrackMetadata object populated with extracted data
@@ -249,7 +249,7 @@ struct TagLibMetadataManager {
 
 // MARK: - Convenience Extensions
 
-extension TagLibMetadataManager {
+extension LyraMetadataManager {
     /// Extract metadata and apply it directly to a Track object
     /// - Parameters:
     ///   - track: Track object to populate
@@ -326,7 +326,7 @@ extension TagLibMetadataManager {
 
 // MARK: - Error Handling
 
-extension TagLibMetadataManager {
+extension LyraMetadataManager {
     enum MetadataError: Error, LocalizedError {
         case fileNotFound
         case unsupportedFormat

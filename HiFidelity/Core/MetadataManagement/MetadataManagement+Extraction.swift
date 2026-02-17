@@ -22,6 +22,6 @@ extension MetadataManagement {
 
     @available(macOS, deprecated: 13.0)
     static func extractMetadataSync(from url: URL) -> TrackMetadata {
-        return TagLibMetadataManager.extractMetadata(from: url)
+        return LyraMetadataManager.extractMetadata(from: url)
     }
 }

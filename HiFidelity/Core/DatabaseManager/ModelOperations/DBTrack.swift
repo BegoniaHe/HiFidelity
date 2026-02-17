@@ -41,8 +41,8 @@ extension DatabaseManager {
                                 // File was modified, update metadata
                                 if fileModDate > dbModDate {
                                     var updatedTrack = existingTrack
-                                    let metadata = TagLibMetadataManager.extractMetadata(from: fileURL)
-                                    TagLibMetadataManager.applyMetadata(to: &updatedTrack, from: metadata, at: fileURL)
+                                    let metadata = LyraMetadataManager.extractMetadata(from: fileURL)
+                                    LyraMetadataManager.applyMetadata(to: &updatedTrack, from: metadata, at: fileURL)
 
                                     Logger.info("File modified, updating metadata: \(fileURL.lastPathComponent)")
                                     return (fileURL, TrackProcessResult.update(updatedTrack, metadata))
@@ -55,9 +55,9 @@ extension DatabaseManager {
 
                         // New track - extract metadata and prepare for insertion
                         var track = Track(url: fileURL)
-                        let metadata = TagLibMetadataManager.extractMetadata(from: fileURL)
+                        let metadata = LyraMetadataManager.extractMetadata(from: fileURL)
                         track.folderId = folderId
-                        TagLibMetadataManager.applyMetadata(to: &track, from: metadata, at: fileURL)
+                        LyraMetadataManager.applyMetadata(to: &track, from: metadata, at: fileURL)
 
                         return (fileURL, TrackProcessResult.new(track, metadata))
                     } catch {
