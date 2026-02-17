@@ -15,6 +15,7 @@ struct SearchResultsView: View {
     @Environment(DatabaseManager.self) var databaseManager
     @Bindable var theme = AppTheme.shared
     @Bindable var playback = PlaybackController.shared
+    @Bindable var jellyfin = JellyfinSessionManager.shared
 
     @State private var results = DatabaseManager.SearchResults()
     @State private var isLoading = false
@@ -372,12 +373,45 @@ struct SearchResultsView: View {
         do {
             // Use selected search mode
             results = try await databaseManager.search(query: searchQuery, mode: searchMode)
+
+            if jellyfin.isAuthenticated {
+                let remoteTracks = await jellyfin.searchTracks(query: searchQuery, limit: 100)
+                if !remoteTracks.isEmpty {
+                    results.tracks = mergeTracks(local: results.tracks, remote: remoteTracks)
+                }
+            }
+
             Logger.info("Search completed (\(searchMode == .and ? "AND" : "OR") mode): \(results.totalCount) total results")
         } catch {
             Logger.error("Search failed: \(error)")
 
             results = DatabaseManager.SearchResults()
         }
+    }
+
+    private func mergeTracks(local: [Track], remote: [Track]) -> [Track] {
+        var merged = local
+        var seenRemoteItemIds = Set(local.compactMap { $0.remoteItemId })
+        var seenURLs = Set(local.map { $0.url.absoluteString })
+
+        for track in remote {
+            if let remoteItemId = track.remoteItemId, seenRemoteItemIds.contains(remoteItemId) {
+                continue
+            }
+
+            let urlString = track.url.absoluteString
+            if seenURLs.contains(urlString) {
+                continue
+            }
+
+            merged.append(track)
+            if let remoteItemId = track.remoteItemId {
+                seenRemoteItemIds.insert(remoteItemId)
+            }
+            seenURLs.insert(urlString)
+        }
+
+        return merged
     }
 }
 

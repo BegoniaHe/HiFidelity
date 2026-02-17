@@ -105,6 +105,41 @@ extension DatabaseManager {
 
     // MARK: - Add Folders
 
+    func ensureManagedFolderTracked(at url: URL) async throws -> Folder {
+        try FileManager.default.createDirectory(
+            at: url,
+            withIntermediateDirectories: true,
+            attributes: nil
+        )
+
+        let trackedFolder = try await dbQueue.write { db -> Folder in
+            if let existing = try Folder
+                .filter(Folder.Columns.path == url.path)
+                .fetchOne(db) {
+                return existing
+            }
+
+            var folder = Folder(url: url, bookmarkData: nil)
+            if let attributes = try? FileManager.default.attributesOfItem(atPath: url.path),
+               let fsModDate = attributes[.modificationDate] as? Date {
+                folder.dateUpdated = fsModDate
+            }
+
+            try folder.insert(db)
+            return folder
+        }
+
+        await MainActor.run {
+            NotificationCenter.default.post(name: .foldersDataDidChange, object: nil)
+
+            if FolderWatcherService.shared.isWatching {
+                FolderWatcherService.shared.startWatching(folder: trackedFolder)
+            }
+        }
+
+        return trackedFolder
+    }
+
     func addFolder() {
         // Prevent adding folders while import is in progress
         if isImporting {

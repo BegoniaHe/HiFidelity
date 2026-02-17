@@ -395,7 +395,7 @@ private struct SearchBar: View {
         .onChange(of: text) { _, newValue in
             if newValue.isEmpty {
                 isActive = false
-            } else if newValue.count >= 2 {
+            } else if newValue.count >= 1 {
                 isActive = true
             }
         }

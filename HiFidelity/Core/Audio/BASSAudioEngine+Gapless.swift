@@ -28,28 +28,39 @@ extension BASSAudioEngine {
             return false
         }
 
-        // Check if file exists
-        guard FileManager.default.fileExists(atPath: url.path) else {
-            Logger.error("File does not exist: \(url.path)")
-            return false
-        }
-
         // Free existing next stream if any
         if nextStream != 0 {
             BASS_StreamFree(nextStream)
             nextStream = 0
         }
 
-        // Create stream from file for immediate playback after current track ends
-        let path = url.path
+        if url.isFileURL {
+            guard FileManager.default.fileExists(atPath: url.path) else {
+                Logger.error("File does not exist: \(url.path)")
+                return false
+            }
 
-        nextStream = BASS_StreamCreateFile(
-            BOOL32(truncating: false),
-            path,
-            0,
-            0,
-            DWORD(BASS_STREAM_PRESCAN)  // Use native bit depth from source file
-        )
+            nextStream = BASS_StreamCreateFile(
+                BOOL32(truncating: false),
+                url.path,
+                0,
+                0,
+                DWORD(BASS_STREAM_PRESCAN)
+            )
+        } else {
+            guard let scheme = url.scheme?.lowercased(), scheme == "http" || scheme == "https" else {
+                Logger.error("Unsupported URL scheme for gapless preload: \(url.absoluteString)")
+                return false
+            }
+
+            nextStream = BASS_StreamCreateURL(
+                url.absoluteString,
+                0,
+                DWORD(0),
+                nil,
+                nil
+            )
+        }
 
         if nextStream == 0 {
             let errorCode = BASS_ErrorGetCode()

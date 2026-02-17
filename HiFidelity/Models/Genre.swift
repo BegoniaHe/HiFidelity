@@ -25,6 +25,10 @@ struct Genre: Identifiable, Hashable, Codable, FetchableRecord, MutablePersistab
     // Timestamps
     var dateAdded: Date
 
+    // Remote-only metadata (not persisted)
+    var remoteId: String?
+    var isRemote: Bool = false
+
     // MARK: - Database Configuration
 
     static let databaseTableName = "genres"

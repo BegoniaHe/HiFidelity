@@ -25,14 +25,19 @@ extension DatabaseManager {
 
             // Insert all tracks in queue
             for (index, track) in tracks.enumerated() {
-                guard let trackId = track.trackId else {
-                    Logger.warning("Skipping track without ID: \(track.title)")
+                let trackId = track.trackId
+                let remoteItemId = track.remoteItemId
+
+                if trackId == nil && remoteItemId == nil {
+                    Logger.warning("Skipping track without local or remote identity: \(track.title)")
                     continue
                 }
 
                 var entry = QueueEntry(
                     id: nil,
                     trackId: trackId,
+                    remoteItemId: remoteItemId,
+                    source: remoteItemId == nil ? nil : "jellyfin",
                     position: index
                 )
 
@@ -61,9 +66,20 @@ extension DatabaseManager {
 
             // Extract tracks using trackId
             let tracks = entries.compactMap { entry -> Track? in
-                try? Track.lightweightRequest()
-                    .filter(Track.Columns.trackId == entry.trackId)
-                    .fetchOne(db)
+                if let trackId = entry.trackId {
+                    return try? Track.lightweightRequest()
+                        .filter(Track.Columns.trackId == trackId)
+                        .fetchOne(db)
+                }
+
+                if let remoteItemId = entry.remoteItemId,
+                   let remoteTrack = try? RemoteTrack
+                    .filter(RemoteTrack.Columns.remoteItemId == remoteItemId)
+                    .fetchOne(db) {
+                    return remoteTrack.toTrack()
+                }
+
+                return nil
             }
 
             // Load current index from UserDefaults
@@ -86,8 +102,11 @@ extension DatabaseManager {
     /// Add a track to the end of the queue
     /// - Parameter track: Track to add
     func addTrackToQueue(_ track: Track) async throws {
-        guard let trackId = track.trackId else {
-            throw DatabaseError.invalidTrackId
+        let trackId = track.trackId
+        let remoteItemId = track.remoteItemId
+
+        guard trackId != nil || remoteItemId != nil else {
+            throw DatabaseError.updateFailed
         }
 
         try await dbQueue.write { db in
@@ -99,6 +118,8 @@ extension DatabaseManager {
             var entry = QueueEntry(
                 id: nil,
                 trackId: trackId,
+                remoteItemId: remoteItemId,
+                source: remoteItemId == nil ? nil : "jellyfin",
                 position: maxPosition + 1
             )
 

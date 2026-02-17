@@ -106,6 +106,12 @@ struct SettingsView: View {
             case .library:
                     LibrarySettings()
 
+            case .jellyfin:
+                ScrollView {
+                    JellyfinSettings()
+                        .padding(DesignTokens.Spacing.xxl)
+                }
+
             case .advanced:
                 ScrollView {
                     AdvancedSettings()
@@ -128,6 +134,7 @@ enum SettingsTab: String, CaseIterable, Identifiable {
     case appearance
     case audio
     case library
+    case jellyfin
     case advanced
     case about
 
@@ -138,6 +145,7 @@ enum SettingsTab: String, CaseIterable, Identifiable {
         case .appearance: return String(localized: "Appearance")
         case .audio: return String(localized: "Audio")
         case .library: return String(localized: "Library")
+        case .jellyfin: return String(localized: "Jellyfin")
         case .advanced: return String(localized: "Advanced")
         case .about: return String(localized: "About")
         }
@@ -148,6 +156,7 @@ enum SettingsTab: String, CaseIterable, Identifiable {
         case .appearance: return "paintbrush.fill"
         case .audio: return "speaker.wave.3.fill"
         case .library: return "music.note.list"
+        case .jellyfin: return "server.rack"
         case .advanced: return "gearshape.2.fill"
         case .about: return "info.circle.fill"
         }

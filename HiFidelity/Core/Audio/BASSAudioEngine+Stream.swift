@@ -66,6 +66,13 @@ extension BASSAudioEngine {
         return state == DWORD(BASS_ACTIVE_PLAYING)
     }
 
+    func isBuffering() -> Bool {
+        guard currentStream != 0 else { return false }
+
+        let state = BASS_ChannelIsActive(currentStream)
+        return state == DWORD(BASS_ACTIVE_STALLED)
+    }
+
     // MARK: - Stream End Callback
 
     func setupStreamEndCallback() {

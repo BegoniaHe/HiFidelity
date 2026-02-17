@@ -8,6 +8,41 @@
 import AppKit
 import SwiftUI
 
+// MARK: - Jellyfin Remote Artwork View
+
+struct JellyfinRemoteArtworkView: View {
+    let artworkURL: URL
+    let size: CGFloat
+    let cornerRadius: CGFloat
+    let placeholderSymbol: String
+
+    @State private var artwork: NSImage?
+
+    var body: some View {
+        Group {
+            if let artwork {
+                Image(nsImage: artwork)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } else {
+                ZStack {
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .fill(Color(nsColor: .controlBackgroundColor))
+
+                    Image(systemName: placeholderSymbol)
+                        .font(AppFonts.placeholder(size: size * 0.36))
+                        .foregroundColor(.secondary.opacity(0.5))
+                }
+            }
+        }
+        .frame(width: size, height: size)
+        .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+        .task(id: artworkURL.absoluteString) {
+            artwork = await JellyfinArtworkCache.shared.image(for: artworkURL)
+        }
+    }
+}
+
 // MARK: - Track Artwork View
 
 /// High-performance SwiftUI view for displaying track artwork
@@ -38,7 +73,7 @@ struct TrackArtworkView: View {
         }
         .frame(width: size, height: size)
         .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-        .task(id: track.trackId) {
+        .task(id: artworkTaskId) {
             await loadArtwork()
         }
         .onDisappear {
@@ -59,6 +94,16 @@ struct TrackArtworkView: View {
     }
 
     private func loadArtwork() async {
+        if track.remoteItemId != nil || track.remoteAlbumId != nil || track.remoteArtworkURL != nil {
+            let resolvedURL = await JellyfinSessionManager.shared.resolveArtworkURL(for: track)
+            if let resolvedURL {
+                artwork = await JellyfinArtworkCache.shared.image(for: resolvedURL)
+            } else {
+                artwork = nil
+            }
+            return
+        }
+
         guard let trackId = track.trackId else {
             artwork = nil
             return
@@ -92,6 +137,18 @@ struct TrackArtworkView: View {
         }
 
         await loadTask?.value
+    }
+
+    private var artworkTaskId: String {
+        if let remoteArtworkURL = track.remoteArtworkURL {
+            return remoteArtworkURL.absoluteString
+        }
+
+        if let trackId = track.trackId {
+            return "local_\(trackId)"
+        }
+
+        return track.url.absoluteString
     }
 }
 

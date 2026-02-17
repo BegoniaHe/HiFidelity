@@ -37,7 +37,16 @@ struct AlbumCard: View {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 // Artwork
                 ZStack {
-                    if let albumId = album.id {
+                    if album.isRemote, let artworkURL = album.remoteArtworkURL {
+                        JellyfinRemoteArtworkView(
+                            artworkURL: artworkURL,
+                            size: DesignTokens.Size.Artwork.xl,
+                            cornerRadius: DesignTokens.CornerRadius.sm,
+                            placeholderSymbol: "music.note"
+                        )
+                        .tokenShadow(
+                            isHovered ? DesignTokens.Shadow.level2 : DesignTokens.Shadow.level1)
+                    } else if let albumId = album.id {
                         AlbumArtworkView(
                             albumId: albumId,
                             size: DesignTokens.Size.Artwork.xl,
@@ -121,11 +130,21 @@ struct AlbumCard: View {
 
     private func playAlbum() {
         Task {
-            guard let albumId = album.id else { return }
-            let databaseManager = DatabaseManager.shared
             do {
-                var tracks = try await databaseManager.getTracksForAlbum(albumId: albumId)
+                let tracks: [Track]
+                if album.isRemote {
+                    tracks = try await JellyfinSessionManager.shared.fetchTracksForRemoteAlbum(
+                        remoteAlbumId: album.remoteId,
+                        albumName: album.title,
+                        albumArtist: album.albumArtist
+                    )
+                } else {
+                    guard let albumId = album.id else { return }
+                    tracks = try await DatabaseManager.shared.getTracksForAlbum(albumId: albumId)
+                }
+
                 guard !tracks.isEmpty else { return }
+                var sortedTracks = tracks
 
                 // Apply saved sorting preference
                 let sortField =
@@ -134,11 +153,11 @@ struct AlbumCard: View {
 
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
                     let comparators = field.getComparators(ascending: sortAscending)
-                    tracks = tracks.sorted(using: comparators)
+                    sortedTracks = tracks.sorted(using: comparators)
                 }
 
                 await MainActor.run {
-                    PlaybackController.shared.playTracks(tracks)
+                    PlaybackController.shared.playTracks(sortedTracks)
                 }
             } catch {
                 Logger.error("Failed to play album: \(error)")
@@ -161,7 +180,17 @@ struct ArtistCard: View {
             VStack(alignment: .center, spacing: DesignTokens.Spacing.md) {
                 // Artwork (circular)
                 ZStack {
-                    if let artistId = artist.id {
+                    if artist.isRemote, let artworkURL = artist.remoteArtworkURL {
+                        JellyfinRemoteArtworkView(
+                            artworkURL: artworkURL,
+                            size: DesignTokens.Size.Artwork.xl,
+                            cornerRadius: DesignTokens.Size.Artwork.xl / 2,
+                            placeholderSymbol: "person.fill"
+                        )
+                        .clipShape(Circle())
+                        .tokenShadow(
+                            isHovered ? DesignTokens.Shadow.level2 : DesignTokens.Shadow.level1)
+                    } else if let artistId = artist.id {
                         ArtistArtworkView(artistId: artistId, size: DesignTokens.Size.Artwork.xl)
                             .tokenShadow(
                                 isHovered ? DesignTokens.Shadow.level2 : DesignTokens.Shadow.level1)
@@ -237,11 +266,17 @@ struct ArtistCard: View {
 
     private func playArtist() {
         Task {
-            guard let artistId = artist.id else { return }
-            let databaseManager = DatabaseManager.shared
             do {
-                var tracks = try await databaseManager.getTracksForArtist(artistId: artistId)
+                let tracks: [Track]
+                if artist.isRemote {
+                    tracks = try await JellyfinSessionManager.shared.fetchTracksForRemoteArtist(name: artist.name)
+                } else {
+                    guard let artistId = artist.id else { return }
+                    tracks = try await DatabaseManager.shared.getTracksForArtist(artistId: artistId)
+                }
+
                 guard !tracks.isEmpty else { return }
+                var sortedTracks = tracks
 
                 // Apply saved sorting preference
                 let sortField =
@@ -250,11 +285,11 @@ struct ArtistCard: View {
 
                 if let field = TrackSortField.allFields.first(where: { $0.rawValue == sortField }) {
                     let comparators = field.getComparators(ascending: sortAscending)
-                    tracks = tracks.sorted(using: comparators)
+                    sortedTracks = tracks.sorted(using: comparators)
                 }
 
                 await MainActor.run {
-                    PlaybackController.shared.playTracks(tracks)
+                    PlaybackController.shared.playTracks(sortedTracks)
                 }
             } catch {
                 Logger.error("Failed to play artist: \(error)")
@@ -584,9 +619,8 @@ struct AlbumContextMenu: View {
 
     private func addToQueue() {
         Task {
-            guard let albumId = album.id else { return }
             do {
-                var tracks = try await databaseManager.getTracksForAlbum(albumId: albumId)
+                var tracks = try await resolveAlbumTracks()
                 guard !tracks.isEmpty else { return }
 
                 // Apply saved sorting preference
@@ -610,9 +644,8 @@ struct AlbumContextMenu: View {
 
     private func playAlbum() {
         Task {
-            guard let albumId = album.id else { return }
             do {
-                var tracks = try await databaseManager.getTracksForAlbum(albumId: albumId)
+                var tracks = try await resolveAlbumTracks()
                 guard !tracks.isEmpty else { return }
 
                 // Apply saved sorting preference
@@ -636,9 +669,8 @@ struct AlbumContextMenu: View {
 
     private func shuffleAlbum() {
         Task {
-            guard let albumId = album.id else { return }
             do {
-                var tracks = try await databaseManager.getTracksForAlbum(albumId: albumId)
+                var tracks = try await resolveAlbumTracks()
                 guard !tracks.isEmpty else { return }
 
                 // Apply saved sorting preference before shuffling
@@ -658,6 +690,19 @@ struct AlbumContextMenu: View {
                 Logger.error("Failed to shuffle album: \(error)")
             }
         }
+    }
+
+    private func resolveAlbumTracks() async throws -> [Track] {
+        if album.isRemote {
+            return try await JellyfinSessionManager.shared.fetchTracksForRemoteAlbum(
+                remoteAlbumId: album.remoteId,
+                albumName: album.title,
+                albumArtist: album.albumArtist
+            )
+        }
+
+        guard let albumId = album.id else { return [] }
+        return try await databaseManager.getTracksForAlbum(albumId: albumId)
     }
 }
 
@@ -700,9 +745,8 @@ struct ArtistContextMenu: View {
 
     private func addToQueue() {
         Task {
-            guard let artistId = artist.id else { return }
             do {
-                var tracks = try await databaseManager.getTracksForArtist(artistId: artistId)
+                var tracks = try await resolveArtistTracks()
                 guard !tracks.isEmpty else { return }
 
                 // Apply saved sorting preference
@@ -726,9 +770,8 @@ struct ArtistContextMenu: View {
 
     private func playArtist() {
         Task {
-            guard let artistId = artist.id else { return }
             do {
-                var tracks = try await databaseManager.getTracksForArtist(artistId: artistId)
+                var tracks = try await resolveArtistTracks()
                 guard !tracks.isEmpty else { return }
 
                 // Apply saved sorting preference
@@ -752,9 +795,8 @@ struct ArtistContextMenu: View {
 
     private func shuffleArtist() {
         Task {
-            guard let artistId = artist.id else { return }
             do {
-                var tracks = try await databaseManager.getTracksForArtist(artistId: artistId)
+                var tracks = try await resolveArtistTracks()
                 guard !tracks.isEmpty else { return }
 
                 // Apply saved sorting preference before shuffling
@@ -774,5 +816,14 @@ struct ArtistContextMenu: View {
                 Logger.error("Failed to shuffle artist: \(error)")
             }
         }
+    }
+
+    private func resolveArtistTracks() async throws -> [Track] {
+        if artist.isRemote {
+            return try await JellyfinSessionManager.shared.fetchTracksForRemoteArtist(name: artist.name)
+        }
+
+        guard let artistId = artist.id else { return [] }
+        return try await databaseManager.getTracksForArtist(artistId: artistId)
     }
 }

@@ -15,6 +15,7 @@ struct AlbumsTabView: View {
 
     @Environment(DatabaseManager.self) var databaseManager
     @Bindable var theme = AppTheme.shared
+    @Bindable var jellyfin = JellyfinSessionManager.shared
 
     @State private var albums: [Album] = []
     @State private var filteredAlbums: [Album] = []
@@ -22,9 +23,16 @@ struct AlbumsTabView: View {
     @State private var hasLoadedOnce = false
     @AppStorage("albumsSortOptionId") private var sortOptionId: String = "name"
     @AppStorage("albumsSortAscending") private var sortAscending: Bool = true
+    @State private var jellyfinTracks: [Track] = []
+    @State private var jellyfinNextStartIndex: Int = 0
+    @State private var jellyfinHasMore: Bool = true
+    @State private var jellyfinIsLoadingMore: Bool = false
     @State private var selectedSort = SortOption(
         id: "name", title: "Name", type: .alphabetical, ascending: true)
     @State private var selectedFilter: FilterOption?
+
+    private let jellyfinPageSize = 200
+    private let jellyfinTabKey = "albums"
 
     init(selectedEntity: Binding<EntityType?>, isVisible: Bool = true) {
         self._selectedEntity = selectedEntity
@@ -58,7 +66,10 @@ struct AlbumsTabView: View {
                 loadingView
             } else if filteredAlbums.isEmpty {
                 if albums.isEmpty {
-                    emptyStateView(icon: "square.stack", message: "No albums in library")
+                    emptyStateView(
+                        icon: "square.stack",
+                        message: "No albums in library"
+                    )
                 } else {
                     emptyStateView(
                         icon: "line.3.horizontal.decrease.circle",
@@ -78,6 +89,26 @@ struct AlbumsTabView: View {
                             prefetchArtwork(startingAt: index)
                         }
                     }
+
+                    if jellyfin.isAuthenticated, jellyfinHasMore {
+                        HStack {
+                            Spacer()
+                            if jellyfinIsLoadingMore {
+                                ProgressView()
+                            } else {
+                                Button("Sync Jellyfin") {
+                                    Task {
+                                        await loadNextJellyfinPage()
+                                    }
+                                }
+                            }
+                            Spacer()
+                        }
+                        .padding(.vertical, DesignTokens.Spacing.md)
+                    }
+                }
+                .refreshable {
+                    await refreshJellyfinFromFirstPage()
                 }
             }
         }
@@ -174,7 +205,24 @@ struct AlbumsTabView: View {
         defer { isLoading = false }
 
         do {
-            albums = try await databaseManager.getAllAlbums()
+            let localAlbums = try await databaseManager.getAllAlbums()
+            var remoteAlbums: [Album] = []
+
+            if jellyfin.isAuthenticated {
+                remoteAlbums = try await databaseManager.getRemoteAlbums()
+                jellyfinHasMore = true
+                jellyfinIsLoadingMore = false
+                Task {
+                    await jellyfin.syncRemoteIndex(forceRefresh: false)
+                }
+            } else {
+                jellyfinTracks = []
+                jellyfinNextStartIndex = 0
+                jellyfinHasMore = false
+                jellyfinIsLoadingMore = false
+            }
+
+            albums = mergeAlbums(local: localAlbums, remote: remoteAlbums)
             applyFiltersAndSort()
 
             // Preload artwork for initially visible albums
@@ -186,6 +234,26 @@ struct AlbumsTabView: View {
         } catch {
             Logger.error("Failed to load albums: \(error)")
         }
+    }
+
+    private func loadNextJellyfinPage() async {
+        guard jellyfin.isAuthenticated,
+              !jellyfinIsLoadingMore else {
+            return
+        }
+
+        jellyfinIsLoadingMore = true
+        defer { jellyfinIsLoadingMore = false }
+
+        await jellyfin.syncRemoteIndex(forceRefresh: true)
+        await loadAlbums()
+    }
+
+    private func refreshJellyfinFromFirstPage() async {
+        if jellyfin.isAuthenticated {
+            await jellyfin.syncRemoteIndex(forceRefresh: true)
+        }
+        await loadAlbums()
     }
 
     private func applyFiltersAndSort() {
@@ -277,6 +345,20 @@ struct AlbumsTabView: View {
 
         let albumIds = filteredAlbums[index..<endIndex].compactMap { $0.id }
         ArtworkCache.shared.preloadAlbumArtwork(for: albumIds, size: 160)
+    }
+
+    private func mergeAlbums(local: [Album], remote: [Album]) -> [Album] {
+        var result: [Album] = local
+        let localKeys = Set(local.map { "\($0.title.lowercased())::\(($0.albumArtist ?? "").lowercased())" })
+
+        for album in remote {
+            let key = "\(album.title.lowercased())::\((album.albumArtist ?? "").lowercased())"
+            if !localKeys.contains(key) {
+                result.append(album)
+            }
+        }
+
+        return result
     }
 }
 

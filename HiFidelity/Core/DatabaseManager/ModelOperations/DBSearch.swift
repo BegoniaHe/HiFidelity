@@ -140,9 +140,72 @@ extension DatabaseManager {
 
         guard !topIds.isEmpty else { return [] }
 
-        // Fetch tracks maintaining order
+        // Fetch local tracks maintaining order
         let tracks = try Track.filter(topIds.contains(Track.Columns.trackId)).fetchAll(db)
-        return topIds.compactMap { id in tracks.first { $0.trackId == id } }
+        var merged = topIds.compactMap { id in tracks.first { $0.trackId == id } }
+
+        // Merge remote tracks from dedicated FTS table
+        let remoteTracks = try searchRemoteTracksWeighted(db: db, queries: queries, limit: limit)
+        if !remoteTracks.isEmpty {
+            let existingRemoteIds = Set(merged.compactMap { $0.remoteItemId })
+            for remoteTrack in remoteTracks where !existingRemoteIds.contains(remoteTrack.remoteItemId ?? "") {
+                merged.append(remoteTrack)
+            }
+        }
+
+        return Array(merged.prefix(limit))
+    }
+
+    nonisolated private static func searchRemoteTracksWeighted(db: Database, queries: SearchQueries, limit: Int) throws -> [Track] {
+        var remoteRowIdScores: [(id: Int64, score: Double)] = []
+
+        if let exactQuery = queries.exactPhrase {
+            do {
+                let exactResults = try Row.fetchAll(db, sql: """
+                    SELECT id, bm25(remote_tracks_fts, 10.0, 8.0, 6.0, 4.0, 2.0) as score
+                    FROM remote_tracks_fts
+                    WHERE remote_tracks_fts MATCH ?
+                    ORDER BY score
+                    LIMIT ?
+                """, arguments: [exactQuery, limit])
+
+                for row in exactResults {
+                    let id: Int64 = row["id"]
+                    let score: Double = row["score"]
+                    remoteRowIdScores.append((id, score * 100.0))
+                }
+            } catch {
+                Logger.warning("Exact phrase search failed for remote tracks: \(error)")
+            }
+        }
+
+        do {
+            let prefixResults = try Row.fetchAll(db, sql: """
+                SELECT id, bm25(remote_tracks_fts, 10.0, 8.0, 6.0, 4.0, 2.0) as score
+                FROM remote_tracks_fts
+                WHERE remote_tracks_fts MATCH ?
+                ORDER BY score
+                LIMIT ?
+            """, arguments: [queries.weighted, limit * 2])
+
+            for row in prefixResults {
+                let id: Int64 = row["id"]
+                if !remoteRowIdScores.contains(where: { $0.id == id }) {
+                    remoteRowIdScores.append((id, row["score"]))
+                }
+            }
+        } catch {
+            Logger.warning("Weighted search failed for remote tracks: \(error)")
+            return []
+        }
+
+        remoteRowIdScores.sort { $0.score < $1.score }
+        let rowIds = Array(remoteRowIdScores.prefix(limit)).map { $0.id }
+        guard !rowIds.isEmpty else { return [] }
+
+        let remoteRows = try RemoteTrack.filter(rowIds.contains(RemoteTrack.Columns.id)).fetchAll(db)
+        let orderedRows = rowIds.compactMap { id in remoteRows.first { $0.id == id } }
+        return orderedRows.map { $0.toTrack() }
     }
 
     nonisolated private static func searchAlbumsWeighted(db: Database, queries: SearchQueries, limit: Int) throws -> [Album] {
@@ -401,8 +464,8 @@ extension DatabaseManager {
         // Build weighted query with prefix matching
         let ftsTerms = terms.map { term -> String in
             if term.count < 2 {
-                // Very short terms: exact match only
-                return "\"\(term)\""
+                // Very short terms: still allow prefix matching for single-character search
+                return "\(term)*"
             } else if term.count < 3 {
                 // Short terms: quoted with prefix
                 return "\"\(term)\"*"

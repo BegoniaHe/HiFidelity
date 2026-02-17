@@ -26,6 +26,7 @@ extension DatabaseManager {
         // Core tables
         try createFoldersTable(in: db)
         try createTracksTable(in: db)
+        try createRemoteTracksTable(in: db)
 
         // Normalized entity tables
         try createAlbumsTable(in: db)
@@ -74,6 +75,22 @@ extension DatabaseManager {
                 genre,
                 composer,
                 content='tracks',
+                content_rowid='id',
+                tokenize='unicode61 remove_diacritics 2'
+            )
+        """)
+
+        // FTS for remote Jellyfin tracks
+        try db.execute(sql: """
+            CREATE VIRTUAL TABLE IF NOT EXISTS remote_tracks_fts USING fts5(
+                id UNINDEXED,
+                remote_item_id UNINDEXED,
+                title,
+                artist,
+                album,
+                album_artist,
+                genre,
+                content='remote_tracks',
                 content_rowid='id',
                 tokenize='unicode61 remove_diacritics 2'
             )
@@ -155,6 +172,28 @@ extension DatabaseManager {
                 DELETE FROM tracks_fts WHERE rowid = old.id;
                 INSERT INTO tracks_fts(rowid, id, title, artist, album, album_artist, genre, composer)
                 VALUES (new.id, new.id, new.title, new.artist, new.album, new.album_artist, new.genre, new.composer);
+            END;
+        """)
+
+        // Remote tracks FTS triggers
+        try db.execute(sql: """
+            CREATE TRIGGER IF NOT EXISTS remote_tracks_fts_insert AFTER INSERT ON remote_tracks BEGIN
+                INSERT INTO remote_tracks_fts(rowid, id, remote_item_id, title, artist, album, album_artist, genre)
+                VALUES (new.id, new.id, new.remote_item_id, new.title, new.artist, new.album, new.album_artist, new.genre);
+            END;
+        """)
+
+        try db.execute(sql: """
+            CREATE TRIGGER IF NOT EXISTS remote_tracks_fts_delete AFTER DELETE ON remote_tracks BEGIN
+                DELETE FROM remote_tracks_fts WHERE rowid = old.id;
+            END;
+        """)
+
+        try db.execute(sql: """
+            CREATE TRIGGER IF NOT EXISTS remote_tracks_fts_update AFTER UPDATE ON remote_tracks BEGIN
+                DELETE FROM remote_tracks_fts WHERE rowid = old.id;
+                INSERT INTO remote_tracks_fts(rowid, id, remote_item_id, title, artist, album, album_artist, genre)
+                VALUES (new.id, new.id, new.remote_item_id, new.title, new.artist, new.album, new.album_artist, new.genre);
             END;
         """)
 
@@ -335,6 +374,33 @@ extension DatabaseManager {
         try db.create(index: "idx_tracks_genre", on: "tracks", columns: ["genre_id"], ifNotExists: true)
 
         Logger.info("Created `tracks` table with indexes")
+    }
+
+    nonisolated static func createRemoteTracksTable(in db: Database) throws {
+        try db.createTableIfNotExists("remote_tracks") { tableDefinition in
+            tableDefinition.autoIncrementedPrimaryKey("id")
+            tableDefinition.column("remote_item_id", .text).notNull().unique()
+            tableDefinition.column("remote_album_id", .text)
+            tableDefinition.column("title", .text).notNull()
+            tableDefinition.column("artist", .text).notNull()
+            tableDefinition.column("album", .text).notNull()
+            tableDefinition.column("album_artist", .text)
+            tableDefinition.column("genre", .text).notNull()
+            tableDefinition.column("duration", .double).notNull().defaults(to: 0)
+            tableDefinition.column("stream_url", .text).notNull()
+            tableDefinition.column("artwork_url", .text)
+            tableDefinition.column("server_url", .text).notNull()
+            tableDefinition.column("user_id", .text).notNull()
+            tableDefinition.column("date_added", .datetime).notNull()
+            tableDefinition.column("date_updated", .datetime).notNull()
+        }
+
+        try db.create(index: "idx_remote_tracks_item", on: "remote_tracks", columns: ["remote_item_id"], unique: true, ifNotExists: true)
+        try db.create(index: "idx_remote_tracks_album", on: "remote_tracks", columns: ["album"], ifNotExists: true)
+        try db.create(index: "idx_remote_tracks_artist", on: "remote_tracks", columns: ["artist"], ifNotExists: true)
+        try db.create(index: "idx_remote_tracks_server_user", on: "remote_tracks", columns: ["server_url", "user_id"], ifNotExists: true)
+
+        Logger.info("Created `remote_tracks` table with indexes")
     }
 
     // MARK: - 1. Folders Table
@@ -575,11 +641,13 @@ extension DatabaseManager {
         try db.create(table: "queue", ifNotExists: true) { tableDefinition in
             tableDefinition.autoIncrementedPrimaryKey("id")
 
-            // Foreign key to tracks
-            // CASCADE: deleting track removes it from queue
+            // Local track reference (nullable for remote-only entries)
             tableDefinition.column("track_id", .integer)
-                .notNull()
                 .references("tracks", column: "id", onDelete: .cascade, onUpdate: .cascade)
+
+            // Remote queue support
+            tableDefinition.column("remote_item_id", .text)
+            tableDefinition.column("source", .text)
 
             // Queue position
             tableDefinition.column("position", .integer).notNull().indexed()
@@ -597,6 +665,11 @@ extension DatabaseManager {
         try db.create(index: "idx_queue_track",
                       on: "queue",
                       columns: ["track_id"],
+                      ifNotExists: true)
+
+        try db.create(index: "idx_queue_remote_item",
+                      on: "queue",
+                      columns: ["remote_item_id"],
                       ifNotExists: true)
 
         Logger.info("Created `queue` table with CASCADE rules and indexes")

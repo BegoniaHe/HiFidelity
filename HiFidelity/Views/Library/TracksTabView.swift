@@ -15,6 +15,7 @@ struct TracksTabView: View {
     @Environment(DatabaseManager.self) private var databaseManager
     @Bindable var theme = AppTheme.shared
     @Bindable var playback = PlaybackController.shared
+    @Bindable var jellyfin = JellyfinSessionManager.shared
 
     @State private var tracks: [Track] = []
     @State private var filteredTracks: [Track] = []
@@ -30,6 +31,12 @@ struct TracksTabView: View {
         KeyPathComparator(\Track.title, order: .forward)
     ]
     @State private var selectedFilter: TrackFilter?
+    @State private var jellyfinNextStartIndex: Int = 0
+    @State private var jellyfinHasMore: Bool = true
+    @State private var jellyfinIsLoadingMore: Bool = false
+
+    private let jellyfinPageSize = 200
+    private let jellyfinTabKey = "tracks"
 
     init(isVisible: Bool = true) {
         self.isVisible = isVisible
@@ -107,7 +114,20 @@ struct TracksTabView: View {
 
             Spacer()
 
-            // Sort and Filter dropdown
+            if jellyfin.isAuthenticated, jellyfinHasMore {
+                if jellyfinIsLoadingMore {
+                    ProgressView()
+                        .controlSize(.small)
+                } else {
+                    Button("Sync Jellyfin") {
+                        Task {
+                            await loadNextJellyfinTracks()
+                        }
+                    }
+                    .buttonStyle(.borderless)
+                }
+            }
+
             TrackTableOptionsDropdown(
                 sortOrder: $sortOrder,
                 selectedFilter: $selectedFilter
@@ -181,7 +201,14 @@ struct TracksTabView: View {
             selection: $selectedTrack,
             sortOrder: $sortOrder,
             onPlayTrack: playTrack,
-            isCurrentTrack: isCurrentTrack
+            isCurrentTrack: isCurrentTrack,
+            isRemoteTrackDownloaded: { jellyfin.isDownloaded($0) },
+            onDownloadTrack: { track in
+                Task {
+                    await jellyfin.downloadTrack(track)
+                    await loadTracks()
+                }
+            }
         )
     }
 
@@ -212,7 +239,7 @@ struct TracksTabView: View {
                     .font(AppFonts.heading4)
                     .foregroundColor(.primary)
 
-                Text("Add music folders to see your library here")
+                Text("Add music folders or connect Jellyfin in Settings")
                     .font(AppFonts.captionLarge)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -248,7 +275,7 @@ struct TracksTabView: View {
 
     private func isCurrentTrack(_ track: Track) -> Bool {
         guard let currentTrack = playback.currentTrack else { return false }
-        return currentTrack.url.path == track.url.path
+        return currentTrack.url.absoluteString == track.url.absoluteString
     }
 
     private func playTrack(_ track: Track) {
@@ -264,14 +291,61 @@ struct TracksTabView: View {
 
     private func loadTracks() async {
         isLoading = true
+        defer { isLoading = false }
 
         do {
-            tracks = try await DatabaseCache.shared.getAllTracks(forceRefresh: true)
+            let localTracks = try await DatabaseCache.shared.getAllTracks(forceRefresh: true)
+            var remoteTracks: [Track] = []
+
+            if jellyfin.isAuthenticated {
+                remoteTracks = try await databaseManager.getRemoteTracksAsTracks(limit: 5000)
+                jellyfinHasMore = true
+                jellyfinIsLoadingMore = false
+
+                Task {
+                    await jellyfin.syncRemoteIndex(forceRefresh: false)
+                }
+            } else {
+                resetJellyfinPagination()
+            }
+
+            tracks = mergeTracks(local: localTracks, remote: remoteTracks)
+            filteredTracks = tracks
+            initializeSortedTracks()
         } catch {
             Logger.error("Failed to load tracks: \(error)")
         }
+    }
 
-        isLoading = false
+    private func resetJellyfinPagination() {
+        tracks = []
+        filteredTracks = []
+        sortedTracks = []
+        jellyfinNextStartIndex = 0
+        jellyfinHasMore = true
+        jellyfinIsLoadingMore = false
+    }
+
+    private func loadNextJellyfinTracks() async {
+        guard jellyfin.isAuthenticated,
+              !jellyfinIsLoadingMore else {
+            return
+        }
+
+        jellyfinIsLoadingMore = true
+        defer { jellyfinIsLoadingMore = false }
+
+        await jellyfin.syncRemoteIndex(forceRefresh: true)
+        await loadTracks()
+    }
+
+    private func refreshJellyfinFromFirstPage() async {
+        guard jellyfin.isAuthenticated else {
+            await loadTracks()
+            return
+        }
+        await jellyfin.syncRemoteIndex(forceRefresh: true)
+        await loadTracks()
     }
 
     // MARK: - Filtering
@@ -299,6 +373,31 @@ struct TracksTabView: View {
 
         // Re-sort after filtering
         initializeSortedTracks()
+    }
+
+    private func mergeTracks(local: [Track], remote: [Track]) -> [Track] {
+        var result: [Track] = []
+        var seen = Set<String>()
+
+        for track in local {
+            let key = track.remoteItemId ?? "local::\(normalize(track.title))::\(normalize(track.artist))::\(normalize(track.album))::\(Int(track.duration))"
+            if seen.insert(key).inserted {
+                result.append(track)
+            }
+        }
+
+        for track in remote {
+            let key = track.remoteItemId ?? "remote::\(normalize(track.title))::\(normalize(track.artist))::\(normalize(track.album))::\(Int(track.duration))"
+            if seen.insert(key).inserted {
+                result.append(track)
+            }
+        }
+
+        return result
+    }
+
+    private func normalize(_ value: String) -> String {
+        value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
     }
 
     // MARK: - Sorting Helpers

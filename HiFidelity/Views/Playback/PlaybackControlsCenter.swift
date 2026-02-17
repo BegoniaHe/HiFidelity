@@ -18,8 +18,12 @@ struct PlaybackControlsCenter: View {
             // Main control buttons
             controlButtons
 
-            // Time display
-            timeLabels
+            if playback.playbackState == .failed {
+                failedActions
+            } else {
+                // Time display
+                timeLabels
+            }
         }
         .fixedSize()
     }
@@ -94,6 +98,20 @@ struct PlaybackControlsCenter: View {
                 .font(AppFonts.captionMedium)
                 .foregroundColor(.secondary)
                 .monospacedDigit()
+        }
+    }
+
+    private var failedActions: some View {
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            Button("重试") {
+                playback.retryCurrentTrackPlayback()
+            }
+            .buttonStyle(.bordered)
+
+            Button("转码重试") {
+                playback.retryCurrentTrackWithTranscode()
+            }
+            .buttonStyle(.borderedProminent)
         }
     }
 }

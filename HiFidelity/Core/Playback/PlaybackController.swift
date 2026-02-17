@@ -29,6 +29,25 @@ class PlaybackController {
             updateNowPlayingPlaybackState()
         }
     }
+    var playbackState: PlaybackState = .idle {
+        didSet {
+            guard oldValue != playbackState else { return }
+
+            NotificationCenter.default.post(
+                name: .playbackStateDidChange,
+                object: nil,
+                userInfo: ["state": playbackState.rawValue]
+            )
+
+            switch playbackState {
+            case .playing, .buffering:
+                isPlaying = true
+            default:
+                isPlaying = false
+            }
+        }
+    }
+    var lastPlaybackError: PlaybackError?
     var currentTime: Double = 0.0 {
         didSet {
             updateNowPlayingElapsedTime()
@@ -203,6 +222,7 @@ class PlaybackController {
 
         if needsReload, let track = currentTrack {
             Logger.info("Reloading track on new device: \(track.title)")
+            transitionPlaybackState(to: .loading)
 
             // Save playback state
             let wasPlaying = isPlaying
@@ -211,6 +231,13 @@ class PlaybackController {
             // Reload the track
             guard audioEngine.load(url: track.url) else {
                 Logger.error("Failed to reload track on new device")
+                transitionPlaybackState(
+                    to: .failed,
+                    error: PlaybackError(
+                        category: .device,
+                        message: "Failed to reload track on new audio device"
+                    )
+                )
                 return
             }
 
@@ -227,11 +254,21 @@ class PlaybackController {
 
             // Resume playback if it was playing
             if wasPlaying {
-                _ = audioEngine.play()
-                isPlaying = true
+                guard audioEngine.play() else {
+                    transitionPlaybackState(
+                        to: .failed,
+                        error: PlaybackError(
+                            category: .device,
+                            message: "Failed to resume playback after audio device switch"
+                        )
+                    )
+                    return
+                }
+                transitionPlaybackState(to: .playing)
                 startPositionTimer()
                 Logger.info("Resumed playback on new device at \(savedPosition)s")
             } else {
+                transitionPlaybackState(to: .paused)
                 Logger.info("Track reloaded on new device - ready to play")
             }
 
@@ -239,6 +276,7 @@ class PlaybackController {
             currentStreamInfo = audioEngine.getStreamInfo()
         } else if !needsReload {
             Logger.info("Stream successfully moved to new device without reload")
+            transitionPlaybackState(to: isPlaying ? .playing : .paused)
 
             // Update stream info even if not reloaded
             currentStreamInfo = audioEngine.getStreamInfo()
@@ -290,6 +328,7 @@ class PlaybackController {
 
     @objc func handleStreamEnded() {
         Logger.info("Stream ended")
+        transitionPlaybackState(to: .ended)
 
         switch repeatMode {
         case .one:
@@ -346,6 +385,55 @@ class PlaybackController {
     }
 }
 
+// MARK: - Playback State
+
+enum PlaybackState: String {
+    case idle
+    case loading
+    case playing
+    case paused
+    case buffering
+    case ended
+    case failed
+}
+
+enum PlaybackErrorCategory: String {
+    case load
+    case play
+    case seek
+    case device
+    case network
+    case unknown
+}
+
+struct PlaybackError: Equatable {
+    let category: PlaybackErrorCategory
+    let message: String
+}
+
+extension PlaybackController {
+    var isBuffering: Bool {
+        playbackState == .buffering
+    }
+
+    func transitionPlaybackState(to state: PlaybackState, error: PlaybackError? = nil) {
+        if case .failed = state, let error {
+            lastPlaybackError = error
+            NotificationCenter.default.post(
+                name: .playbackErrorDidOccur,
+                object: nil,
+                userInfo: [
+                    "category": error.category.rawValue,
+                    "message": error.message,
+                ]
+            )
+            Logger.error("Playback error [\(error.category.rawValue)]: \(error.message)")
+        }
+
+        playbackState = state
+    }
+}
+
 // MARK: - Repeat Mode
 
 enum RepeatMode {
@@ -385,4 +473,9 @@ extension PlaybackController {
             return String(format: "%d:%02d", minutes, seconds)
         }
     }
+}
+
+extension Notification.Name {
+    static let playbackStateDidChange = Notification.Name("PlaybackStateDidChange")
+    static let playbackErrorDidOccur = Notification.Name("PlaybackErrorDidOccur")
 }

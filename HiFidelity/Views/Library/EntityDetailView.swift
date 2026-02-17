@@ -422,14 +422,30 @@ enum EntityType: Identifiable, Hashable {
     func loadTracks(from database: DatabaseManager) async throws -> [Track] {
         switch self {
         case .album(let album):
+            if album.isRemote {
+                return try await JellyfinSessionManager.shared.fetchTracksForRemoteAlbum(
+                    remoteAlbumId: album.remoteId,
+                    albumName: album.title,
+                    albumArtist: album.albumArtist
+                )
+            }
+
             guard let albumId = album.id else { return [] }
             return try await database.getTracksForAlbum(albumId: albumId)
 
         case .artist(let artist):
+            if artist.isRemote {
+                return try await JellyfinSessionManager.shared.fetchTracksForRemoteArtist(name: artist.name)
+            }
+
             guard let artistId = artist.id else { return [] }
             return try await database.getTracksForArtist(artistId: artistId)
 
         case .genre(let genre):
+            if genre.isRemote {
+                return try await JellyfinSessionManager.shared.fetchTracksForRemoteGenre(name: genre.name)
+            }
+
             guard let genreId = genre.id else { return [] }
             return try await database.getTracksForGenre(genreId: genreId)
 
@@ -595,6 +611,23 @@ struct EntityHeader: View {
                     .frame(width: DesignTokens.Size.Artwork.xl, height: DesignTokens.Size.Artwork.xl)
                     .cornerRadius(entity.isArtist ? DesignTokens.Size.Artwork.xl / 2 : DesignTokens.CornerRadius.lg)
                     .tokenShadow(DesignTokens.Shadow.level3)
+            } else if let remoteArtworkURL = entity.remoteArtworkURL, entity.isArtist {
+                JellyfinRemoteArtworkView(
+                    artworkURL: remoteArtworkURL,
+                    size: DesignTokens.Size.Artwork.xl,
+                    cornerRadius: DesignTokens.Size.Artwork.xl / 2,
+                    placeholderSymbol: "person.fill"
+                )
+                .clipShape(Circle())
+                .tokenShadow(DesignTokens.Shadow.level3)
+            } else if let remoteArtworkURL = entity.remoteArtworkURL {
+                JellyfinRemoteArtworkView(
+                    artworkURL: remoteArtworkURL,
+                    size: DesignTokens.Size.Artwork.xl,
+                    cornerRadius: DesignTokens.CornerRadius.lg,
+                    placeholderSymbol: "music.note"
+                )
+                .tokenShadow(DesignTokens.Shadow.level3)
             } else if entity.isArtist, let artistId = entity.entityId {
                 ArtistArtworkView(artistId: artistId, size: DesignTokens.Size.Artwork.xl)
                     .tokenShadow(DesignTokens.Shadow.level3)
@@ -689,6 +722,19 @@ extension EntityType {
     var isPlaylist: Bool {
         if case .playlist = self { return true }
         return false
+    }
+
+    var remoteArtworkURL: URL? {
+        switch self {
+        case .album(let album):
+            return album.remoteArtworkURL
+
+        case .artist(let artist):
+            return artist.remoteArtworkURL
+
+        case .genre, .playlist:
+            return nil
+        }
     }
 }
 

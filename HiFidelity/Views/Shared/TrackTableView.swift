@@ -15,6 +15,8 @@ struct TrackTableView: View {
     @Binding var sortOrder: [KeyPathComparator<Track>]
     let onPlayTrack: (Track) -> Void
     let isCurrentTrack: (Track) -> Bool
+    var isRemoteTrackDownloaded: ((Track) -> Bool)?
+    var onDownloadTrack: ((Track) -> Void)?
 
     // Optional playlist context
     var playlistContext: NSTrackTableView.PlaylistContext?
@@ -26,6 +28,8 @@ struct TrackTableView: View {
             sortOrder: $sortOrder,
             onPlayTrack: onPlayTrack,
             isCurrentTrack: isCurrentTrack,
+            isRemoteTrackDownloaded: isRemoteTrackDownloaded,
+            onDownloadTrack: onDownloadTrack,
             playlistContext: playlistContext
         )
     }

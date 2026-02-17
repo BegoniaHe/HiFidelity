@@ -119,6 +119,18 @@ struct TrackInfoDisplay: View {
                 .lineLimit(1)
                 .foregroundColor(.secondary.opacity(0.85))
 
+            if isStreamingTrack(track) {
+                Text("Streaming")
+                    .font(AppFonts.captionSmall)
+                    .foregroundColor(theme.currentTheme.primaryColor)
+                    .padding(.horizontal, DesignTokens.Spacing.xs)
+                    .padding(.vertical, 2)
+                    .background(
+                        Capsule()
+                            .fill(theme.currentTheme.primaryColor.opacity(0.14))
+                    )
+            }
+
             // Audio quality info from BASS - uses cached string for performance
             if !cachedAudioQuality.isEmpty {
                 Text(cachedAudioQuality)
@@ -222,6 +234,11 @@ struct TrackInfoDisplay: View {
         case 8: return "7.1"
         default: return "\(channels)ch"
         }
+    }
+
+    private func isStreamingTrack(_ track: Track) -> Bool {
+        guard let scheme = track.url.scheme?.lowercased() else { return false }
+        return scheme == "http" || scheme == "https"
     }
 }
 

@@ -22,6 +22,8 @@ struct NSTrackTableView: NSViewRepresentable {
     @Binding var sortOrder: [KeyPathComparator<Track>]
     let onPlayTrack: (Track) -> Void
     let isCurrentTrack: (Track) -> Bool
+    var isRemoteTrackDownloaded: ((Track) -> Bool)?
+    var onDownloadTrack: ((Track) -> Void)?
     var playlistContext: PlaylistContext?
 
     @Environment(TrackInfoManager.self) private var trackInfoManager
@@ -92,6 +94,8 @@ extension NSTrackTableView {
         context.coordinator.selection = $selection
         context.coordinator.onPlayTrack = onPlayTrack
         context.coordinator.isCurrentTrack = isCurrentTrack
+        context.coordinator.isRemoteTrackDownloaded = isRemoteTrackDownloaded
+        context.coordinator.onDownloadTrack = onDownloadTrack
         context.coordinator.playlistContext = playlistContext
         context.coordinator.sortOrder = $sortOrder
         let selectionColor = NSColor(theme.currentTheme.primaryColor)
@@ -132,6 +136,8 @@ extension NSTrackTableView {
             sortOrder: $sortOrder,
             onPlayTrack: onPlayTrack,
             isCurrentTrack: isCurrentTrack,
+            isRemoteTrackDownloaded: isRemoteTrackDownloaded,
+            onDownloadTrack: onDownloadTrack,
             playlistContext: playlistContext,
             selectionColor: NSColor(theme.currentTheme.primaryColor)
         )
@@ -148,6 +154,8 @@ extension NSTrackTableView {
         var sortOrder: Binding<[KeyPathComparator<Track>]>
         var onPlayTrack: (Track) -> Void
         var isCurrentTrack: (Track) -> Bool
+        var isRemoteTrackDownloaded: ((Track) -> Bool)?
+        var onDownloadTrack: ((Track) -> Void)?
         var playlistContext: NSTrackTableView.PlaylistContext?
         var selectionColor: NSColor
 
@@ -161,6 +169,8 @@ extension NSTrackTableView {
             sortOrder: Binding<[KeyPathComparator<Track>]>,
             onPlayTrack: @escaping (Track) -> Void,
             isCurrentTrack: @escaping (Track) -> Bool,
+            isRemoteTrackDownloaded: ((Track) -> Bool)?,
+            onDownloadTrack: ((Track) -> Void)?,
             playlistContext: NSTrackTableView.PlaylistContext?,
             selectionColor: NSColor
         ) {
@@ -169,6 +179,8 @@ extension NSTrackTableView {
             self.sortOrder = sortOrder
             self.onPlayTrack = onPlayTrack
             self.isCurrentTrack = isCurrentTrack
+            self.isRemoteTrackDownloaded = isRemoteTrackDownloaded
+            self.onDownloadTrack = onDownloadTrack
             self.playlistContext = playlistContext
             self.selectionColor = selectionColor
 
@@ -298,6 +310,10 @@ private final class ThemedTrackRowView: NSTableRowView {
     }
 }
 
+private final class TrackDownloadButton: NSButton {
+    var track: Track?
+}
+
 extension NSTrackTableView.Coordinator {
     // MARK: - Column Setup
 
@@ -404,6 +420,24 @@ extension NSTrackTableView.Coordinator {
                     artworkView?.image = image ?? placeholder
                 }
             }
+        } else if track.remoteItemId != nil || track.remoteAlbumId != nil || track.remoteArtworkURL != nil {
+            let artworkBindKey = track.id.uuidString
+            artworkView.identifier = NSUserInterfaceItemIdentifier(rawValue: artworkBindKey)
+
+            Task {
+                let resolvedURL = await JellyfinSessionManager.shared.resolveArtworkURL(for: track)
+                let image = resolvedURL.flatMap { url in
+                    Task.detached(priority: .utility) {
+                        await JellyfinArtworkCache.shared.image(for: url)
+                    }
+                }
+
+                let remoteArtwork = await image?.value
+                await MainActor.run {
+                    guard artworkView.identifier?.rawValue == artworkBindKey else { return }
+                    artworkView.image = remoteArtwork ?? placeholder
+                }
+            }
         }
 
         // Title label
@@ -416,6 +450,40 @@ extension NSTrackTableView.Coordinator {
         containerView.addSubview(artworkView)
         containerView.addSubview(titleLabel)
 
+        var trailingAnchor = containerView.trailingAnchor
+        var trailingConstant: CGFloat = -8
+
+        if track.remoteItemId != nil {
+            let downloaded = isRemoteTrackDownloaded?(track) ?? false
+            let downloadButton = TrackDownloadButton()
+            downloadButton.isBordered = false
+            downloadButton.imagePosition = .imageOnly
+            downloadButton.imageScaling = .scaleProportionallyDown
+            downloadButton.translatesAutoresizingMaskIntoConstraints = false
+            downloadButton.contentTintColor = downloaded ? .systemGreen : .secondaryLabelColor
+            downloadButton.image = NSImage(
+                systemSymbolName: downloaded ? "checkmark.circle.fill" : "arrow.down.circle",
+                accessibilityDescription: nil
+            )
+            downloadButton.toolTip = downloaded ? "Downloaded" : "Download from Jellyfin"
+            downloadButton.target = self
+            downloadButton.action = #selector(downloadTrackFromButton(_:))
+            downloadButton.track = track
+            downloadButton.isEnabled = !downloaded
+
+            containerView.addSubview(downloadButton)
+
+            NSLayoutConstraint.activate([
+                downloadButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
+                downloadButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+                downloadButton.widthAnchor.constraint(equalToConstant: 18),
+                downloadButton.heightAnchor.constraint(equalToConstant: 18),
+            ])
+
+            trailingAnchor = downloadButton.leadingAnchor
+            trailingConstant = -6
+        }
+
         NSLayoutConstraint.activate([
             artworkView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
             artworkView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
@@ -424,8 +492,7 @@ extension NSTrackTableView.Coordinator {
 
             titleLabel.leadingAnchor.constraint(equalTo: artworkView.trailingAnchor, constant: 10),
             titleLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            titleLabel.trailingAnchor.constraint(
-                equalTo: containerView.trailingAnchor, constant: -8),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: trailingConstant),
         ])
 
         cellView.addSubview(containerView)
@@ -511,6 +578,11 @@ extension NSTrackTableView.Coordinator {
         let row = sender.clickedRow
         guard row >= 0, row < tracks.count else { return }
         onPlayTrack(tracks[row])
+    }
+
+    @objc private func downloadTrackFromButton(_ sender: NSButton) {
+        guard let track = (sender as? TrackDownloadButton)?.track else { return }
+        onDownloadTrack?(track)
     }
 
     func createContextMenu() -> NSMenu {

@@ -24,6 +24,12 @@ extension PlaybackController {
             DispatchQueue.main.async {
                 self.currentTime = self.audioEngine.getCurrentTime()
 
+                if self.audioEngine.isBuffering() {
+                    self.transitionPlaybackState(to: .buffering)
+                } else if self.audioEngine.isPlaying() {
+                    self.transitionPlaybackState(to: .playing)
+                }
+
                 // Check for gapless pre-loading (5 seconds or less remaining)
                 self.checkGaplessPreload()
 

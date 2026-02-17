@@ -30,16 +30,39 @@ class AppCoordinator {
     func initializeApp() async {
         Logger.info("Initializing HiFidelity application...")
 
+        await ensureJellyfinDownloadFolderTracked()
+
         // Initialize security-scoped bookmarks for all folders
         await bookmarkManager.initializeSecurityScopes()
 
         // Start queue persistence manager
         QueuePersistenceManager.shared.start()
 
+        // Sync Jellyfin remote index for search/metadata if already authenticated
+        if JellyfinSessionManager.shared.isAuthenticated {
+            await JellyfinSessionManager.shared.syncRemoteIndex(forceRefresh: false)
+        }
+
         // Start folder monitoring if enabled
         await startFolderMonitoring()
 
         Logger.info("Application initialization complete")
+    }
+
+    private func ensureJellyfinDownloadFolderTracked() async {
+        do {
+            let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+            let bundleID = Bundle.main.bundleIdentifier ?? About.bundleIdentifier
+            let appDirectory = appSupport.appendingPathComponent(bundleID, isDirectory: true)
+            let downloadFolder = appDirectory
+                .appendingPathComponent("remote", isDirectory: true)
+                .appendingPathComponent("jellyfin", isDirectory: true)
+
+            let folder = try await DatabaseManager.shared.ensureManagedFolderTracked(at: downloadFolder)
+            try await DatabaseManager.shared.rescanFolder(folder)
+        } catch {
+            Logger.error("Failed to track Jellyfin download folder: \(error)")
+        }
     }
 
     /// Start folder monitoring if enabled in preferences

@@ -38,6 +38,13 @@
     <key>NSSupportsAutomaticGraphicsSwitching</key>
     <true/>
 
+  <!-- Allow non-HTTPS servers (e.g., local Jellyfin over HTTP) -->
+  <key>NSAppTransportSecurity</key>
+  <dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+  </dict>
+
 	<!-- URL Scheme for remote control -->
 	<key>CFBundleURLTypes</key>
 	<array>

@@ -15,6 +15,7 @@ struct GenresTabView: View {
 
     @Environment(DatabaseManager.self) var databaseManager
     @Bindable var theme = AppTheme.shared
+    @Bindable var jellyfin = JellyfinSessionManager.shared
 
     @State private var genres: [Genre] = []
     @State private var filteredGenres: [Genre] = []
@@ -22,8 +23,15 @@ struct GenresTabView: View {
     @State private var hasLoadedOnce = false
     @AppStorage("genresSortOptionId") private var sortOptionId: String = "name"
     @AppStorage("genresSortAscending") private var sortAscending: Bool = true
+    @State private var jellyfinTracks: [Track] = []
+    @State private var jellyfinNextStartIndex: Int = 0
+    @State private var jellyfinHasMore: Bool = true
+    @State private var jellyfinIsLoadingMore: Bool = false
     @State private var selectedSort = SortOption(id: "name", title: "Name", type: .alphabetical, ascending: true)
     @State private var selectedFilter: FilterOption?
+
+    private let jellyfinPageSize = 200
+    private let jellyfinTabKey = "genres"
 
     init(selectedEntity: Binding<EntityType?>, isVisible: Bool = true) {
         self._selectedEntity = selectedEntity
@@ -52,19 +60,42 @@ struct GenresTabView: View {
                 loadingView
             } else if filteredGenres.isEmpty {
                 if genres.isEmpty {
-                    emptyStateView(icon: "guitars", message: "No genres in library")
+                    emptyStateView(
+                        icon: "guitars",
+                        message: "No genres in library"
+                    )
                 } else {
                     emptyStateView(icon: "line.3.horizontal.decrease.circle", message: "No genres match your filter")
                 }
             } else {
                 LibraryGridScrollView(preset: DesignTokens.Grid.library) {
-                    ForEach(filteredGenres) { genre in
+                    ForEach(Array(filteredGenres.enumerated()), id: \.element.id) { index, genre in
                         GenreCard(genre: genre) {
                             withAnimation(.easeInOut(duration: 0.2)) {
                                 selectedEntity = .genre(genre)
                             }
                         }
                     }
+
+                    if jellyfin.isAuthenticated, jellyfinHasMore {
+                        HStack {
+                            Spacer()
+                            if jellyfinIsLoadingMore {
+                                ProgressView()
+                            } else {
+                                Button("Sync Jellyfin") {
+                                    Task {
+                                        await loadNextJellyfinPage()
+                                    }
+                                }
+                            }
+                            Spacer()
+                        }
+                        .padding(.vertical, DesignTokens.Spacing.md)
+                    }
+                }
+                .refreshable {
+                    await refreshJellyfinFromFirstPage()
                 }
             }
         }
@@ -161,11 +192,48 @@ struct GenresTabView: View {
         defer { isLoading = false }
 
         do {
-            genres = try await databaseManager.getAllGenres()
+            let localGenres = try await databaseManager.getAllGenres()
+            var remoteGenres: [Genre] = []
+
+            if jellyfin.isAuthenticated {
+                remoteGenres = try await databaseManager.getRemoteGenres()
+                jellyfinHasMore = true
+                jellyfinIsLoadingMore = false
+                Task {
+                    await jellyfin.syncRemoteIndex(forceRefresh: false)
+                }
+            } else {
+                jellyfinTracks = []
+                jellyfinNextStartIndex = 0
+                jellyfinHasMore = false
+                jellyfinIsLoadingMore = false
+            }
+
+            genres = mergeGenres(local: localGenres, remote: remoteGenres)
             applyFiltersAndSort()
         } catch {
             Logger.error("Failed to load genres: \(error)")
         }
+    }
+
+    private func loadNextJellyfinPage() async {
+        guard jellyfin.isAuthenticated,
+              !jellyfinIsLoadingMore else {
+            return
+        }
+
+        jellyfinIsLoadingMore = true
+        defer { jellyfinIsLoadingMore = false }
+
+        await jellyfin.syncRemoteIndex(forceRefresh: true)
+        await loadGenres()
+    }
+
+    private func refreshJellyfinFromFirstPage() async {
+        if jellyfin.isAuthenticated {
+            await jellyfin.syncRemoteIndex(forceRefresh: true)
+        }
+        await loadGenres()
     }
 
     private func applyFiltersAndSort() {
@@ -202,6 +270,17 @@ struct GenresTabView: View {
         }
 
         filteredGenres = result
+    }
+
+    private func mergeGenres(local: [Genre], remote: [Genre]) -> [Genre] {
+        var result: [Genre] = local
+        let localNames = Set(local.map { $0.name.lowercased() })
+
+        for genre in remote where !localNames.contains(genre.name.lowercased()) {
+            result.append(genre)
+        }
+
+        return result
     }
 }
 

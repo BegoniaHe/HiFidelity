@@ -16,31 +16,44 @@ extension BASSAudioEngine {
             return false
         }
 
-        // Check if file exists
-        guard FileManager.default.fileExists(atPath: url.path) else {
-            Logger.error("File does not exist: \(url.path)")
-            return false
-        }
-
         // Stop current stream if any
         stop()
 
-        // Create stream from file first to get actual sample rate
-        let path = url.path
+        if url.isFileURL {
+            // Check if file exists
+            guard FileManager.default.fileExists(atPath: url.path) else {
+                Logger.error("File does not exist: \(url.path)")
+                return false
+            }
 
-        currentStream = BASS_StreamCreateFile(
-            BOOL32(truncating: false),
-            path,
-            0,
-            0,
-            DWORD(BASS_STREAM_PRESCAN)  // Use native bit depth from source file
-        )
+            // Create stream from local file
+            currentStream = BASS_StreamCreateFile(
+                BOOL32(truncating: false),
+                url.path,
+                0,
+                0,
+                DWORD(BASS_STREAM_PRESCAN)
+            )
+        } else {
+            guard let scheme = url.scheme?.lowercased(), scheme == "http" || scheme == "https" else {
+                Logger.error("Unsupported URL scheme for playback: \(url.absoluteString)")
+                return false
+            }
+
+            currentStream = BASS_StreamCreateURL(
+                url.absoluteString,
+                0,
+                DWORD(0),
+                nil,
+                nil
+            )
+        }
 
         if currentStream == 0 {
             let errorCode = BASS_ErrorGetCode()
             let errorDescription = getLastError()
             Logger.error("Failed to create BASS stream for '\(url.lastPathComponent)'")
-            Logger.error("  Path: \(url.path)")
+            Logger.error("  URL: \(url.absoluteString)")
             Logger.error("  Error code: \(errorCode) - \(errorDescription)")
             Logger.error("  File extension: \(url.pathExtension)")
 

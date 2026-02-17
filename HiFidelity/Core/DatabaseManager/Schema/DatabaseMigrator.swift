@@ -72,6 +72,84 @@ struct DatabaseMigrator {
             Logger.info("R128 loudness column added successfully")
         }
 
+        // v7: Add remote Jellyfin tracks table with FTS support
+        migrator.registerMigration("v7_remote_tracks") { db in
+            Logger.info("Creating remote tracks schema...")
+            try DatabaseManager.createRemoteTracksTable(in: db)
+
+            try db.execute(sql: """
+                CREATE VIRTUAL TABLE IF NOT EXISTS remote_tracks_fts USING fts5(
+                    id UNINDEXED,
+                    remote_item_id UNINDEXED,
+                    title,
+                    artist,
+                    album,
+                    album_artist,
+                    genre,
+                    content='remote_tracks',
+                    content_rowid='id',
+                    tokenize='unicode61 remove_diacritics 2'
+                )
+            """)
+
+            try db.execute(sql: """
+                CREATE TRIGGER IF NOT EXISTS remote_tracks_fts_insert AFTER INSERT ON remote_tracks BEGIN
+                    INSERT INTO remote_tracks_fts(rowid, id, remote_item_id, title, artist, album, album_artist, genre)
+                    VALUES (new.id, new.id, new.remote_item_id, new.title, new.artist, new.album, new.album_artist, new.genre);
+                END;
+            """)
+
+            try db.execute(sql: """
+                CREATE TRIGGER IF NOT EXISTS remote_tracks_fts_delete AFTER DELETE ON remote_tracks BEGIN
+                    DELETE FROM remote_tracks_fts WHERE rowid = old.id;
+                END;
+            """)
+
+            try db.execute(sql: """
+                CREATE TRIGGER IF NOT EXISTS remote_tracks_fts_update AFTER UPDATE ON remote_tracks BEGIN
+                    DELETE FROM remote_tracks_fts WHERE rowid = old.id;
+                    INSERT INTO remote_tracks_fts(rowid, id, remote_item_id, title, artist, album, album_artist, genre)
+                    VALUES (new.id, new.id, new.remote_item_id, new.title, new.artist, new.album, new.album_artist, new.genre);
+                END;
+            """)
+
+            try db.execute(sql: "INSERT INTO remote_tracks_fts(remote_tracks_fts) VALUES('rebuild')")
+            try db.execute(sql: "INSERT INTO remote_tracks_fts(remote_tracks_fts) VALUES('optimize')")
+
+            Logger.info("Remote tracks migration completed")
+        }
+
+        // v8: Extend queue persistence to support remote entries
+        migrator.registerMigration("v8_queue_remote_support") { db in
+            Logger.info("Upgrading queue table for remote support...")
+
+            try db.execute(sql: "ALTER TABLE queue RENAME TO queue_old")
+
+            try db.create(table: "queue") { tableDefinition in
+                tableDefinition.autoIncrementedPrimaryKey("id")
+                tableDefinition.column("track_id", .integer)
+                    .references("tracks", column: "id", onDelete: .cascade, onUpdate: .cascade)
+                tableDefinition.column("remote_item_id", .text)
+                tableDefinition.column("source", .text)
+                tableDefinition.column("position", .integer).notNull()
+                tableDefinition.uniqueKey(["position"])
+            }
+
+            try db.execute(sql: """
+                INSERT INTO queue (id, track_id, remote_item_id, source, position)
+                SELECT id, track_id, NULL, NULL, position
+                FROM queue_old
+            """)
+
+            try db.drop(table: "queue_old")
+
+            try db.create(index: "idx_queue_position", on: "queue", columns: ["position"], ifNotExists: true)
+            try db.create(index: "idx_queue_track", on: "queue", columns: ["track_id"], ifNotExists: true)
+            try db.create(index: "idx_queue_remote_item", on: "queue", columns: ["remote_item_id"], ifNotExists: true)
+
+            Logger.info("Queue remote support migration completed")
+        }
+
         // Add new migrations here as: migrator.registerMigration("v7_description") { db in ... }
 
         return migrator

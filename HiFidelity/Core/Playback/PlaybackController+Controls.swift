@@ -13,11 +13,14 @@ extension PlaybackController {
     func play() {
         guard let track = currentTrack else { return }
 
+        transitionPlaybackState(to: .loading)
+
         // If track has ended (currentTime >= duration), restart from beginning
         if currentTime >= duration && duration > 0 {
             currentTime = 0
             guard audioEngine.load(url: track.url) else {
                 Logger.error("Failed to reload track: \(track.title)")
+                recoverOrFailPlayback(for: track, category: .load, failureMessage: "Failed to reload track: \(track.title)")
                 return
             }
             duration = audioEngine.getDuration()
@@ -32,6 +35,7 @@ extension PlaybackController {
         else if !audioEngine.isPlaying() && currentTime == 0 {
             guard audioEngine.load(url: track.url) else {
                 Logger.error("Failed to load track: \(track.title)")
+                recoverOrFailPlayback(for: track, category: .load, failureMessage: "Failed to load track: \(track.title)")
                 return
             }
 
@@ -47,10 +51,11 @@ extension PlaybackController {
         // Play
         guard audioEngine.play() else {
             Logger.error("Failed to play track: \(track.title)")
+            recoverOrFailPlayback(for: track, category: .play, failureMessage: "Failed to play track: \(track.title)")
             return
         }
 
-        isPlaying = true
+        transitionPlaybackState(to: .playing)
         startPositionTimer()
         Logger.info("Playing: \(track.title)")
 
@@ -61,14 +66,14 @@ extension PlaybackController {
     func pause() {
         guard audioEngine.pause() else { return }
 
-        isPlaying = false
+        transitionPlaybackState(to: .paused)
         stopPositionTimer()
         Logger.info("Paused")
     }
 
     func stop() {
         audioEngine.stop()
-        isPlaying = false
+        transitionPlaybackState(to: .idle)
         stopPositionTimer()
         Logger.info("Stopped")
     }
@@ -85,7 +90,7 @@ extension PlaybackController {
     func stopPlayback() {
         _ = audioEngine.pause()
         audioEngine.clearPreloadedTrack()
-        isPlaying = false
+        transitionPlaybackState(to: .idle)
         currentTime = 0
         stopPositionTimer()
 
@@ -104,12 +109,20 @@ extension PlaybackController {
             // Try to reload the track if we have one
             guard let track = currentTrack else {
                 Logger.error("Failed to seek to \(time) - no track loaded")
+                transitionPlaybackState(
+                    to: .failed,
+                    error: PlaybackError(category: .seek, message: "Failed to seek: no track loaded")
+                )
                 return
             }
 
             Logger.info("Track not loaded, reloading for seek...")
             guard audioEngine.load(url: track.url) else {
                 Logger.error("Failed to reload track for seeking")
+                transitionPlaybackState(
+                    to: .failed,
+                    error: PlaybackError(category: .seek, message: "Failed to reload track for seeking")
+                )
                 return
             }
 
@@ -121,12 +134,97 @@ extension PlaybackController {
             // Try seeking again
             guard audioEngine.seek(to: time) else {
                 Logger.error("Failed to seek to \(time) after reload")
+                transitionPlaybackState(
+                    to: .failed,
+                    error: PlaybackError(category: .seek, message: "Failed to seek to \(time) after reload")
+                )
                 return
             }
         }
 
         currentTime = time
         Logger.info("Seeked to: \(time)")
+    }
+
+    func retryCurrentTrackPlayback() {
+        guard let track = currentTrack else { return }
+
+        Task {
+            let recovered = await attemptRemotePlaybackRecovery(for: track, allowTranscodeFallback: false)
+            if !recovered {
+                transitionPlaybackState(
+                    to: .failed,
+                    error: PlaybackError(category: .network, message: "Retry failed for \(track.title)")
+                )
+            }
+        }
+    }
+
+    func retryCurrentTrackWithTranscode() {
+        guard let track = currentTrack else { return }
+
+        Task {
+            let recovered = await attemptRemotePlaybackRecovery(for: track, allowTranscodeFallback: true)
+            if !recovered {
+                transitionPlaybackState(
+                    to: .failed,
+                    error: PlaybackError(category: .network, message: "Transcode retry failed for \(track.title)")
+                )
+            }
+        }
+    }
+
+    private func recoverOrFailPlayback(for track: Track, category: PlaybackErrorCategory, failureMessage: String) {
+        guard track.remoteItemId != nil else {
+            transitionPlaybackState(
+                to: .failed,
+                error: PlaybackError(category: category, message: failureMessage)
+            )
+            return
+        }
+
+        Task {
+            let recovered = await attemptRemotePlaybackRecovery(for: track, allowTranscodeFallback: true)
+            if !recovered {
+                transitionPlaybackState(
+                    to: .failed,
+                    error: PlaybackError(category: category, message: failureMessage)
+                )
+            }
+        }
+    }
+
+    private func attemptRemotePlaybackRecovery(for track: Track, allowTranscodeFallback: Bool) async -> Bool {
+        transitionPlaybackState(to: .buffering)
+
+        if let refreshedURL = await JellyfinSessionManager.shared.refreshPlaybackURL(for: track),
+           audioEngine.load(url: refreshedURL),
+           audioEngine.play() {
+            duration = audioEngine.getDuration()
+            currentTime = 0
+            applyReplayGain()
+            currentStreamInfo = audioEngine.getStreamInfo()
+            transitionPlaybackState(to: .playing)
+            startPositionTimer()
+            NotificationManager.shared.addMessage(.info, "Playback recovered")
+            return true
+        }
+
+        guard allowTranscodeFallback,
+              let transcodeURL = await JellyfinSessionManager.shared.transcodePlaybackURL(for: track),
+              audioEngine.load(url: transcodeURL),
+              audioEngine.play() else {
+            return false
+        }
+
+        duration = audioEngine.getDuration()
+        currentTime = 0
+        applyReplayGain()
+        currentStreamInfo = audioEngine.getStreamInfo()
+        transitionPlaybackState(to: .playing)
+        startPositionTimer()
+        NotificationManager.shared.addMessage(.warning, "Recovered with transcode fallback")
+        return true
     }
 
     func seekForward(_ seconds: Double = 10) {

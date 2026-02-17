@@ -88,6 +88,11 @@ struct Track: Identifiable, Equatable, Hashable, FetchableRecord, MutablePersist
     // Transient property for playlist order (not persisted to database)
     var playlistPosition: Int?
 
+    // Remote-only metadata (not persisted)
+    var remoteItemId: String?
+    var remoteAlbumId: String?
+    var remoteArtworkURL: URL?
+
     var filename: String {
         url.lastPathComponent
     }

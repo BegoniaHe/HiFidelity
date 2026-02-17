@@ -34,6 +34,11 @@ struct Artist: Identifiable, Hashable, Codable, FetchableRecord, MutablePersista
     // Timestamps
     var dateAdded: Date
 
+    // Remote-only metadata (not persisted)
+    var remoteId: String?
+    var remoteArtworkURL: URL?
+    var isRemote: Bool = false
+
     // MARK: - Database Configuration
 
     static let databaseTableName = "artists"
