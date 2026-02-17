@@ -142,6 +142,48 @@ brew install --cask rvarunrathod/tap/hifidelity
 2. HiFidelity will automatically scan and import your music.
 3. Start enjoying your music collection!
 
+## 🔗 URL Scheme (open command)
+
+HiFidelity supports remote control via a custom URL Scheme: `hifidelity://`
+
+- Base format: `hifidelity://control/<action>?step=<1-100>`
+- Usage (macOS Terminal): `open "hifidelity://control/play-next"`
+
+#### Supported Actions
+
+- `play-next`
+- `play-previous`
+- `toggle-play-stop`
+- `play`
+- `stop`
+- `volume-up`
+- `volume-down`
+- `device-next`
+- `device-default`
+- `toggle-miniplayer`
+
+#### Examples
+
+```bash
+# Play next track
+open "hifidelity://control/play-next"
+
+# Toggle play/pause
+open "hifidelity://control/toggle-play-stop"
+
+# Volume +15%
+open "hifidelity://control/volume-up?step=15"
+
+# Volume -10% (default step)
+open "hifidelity://control/volume-down"
+
+# Switch to next audio device
+open "hifidelity://control/device-next"
+
+# Toggle mini player visibility
+open "hifidelity://control/toggle-miniplayer"
+```
+
 ## ⚡ Development
 
 - Make sure you’re running macOS 14 or later
