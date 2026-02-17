@@ -205,7 +205,7 @@ class DACManager {
 
         // Check if already at desired sample rate
         let currentRate = getCurrentDeviceSampleRate()
-        if abs(currentRate - sampleRate) < 0.1 {
+        if Swift.abs(currentRate - sampleRate) < 0.1 {
             Logger.debug("Device already at \(Int(sampleRate)) Hz")
             return true
         }

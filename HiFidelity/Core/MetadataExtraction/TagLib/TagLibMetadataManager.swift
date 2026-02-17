@@ -8,23 +8,24 @@
 
 import AppKit
 import Foundation
+import Lyra
 
 /// Swift wrapper for TagLib metadata extraction
 struct TagLibMetadataManager {
-    /// Extract metadata from an audio file using TagLib
+    /// Extract metadata from an audio file using Lyra
     /// - Parameter url: URL to the audio file
     /// - Returns: TrackMetadata object populated with extracted data
     static func extractMetadata(from url: URL) -> TrackMetadata {
         var metadata = TrackMetadata(url: url)
 
-        // Try extracting with TagLib
+        // Try extracting with Lyra
         do {
-            let taglibMetadata = try TagLibMetadataExtractor.extractMetadata(from: url)
+            let lyraMetadata = try Lyra.read(from: url)
 
-            // Map TagLib metadata to our TrackMetadata structure
-            mapTagLibMetadataToTrackMetadata(taglibMetadata, into: &metadata)
+            // Map Lyra metadata to our TrackMetadata structure
+            mapLyraMetadataToTrackMetadata(lyraMetadata, into: &metadata)
         } catch {
-            Logger.error("TagLib extraction failed for \(url.lastPathComponent): \(error.localizedDescription)")
+            Logger.error("Lyra extraction failed for \(url.lastPathComponent): \(error.localizedDescription)")
             // Return metadata with at least filename as title
             metadata.title = url.deletingPathExtension().lastPathComponent
         }
@@ -45,23 +46,23 @@ struct TagLibMetadataManager {
         }
     }
 
-    /// Check if a file format is supported by TagLib
+    /// Check if a file format is supported by Lyra
     /// - Parameter fileExtension: File extension (without dot)
     /// - Returns: true if supported, false otherwise
     static func isSupportedFormat(_ fileExtension: String) -> Bool {
-        return TagLibMetadataExtractor.isSupportedFormat(fileExtension)
+        return Lyra.supportedExtensions.contains(fileExtension.lowercased())
     }
 
     /// Get list of all supported file extensions
     /// - Returns: Array of supported extensions
     static func supportedExtensions() -> [String] {
-        return TagLibMetadataExtractor.supportedExtensions()
+        return Lyra.supportedExtensions
     }
 
     // MARK: - Private Helpers
 
-    /// Map TagLib metadata object to TrackMetadata structure
-    private static func mapTagLibMetadataToTrackMetadata(_ source: TagLibAudioMetadata, into metadata: inout TrackMetadata) {
+    /// Map Lyra metadata object to TrackMetadata structure
+    private static func mapLyraMetadataToTrackMetadata(_ source: AudioMetadata, into metadata: inout TrackMetadata) {
         // Core metadata
         metadata.title = source.title
         metadata.artist = source.artist
@@ -69,36 +70,36 @@ struct TagLibMetadataManager {
         metadata.albumArtist = source.albumArtist
         metadata.composer = source.composer
         metadata.genre = source.genre
-        metadata.year = source.year
+        metadata.year = source.year.map(String.init)
 
         // Track/Disc information
-        if source.trackNumber > 0 {
-            metadata.trackNumber = Int(source.trackNumber)
+        if let trackNumber = source.trackNumber, trackNumber > 0 {
+            metadata.trackNumber = Int(trackNumber)
         }
-        if source.totalTracks > 0 {
-            metadata.totalTracks = Int(source.totalTracks)
+        if let totalTracks = source.totalTracks, totalTracks > 0 {
+            metadata.totalTracks = Int(totalTracks)
         }
-        if source.discNumber > 0 {
-            metadata.discNumber = Int(source.discNumber)
+        if let discNumber = source.discNumber, discNumber > 0 {
+            metadata.discNumber = Int(discNumber)
         }
-        if source.totalDiscs > 0 {
-            metadata.totalDiscs = Int(source.totalDiscs)
+        if let totalDiscs = source.totalDiscs, totalDiscs > 0 {
+            metadata.totalDiscs = Int(totalDiscs)
         }
 
         // Audio properties
-        metadata.duration = source.duration
+        metadata.duration = Double(source.duration ?? 0)
 
-        if source.bitrate > 0 {
-            metadata.bitrate = Int(source.bitrate)
+        if let bitrate = source.bitrate, bitrate > 0 {
+            metadata.bitrate = bitrate
         }
-        if source.sampleRate > 0 {
-            metadata.sampleRate = Int(source.sampleRate)
+        if let sampleRate = source.sampleRate, sampleRate > 0 {
+            metadata.sampleRate = sampleRate
         }
-        if source.channels > 0 {
-            metadata.channels = Int(source.channels)
+        if let channels = source.channels, channels > 0 {
+            metadata.channels = channels
         }
-        if source.bitDepth > 0 {
-            metadata.bitDepth = Int(source.bitDepth)
+        if let bitDepth = source.bitDepth, bitDepth > 0 {
+            metadata.bitDepth = bitDepth
         }
         metadata.codec = source.codec
 
@@ -106,10 +107,10 @@ struct TagLibMetadataManager {
         metadata.artworkData = source.artworkData
 
         // Additional metadata
-        if source.bpm > 0 {
-            metadata.bpm = Int(source.bpm)
+        if let bpm = source.bpm, bpm > 0 {
+            metadata.bpm = Int(bpm)
         }
-        metadata.compilation = source.compilation
+        metadata.compilation = source.compilation ?? false
 
         // Sort fields
         metadata.sortTitle = source.sortTitle
@@ -126,7 +127,7 @@ struct TagLibMetadataManager {
     }
 
     /// Map extended metadata fields
-    private static func mapExtendedMetadata(_ source: TagLibAudioMetadata, into extended: inout ExtendedMetadata) {
+    private static func mapExtendedMetadata(_ source: AudioMetadata, into extended: inout ExtendedMetadata) {
         // Identifiers
         extended.isrc = source.isrc
         extended.label = source.label
@@ -137,20 +138,13 @@ struct TagLibMetadataManager {
         extended.musicBrainzTrackId = source.musicBrainzTrackId
         extended.musicBrainzReleaseGroupId = source.musicBrainzReleaseGroupId
 
-        // Personnel
-        extended.conductor = source.conductor
-        extended.remixer = source.remixer
-        extended.producer = source.producer
-        extended.engineer = source.engineer
-        extended.lyricist = source.lyricist
-
         // Descriptive fields
         extended.subtitle = source.subtitle
         extended.grouping = source.grouping
         extended.movement = source.movement
         extended.mood = source.mood
         extended.language = source.language
-        extended.key = source.musicalKey
+        extended.key = source.key
         extended.lyrics = source.lyrics
         extended.comment = source.comment
 
@@ -374,7 +368,7 @@ extension TagLibMetadataManager {
         }
 
         do {
-            _ = try TagLibMetadataExtractor.extractMetadata(from: url)
+            _ = try Lyra.read(from: url)
         } catch {
             return .failure(.extractionFailed(error.localizedDescription))
         }

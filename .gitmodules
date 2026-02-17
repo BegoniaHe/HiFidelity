@@ -1,6 +1,0 @@
-[submodule "ThirdParty/taglib"]
-	path = ThirdParty/taglib
-	url = https://github.com/taglib/taglib
-[submodule "ThirdParty/Lyra"]
-	path = ThirdParty/Lyra
-	url = https://github.com/BegoniaHe/Lyra

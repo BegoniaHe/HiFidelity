@@ -329,23 +329,23 @@ extension SongFeatures {
         // Compare each feature if both exist
         if let t1 = self.tempo, let t2 = other.tempo {
             // Normalize tempo difference (max difference ~100 BPM)
-            similarities.append(1.0 - min(abs(t1 - t2) / 100.0, 1.0))
+            similarities.append(1.0 - Swift.min(Swift.abs(t1 - t2) / 100.0, 1.0))
         }
 
         if let e1 = self.energy, let e2 = other.energy {
-            similarities.append(1.0 - abs(e1 - e2))
+            similarities.append(1.0 - Swift.abs(e1 - e2))
         }
 
         if let v1 = self.valence, let v2 = other.valence {
-            similarities.append(1.0 - abs(v1 - v2))
+            similarities.append(1.0 - Swift.abs(v1 - v2))
         }
 
         if let d1 = self.danceability, let d2 = other.danceability {
-            similarities.append(1.0 - abs(d1 - d2))
+            similarities.append(1.0 - Swift.abs(d1 - d2))
         }
 
         if let a1 = self.acousticness, let a2 = other.acousticness {
-            similarities.append(1.0 - abs(a1 - a2))
+            similarities.append(1.0 - Swift.abs(a1 - a2))
         }
 
         // Return average similarity of available features

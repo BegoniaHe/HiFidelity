@@ -1,13 +1,13 @@
 {
-  "originHash" : "ab8e7e4cfb521a0797d3f60f5cdd5fde6200f14b3b5935ab9701d9162bd8a3eb",
+  "originHash" : "92f975aa067fed537a666ff5ac4b57f80ca0446e1e31e4b8ff601d909b24fd1b",
   "pins" : [
     {
       "identity" : "cbass",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Treata11/CBass",
+      "location" : "https://github.com/BegoniaHe/CBass",
       "state" : {
-        "branch" : "main",
-        "revision" : "74cb58f5c900bc1579173fb3b2d94e7c4463a238"
+        "branch" : "cxx-interop-fix",
+        "revision" : "5f3dc0dbe7cac30fa175b11038313cec69e2d724"
       }
     },
     {
@@ -20,12 +20,30 @@
       }
     },
     {
+      "identity" : "lyra",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/BegoniaHe/Lyra",
+      "state" : {
+        "branch" : "main",
+        "revision" : "420a21a7b05ee6efa5d2b546d770f8e648611e03"
+      }
+    },
+    {
       "identity" : "sparkle",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sparkle-project/Sparkle",
       "state" : {
         "revision" : "5581748cef2bae787496fe6d61139aebe0a451f6",
         "version" : "2.8.1"
+      }
+    },
+    {
+      "identity" : "swift-foundation-icu",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-foundation-icu",
+      "state" : {
+        "branch" : "main",
+        "revision" : "a92f6aecbfdf4de9b7e18f1b63bf471e5a63a9c5"
       }
     }
   ],

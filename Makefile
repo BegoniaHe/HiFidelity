@@ -1,4 +1,4 @@
-.PHONY: run build clean build-debug lint init build-taglib check-taglib rebuild-taglib clean-all localize localize-import localize-clean localize-scan test-audio test-audio-source test-audio-convert test-audio-clean test-audio-clean-all test-audio-info test-audio-formats
+.PHONY: run build clean build-debug lint init clean-all localize localize-import localize-clean localize-scan test-audio test-audio-source test-audio-convert test-audio-clean test-audio-clean-all test-audio-info test-audio-formats
 
 
 # ============================================================================
@@ -18,26 +18,6 @@ DESTINATION := platform=macOS
 
 DEBUG_APP := $(DERIVED_DATA)/Build/Products/Debug/$(APP_NAME).app
 RELEASE_APP := $(DERIVED_DATA)/Build/Products/Release/$(APP_NAME).app
-
-
-# ============================================================================
-# TagLib Configuration
-# ============================================================================
-
-TAGLIB_BUILD_DIR := $(DERIVED_DATA)/taglib
-TAGLIB_LIB := HiFidelity/deps/lib/libtag.dylib
-TAGLIB_SOURCE := ThirdParty/taglib
-TAGLIB_INSTALL := HiFidelity/deps
-
-CMAKE_BUILD_FLAGS := \
-	-DCMAKE_BUILD_TYPE=Release \
-	-DBUILD_SHARED_LIBS=ON \
-	-DBUILD_TESTING=OFF \
-	-DBUILD_EXAMPLES=OFF \
-	-DBUILD_BINDINGS=OFF \
-	-DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 \
-	-DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
-	-DCMAKE_INSTALL_PREFIX=../../$(TAGLIB_INSTALL)
 
 
 # ============================================================================
@@ -69,44 +49,10 @@ all: build
 
 
 # ============================================================================
-# TagLib Build Targets
-# ============================================================================
-
-check-taglib:
-	@if [ ! -f "$(TAGLIB_LIB)" ]; then \
-		echo "[TagLib] Not found, building..."; \
-		$(MAKE) build-taglib; \
-	else \
-		echo "[TagLib] Already built"; \
-	fi
-
-build-taglib:
-	@echo "[TagLib] Initializing submodules..."
-	@git submodule update --init --recursive
-	@echo "[TagLib] Creating build directory..."
-	@mkdir -p $(TAGLIB_BUILD_DIR)
-	@echo "[TagLib] Configuring with CMake..."
-	@cd $(TAGLIB_BUILD_DIR) && \
-		cmake ../../$(TAGLIB_SOURCE) $(CMAKE_BUILD_FLAGS)
-	@echo "[TagLib] Building with $(NCPU) cores..."
-	@cd $(TAGLIB_BUILD_DIR) && \
-		cmake --build . --config Release -j$(NCPU)
-	@echo "[TagLib] Installing to $(TAGLIB_INSTALL)..."
-	@cd $(TAGLIB_BUILD_DIR) && \
-		cmake --install . --config Release
-	@echo "[TagLib] Build complete"
-
-rebuild-taglib:
-	@echo "[TagLib] Cleaning previous build..."
-	@rm -rf $(TAGLIB_BUILD_DIR) $(TAGLIB_INSTALL)
-	@$(MAKE) build-taglib
-
-
-# ============================================================================
 # Build Targets
 # ============================================================================
 
-build-debug: check-taglib
+build-debug:
 	@echo "[Xcode] Building Debug configuration..."
 	@xcodebuild -project "$(PROJECT)" \
 		-scheme "$(SCHEME)" \
@@ -115,7 +61,7 @@ build-debug: check-taglib
 		-derivedDataPath "$(DERIVED_DATA)" \
 		build
 
-build: check-taglib
+build:
 	@echo "[Xcode] Building Release configuration..."
 	@xcodebuild -project "$(PROJECT)" \
 		-scheme "$(SCHEME)" \
@@ -155,8 +101,6 @@ clean:
 	@rm -rf ~/Library/Developer/Xcode/DerivedData/HiFidelity-* 2>/dev/null || true
 
 clean-all: clean
-	@echo "[Clean] Removing TagLib installation..."
-	@rm -rf $(TAGLIB_INSTALL)
 	@echo "[Clean] Complete"
 
 
@@ -189,6 +133,7 @@ init:
 			'    dependencies: [' \
 			'        .package(url: "https://github.com/groue/GRDB.swift.git", from: "7.8.0"),' \
 			'        .package(url: "https://github.com/sparkle-project/Sparkle.git", from: "2.8.1")' \
+			'        .package(url: "https://github.com/BegoniaHe/Lyra", branch: "main")' \
 			'    ],' \
 			'    targets: [' \
 			'        .target(' \

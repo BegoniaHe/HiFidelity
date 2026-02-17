@@ -494,7 +494,7 @@ struct ProfessionalEQSlider: View {
         let rawValue = range.lowerBound + clamped * (range.upperBound - range.lowerBound)
 
         // Snap to 0 when close (within 0.5 dB)
-        if abs(rawValue) < 0.5 {
+        if Swift.abs(rawValue) < 0.5 {
             return 0.0
         }
 
